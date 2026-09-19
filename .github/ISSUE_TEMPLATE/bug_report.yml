@@ -1,0 +1,52 @@
+name: Bug report
+description: Something in aicb (MCP server, CLI or desktop app) does not work as described.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. **Never paste your source code** — a description, the tool call
+        and the answer are enough. Security issues do not belong here: see SECURITY.md.
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Where does it happen?
+      options:
+        - MCP server (aicb mcp, via an agent)
+        - CLI (aicb analyze / call / init / …)
+        - Desktop app (Windows)
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: "`aicb --version`, or Settings → About in the desktop app."
+      placeholder: 0.5.464.31
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, .NET SDK version (`dotnet --version`), agent/client (Claude Code, Codex, Cursor, …).
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+      description: For the MCP server, include the tool name, its arguments and the answer.
+    validations:
+      required: true
+  - type: textarea
+    id: serverinfo
+    attributes:
+      label: server_info answer (MCP only)
+      render: json
+  - type: textarea
+    id: log
+    attributes:
+      label: Log excerpt (desktop app)
+      description: "%APPDATA%\\AIContextBuilder\\aicb.log — warnings and errors only, no source code."
+      render: text

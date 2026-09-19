@@ -1,0 +1,75 @@
+AIContextBuilder and AIContextBuilder for .NET
+Copyright (c) 2026 Gregor Dadera. All rights reserved.
+
+This software is licensed under the AIContextBuilder End-User License
+Agreement (EULA). See EULA.md for the full bilingual text (German /
+English): https://github.com/gregordadera/AICB/blob/main/EULA.md
+
+SUMMARY (for orientation only; the EULA is binding)
+===================================================
+
+Free use:
+  Free of charge for as long as your organization reaches NONE of these
+  three thresholds:
+
+    (a) one hundred (100) employees,
+    (b) ten million Euro (EUR 10,000,000) annual turnover,
+    (c) twenty-one (21) developers.
+
+  "Organization" includes linked enterprises: a subsidiary is counted
+  together with its group. See EULA section 4.2 for how employees,
+  developers and turnover are counted.
+
+Always free, regardless of the thresholds:
+  - Natural persons, for private, hobby or educational purposes.
+  - Accredited educational institutions, for teaching, learning and
+    non-commercial research (not for contract research).
+  - Work you do for clients: the thresholds measure YOUR organization
+    only. The size of your client does not matter, including when you
+    work on their premises.
+
+Commercial license required:
+  - If your organization reaches or exceeds even one threshold, a
+    commercial license must be agreed before further use. Terms are
+    agreed individually - please get in touch.
+  - You have ninety (90) days from first reaching a threshold to arrange
+    it; use stays free of charge until then.
+  - The software contains no technical verification of any of this: no
+    license server, no activation token, no telemetry. Compliance is
+    your responsibility.
+
+Donations:
+  - Voluntary and welcome (e.g., https://github.com/sponsors/gregordadera),
+    but they are a separate matter. A donation does NOT replace a
+    commercial license where one is required.
+
+Restrictions:
+  - No reverse engineering, decompilation, or disassembly, except as
+    permitted by mandatory applicable law (German Copyright Act
+    sections 69d / 69e for interoperability).
+  - No removal or alteration of copyright notices, trademarks, or
+    version information.
+  - No redistribution, modification, or repackaging.
+  - No integration into other products or services.
+  - No re-branding or representation as own work.
+  - No competing products based on this software.
+
+Trademarks:
+  - "AIContextBuilder" and "AIContextBuilder for .NET" are unregistered
+    trademarks of Gregor Dadera.
+
+Warranty and liability:
+  - Software is provided "as is", without warranty.
+  - Liability limited per EULA section 9 (German law: unlimited for
+    intent and gross negligence; limited to typical foreseeable damage
+    for ordinary negligence in case of breach of cardinal duties).
+
+Governing law:
+  - German law applies. Exclusive jurisdiction at the domicile of the
+    licensor (Gregor Dadera) for merchants and legal entities; statutory
+    rules for consumers.
+
+By installing or using the software, you accept the EULA.
+
+Contact for licensing: aicb@dadera.de
+Project page: https://github.com/gregordadera/AICB

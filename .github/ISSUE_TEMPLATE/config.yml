@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/gregordadera/AICB/security/advisories/new
+    about: Please report security issues privately, not as a public issue.
+  - name: Commercial licence
+    url: https://github.com/gregordadera/AICB/blob/main/docs/LICENSING.md
+    about: Organizations at or above a threshold — write to aicb@dadera.de.
