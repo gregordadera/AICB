@@ -254,6 +254,17 @@ Default is off, and on a solution without multi-targeting the setting does
 nothing at all — the saving is entirely solution-specific (measured: 63 % of the
 documents on `dotnet/roslyn`, 0 % on nopCommerce and on mapperly).
 
+## Documentation
+
+Full manuals (PDF, English, written against `0.5.464.32`):
+
+- [General](docs/manual/AICB-General.pdf) — installation, licence, CLI reference, the context document, analysis rules, troubleshooting
+- [MCP server](docs/manual/AICB-MCP-Server.pdf) — client setup, profiles, all 82 tools with their parameters
+- [Desktop app](docs/manual/AICB-Desktop-App.pdf) — every page, panel, dialog and setting of the Windows app
+
+Shorter guides: [`docs/GETTING-STARTED.md`](docs/GETTING-STARTED.md), [`docs/TOOLS.md`](docs/TOOLS.md),
+[`docs/LICENSING.md`](docs/LICENSING.md).
+
 ## Security
 
 **The MCP server never modifies the code it analyses.** Nothing any tool writes is
