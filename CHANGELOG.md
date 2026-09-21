@@ -4,6 +4,14 @@ Versions follow `Major.Minor.Series.Build`. The build number rises by one for ev
 change that lands, so gaps between published versions are normal — not every build is
 released.
 
+## 0.5.464.33 — manuals linked from the package page
+
+- Full manuals as PDF (General, MCP server, Desktop app) in
+  [`docs/manual/`](https://github.com/gregordadera/AICB/tree/main/docs/manual), linked from the
+  README and therefore from the nuget.org package page.
+- No code change: the MCP server and CLI behave exactly like 0.5.464.32. Published on
+  nuget.org only; the desktop app stays at 0.5.464.32.
+
 ## 0.5.464.32 — one installation per machine
 
 - **The installer removes an existing .NET tool** (option, preselected). The installer
