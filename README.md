@@ -258,12 +258,12 @@ documents on `dotnet/roslyn`, 0 % on nopCommerce and on mapperly).
 
 Full manuals (PDF, English, written against `0.5.464.32`):
 
-- [General](docs/manual/AICB-General.pdf) — installation, licence, CLI reference, the context document, analysis rules, troubleshooting
-- [MCP server](docs/manual/AICB-MCP-Server.pdf) — client setup, profiles, all 82 tools with their parameters
-- [Desktop app](docs/manual/AICB-Desktop-App.pdf) — every page, panel, dialog and setting of the Windows app
+- [General](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-General.pdf) — installation, licence, CLI reference, the context document, analysis rules, troubleshooting
+- [MCP server](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-MCP-Server.pdf) — client setup, profiles, all 82 tools with their parameters
+- [Desktop app](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-Desktop-App.pdf) — every page, panel, dialog and setting of the Windows app
 
-Shorter guides: [`docs/GETTING-STARTED.md`](docs/GETTING-STARTED.md), [`docs/TOOLS.md`](docs/TOOLS.md),
-[`docs/LICENSING.md`](docs/LICENSING.md).
+Shorter guides: [`docs/GETTING-STARTED.md`](https://github.com/gregordadera/AICB/blob/main/docs/GETTING-STARTED.md), [`docs/TOOLS.md`](https://github.com/gregordadera/AICB/blob/main/docs/TOOLS.md),
+[`docs/LICENSING.md`](https://github.com/gregordadera/AICB/blob/main/docs/LICENSING.md).
 
 ## Security
 
