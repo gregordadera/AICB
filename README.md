@@ -33,7 +33,17 @@ Every tool also accepts the `.sln` path directly as its `session_id`
 
 ## Install
 
-`aicb` comes in two forms that share one analysis engine.
+`aicb` comes in two forms that share one analysis engine. **Install one of them per
+machine:**
+
+- **Windows, and you want the desktop app:** the installer. It contains the MCP server
+  and CLI as well, so one update brings both to the same version. If the .NET tool is
+  already installed, the installer offers to remove it (on by default).
+- **Everything else** (Linux, macOS, CI, or no desktop app): the .NET tool.
+
+Both put an `aicb` command on `PATH`. With both installed, the installer's copy is the
+one that runs, and `dotnet tool update` would update a copy nothing starts; `aicb init`
+warns when it finds more than one.
 
 ### MCP server and CLI — Windows, Linux, macOS
 
@@ -53,7 +63,8 @@ separate program: `aicb mcp` is a verb of this same command.
 Download from [GitHub Releases](https://github.com/gregordadera/AICB/releases):
 
 - `AIContextBuilder-Setup-<version>.exe` — installer (needs administrator rights;
-  optionally puts the `aicb` command on `PATH`).
+  puts the `aicb` command on `PATH` unless you untick it). Consoles, editors and agents
+  that were already open see the new `PATH` only after a restart.
 - `AIContextBuilder-<version>-win-x64.zip` — portable, no installation: `gui\aicb-ui.exe`
   is the desktop app, `cli\aicb.exe` the same CLI/MCP server as above.
 

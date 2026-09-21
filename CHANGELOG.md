@@ -4,6 +4,23 @@ Versions follow `Major.Minor.Series.Build`. The build number rises by one for ev
 change that lands, so gaps between published versions are normal — not every build is
 released.
 
+## 0.5.464.32 — one installation per machine
+
+- **The installer removes an existing .NET tool** (option, preselected). The installer
+  contains the same MCP server and CLI; with both installed, Windows starts the
+  installer's `aicb` first, so `dotnet tool update` updated a copy no MCP client ran.
+  Now one `aicb` per machine, and a desktop-app update brings the MCP server along. If
+  the tool is still running as an agent's MCP server, the installer asks you to close
+  the agent and retry.
+- **`aicb init` warns when `aicb` is installed more than once** and names the copy that
+  actually runs.
+- The installer's last page says that consoles, editors and agents that were already
+  open see the new `PATH` only after a restart.
+- Published builds report a plain version number (`0.5.464.32`) without a build commit
+  suffix.
+- Install guidance in README, Getting started and the `aicb-csharp-context` skill:
+  Windows with the desktop app → installer only; everywhere else → the .NET tool.
+
 ## 0.5.464.31 — first public release
 
 The first release published outside the author's own machine.

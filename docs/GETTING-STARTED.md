@@ -24,6 +24,13 @@ Windows one download covers both.
 
 ## 3. Install
 
+**Pick one per machine.** On Windows with the desktop app, install only the desktop
+app: it contains the MCP server and CLI too, and one update brings both to the same
+version. Everywhere else (Linux, macOS, CI, no desktop app), install only the .NET
+tool. With both installed, the installer's `aicb` is the one that runs and
+`dotnet tool update` updates a copy nothing starts - so the installer offers to remove
+an existing .NET tool (preselected), and `aicb init` warns when it finds two.
+
 ### The .NET tool (MCP server + CLI)
 
 ```sh
@@ -45,7 +52,8 @@ From the [latest release](https://github.com/gregordadera/AICB/releases/latest):
 
 - **`AIContextBuilder-Setup-<version>.exe`** — installer. Needs administrator rights.
   The option to put `aicb` on `PATH` is preselected; keep it if you want to use the
-  bundled CLI as your MCP server.
+  bundled CLI as your MCP server. Consoles, editors and agents that were already open
+  see the new `PATH` only after a restart.
 - **`AIContextBuilder-<version>-win-x64.zip`** — portable. Unzip anywhere, no
   administrator rights: `gui\aicb-ui.exe` is the desktop app, `cli\aicb.exe` the CLI.
   Uninstall = delete the folder.

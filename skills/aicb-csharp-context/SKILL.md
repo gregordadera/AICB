@@ -27,8 +27,10 @@ nuget.org:
 dotnet tool install -g AIContextBuilder
 ```
 
-`dotnet tool update -g AIContextBuilder` updates it. Documentation and releases:
-https://github.com/gregordadera/AICB
+`dotnet tool update -g AIContextBuilder` updates it. On Windows with the desktop
+app, install the Windows installer INSTEAD: it contains this same server, and one
+`aicb` per machine keeps updates from reaching a copy nothing runs. Documentation
+and releases: https://github.com/gregordadera/AICB
 
 Then register the server with your agent, e.g. `.mcp.json` in the project root:
 
