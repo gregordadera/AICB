@@ -8,7 +8,7 @@ released.
 
 The first release published outside the author's own machine.
 
-**MCP server and CLI** (.NET tool, `.nupkg` in the release assets, Windows / Linux / macOS)
+**MCP server and CLI** (`dotnet tool install -g AIContextBuilder` from nuget.org, Windows / Linux / macOS)
 
 - A Roslyn-backed MCP server (`aicb mcp`, stdio) that answers the questions a coding
   agent has before it edits C#: callers and blast radius, implementations and

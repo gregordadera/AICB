@@ -6,10 +6,9 @@ same engine as an **MCP server** so coding agents (Claude Code, Cursor, Cline, �
 can navigate your code *semantically* instead of by text search.
 
 > **Status:** free for individuals and for organizations below the EULA
-> thresholds — see [License](#license). Everything — the Windows desktop app and
-> the MCP server / CLI — downloads from
-> [GitHub Releases](https://github.com/gregordadera/AICB/releases); a nuget.org
-> listing of the MCP server follows. Closed source — the public repository
+> thresholds — see [License](#license). The MCP server and CLI install from
+> nuget.org; the Windows desktop app downloads from
+> [GitHub Releases](https://github.com/gregordadera/AICB/releases). Closed source — the public repository
 > [`gregordadera/AICB`](https://github.com/gregordadera/AICB) carries the documentation, the licence and the
 > releases.
 
@@ -41,21 +40,13 @@ Every tool also accepts the `.sln` path directly as its `session_id`
 A .NET global tool. It needs the **.NET 8 SDK**, which is also what analyzing a
 solution needs.
 
-Download `AIContextBuilder.<version>.nupkg` from the
-[latest release](https://github.com/gregordadera/AICB/releases/latest) into a folder
-of its own, then install from that folder:
-
 ```sh
-dotnet tool install -g AIContextBuilder --add-source ./folder-with-the-nupkg
+dotnet tool install -g AIContextBuilder
 aicb --version
 ```
 
-An update works the same way with `dotnet tool update`. Once the package is on
-nuget.org, `dotnet tool install -g AIContextBuilder` will do without the download.
-The MCP server is not a separate program: `aicb mcp` is a verb of this same command.
-
-On Windows you can skip the .NET tool entirely: the desktop download below contains
-the same CLI as `cli\aicb.exe`.
+`dotnet tool update -g AIContextBuilder` updates it later. The MCP server is not a
+separate program: `aicb mcp` is a verb of this same command.
 
 ### Desktop app — Windows
 

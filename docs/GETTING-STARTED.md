@@ -7,7 +7,7 @@ grepping — in about five minutes. Detailed German documentation (PDF) follows.
 
 | You want … | Install | Runs on |
 |---|---|---|
-| your coding agent (Claude Code, Codex, Cursor, …) to understand your C# code | the `aicb` .NET tool (`.nupkg` from [GitHub Releases](https://github.com/gregordadera/AICB/releases)) | Windows, Linux, macOS |
+| your coding agent (Claude Code, Codex, Cursor, …) to understand your C# code | the `aicb` .NET tool from [nuget.org](https://www.nuget.org/packages/AIContextBuilder) | Windows, Linux, macOS |
 | to decide by hand what a model gets to see, and look at the result | the desktop app from [GitHub Releases](https://github.com/gregordadera/AICB/releases) | Windows |
 
 Both share one analysis engine. The desktop download also contains the CLI, so on
@@ -26,18 +26,18 @@ Windows one download covers both.
 
 ### The .NET tool (MCP server + CLI)
 
-Download `AIContextBuilder.<version>.nupkg` from the
-[latest release](https://github.com/gregordadera/AICB/releases/latest) into an
-otherwise empty folder, then:
-
 ```sh
-dotnet tool install -g AIContextBuilder --add-source ./folder-with-the-nupkg
+dotnet tool install -g AIContextBuilder
 aicb --version
 ```
 
-Update later the same way with `dotnet tool update -g AIContextBuilder --add-source …`.
-A nuget.org listing follows; from then on the plain `dotnet tool install -g
-AIContextBuilder` works without a download.
+Update later with `dotnet tool update -g AIContextBuilder`. The package page is
+[nuget.org/packages/AIContextBuilder](https://www.nuget.org/packages/AIContextBuilder).
+
+Without access to nuget.org (an offline or locked-down machine), the same package is
+attached to every [release](https://github.com/gregordadera/AICB/releases/latest):
+put the `.nupkg` into an otherwise empty folder and add
+`--add-source ./that-folder` to the install command.
 
 ### The desktop app (Windows)
 
