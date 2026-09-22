@@ -1,6 +1,6 @@
 # AIContextBuilder (`aicb`)
 
-[![M8ven Score](https://m8ven.ai/badge/mcp/gregordadera/aicb)](https://m8ven.ai/mcp/gregordadera/aicb)
+[![M8ven Score](https://m8ven.ai/badge/mcp/gregordadera-aicb-zb5d9e?v=677e2e58f84eb0a4e92f2063b588e004)](https://m8ven.ai/mcp/gregordadera-aicb-zb5d9e)
 
 **Roslyn-based .NET → dense, LLM-optimized Markdown context.** `aicb` turns a
 C#/.NET solution into structured Markdown built for AI models, and exposes the
