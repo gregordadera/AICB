@@ -1,5 +1,7 @@
 # AIContextBuilder (`aicb`)
 
+[![M8ven Score](https://m8ven.ai/badge/mcp/gregordadera/aicb)](https://m8ven.ai/mcp/gregordadera/aicb)
+
 **Roslyn-based .NET → dense, LLM-optimized Markdown context.** `aicb` turns a
 C#/.NET solution into structured Markdown built for AI models, and exposes the
 same engine as an **MCP server** so coding agents (Claude Code, Cursor, Cline, …)
