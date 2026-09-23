@@ -4,6 +4,23 @@ Versions follow `Major.Minor.Series.Build`. The build number rises by one for ev
 change that lands, so gaps between published versions are normal — not every build is
 released.
 
+## 0.5.464.36 — internal wiring, nothing you can see
+
+A plumbing release. No tool changes its answer, the CLI and the desktop app behave
+exactly as in 0.5.464.35, and there is no reason to update in a hurry.
+
+- **The MCP server now hands its insights service the queued-work store.** The server
+  builds that service by hand instead of letting the container fill it, and the hand-written
+  argument list had been leaving out one of the three optional stores. Nothing reported
+  anything wrong, because no MCP tool reads the queued-work axis yet — the omission would
+  only have surfaced the day one did, as an empty answer that reads like "nothing is
+  queued" rather than "not connected". The desktop app was never affected: it builds the
+  same service through the container, which had been filling the argument all along.
+- **One consequence worth stating:** in a setup where the MCP server is pointed at a
+  database, an insights run now performs one additional indexed read against it — the same
+  read the desktop app already does — and currently discards the result. Analysis still
+  runs entirely on your machine, and the MCP server still writes nothing.
+
 ## 0.5.464.35 — two answers about C# code that were quietly wrong
 
 Analysis-engine changes, so they reach the MCP server, the CLI and the desktop app alike.
