@@ -1,5 +1,10 @@
 # AIContextBuilder (`aicb`)
 
+[![NuGet Version](https://img.shields.io/nuget/v/AIContextBuilder)](https://www.nuget.org/packages/AIContextBuilder)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/AIContextBuilder)](https://www.nuget.org/packages/AIContextBuilder)
+[![MCP Registry](https://img.shields.io/badge/MCP%20Registry-listed-1584ad)](https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.gregordadera%2Faicb)
+[![License](https://img.shields.io/badge/license-custom%20EULA-lightgrey)](https://github.com/gregordadera/AICB/blob/main/EULA.md)
+
 [![M8ven Score](https://m8ven.ai/badge/mcp/gregordadera-aicb-zb5d9e?v=677e2e58f84eb0a4e92f2063b588e004)](https://m8ven.ai/mcp/gregordadera-aicb-zb5d9e)
 
 **Roslyn-based .NET → dense, LLM-optimized Markdown context.** `aicb` turns a
