@@ -263,11 +263,18 @@ documents on `dotnet/roslyn`, 0 % on nopCommerce and on mapperly).
 
 ## Documentation
 
-Full manuals (PDF, English, written against `0.5.464.32`):
+Current reference manuals (PDF, English, written against `0.5.464.36`):
 
-- [General](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-General.pdf) — installation, licence, CLI reference, the context document, analysis rules, troubleshooting
-- [MCP server](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-MCP-Server.pdf) — client setup, profiles, all 82 tools with their parameters
-- [Desktop app](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-Desktop-App.pdf) — every page, panel, dialog and setting of the Windows app
+- [General reference manual](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-General-Reference-V0.5.464.36.pdf) — installation, licence, CLI reference, the context document, analysis rules, troubleshooting
+- [MCP server reference manual](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-MCP-Server-Reference-V0.5.464.36.pdf) — client setup, profiles, all 82 tools with their parameters
+- [Desktop app reference manual](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-Desktop-App-Reference-V0.5.464.36.pdf) — every page, panel, dialog and setting of the Windows app
+
+Introductory reading (PDF, English, previous `0.5.464.32` editions retained at
+their established URLs):
+
+- [General](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-General.pdf)
+- [MCP server](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-MCP-Server.pdf)
+- [Desktop app](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-Desktop-App.pdf)
 
 Shorter guides: [`docs/GETTING-STARTED.md`](https://github.com/gregordadera/AICB/blob/main/docs/GETTING-STARTED.md), [`docs/TOOLS.md`](https://github.com/gregordadera/AICB/blob/main/docs/TOOLS.md),
 [`docs/LICENSING.md`](https://github.com/gregordadera/AICB/blob/main/docs/LICENSING.md).
