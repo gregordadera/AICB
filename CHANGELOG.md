@@ -4,6 +4,31 @@ Versions follow `Major.Minor.Series.Build`. The build number rises by one for ev
 change that lands, so gaps between published versions are normal — not every build is
 released.
 
+## 0.5.464.35 — two answers about C# code that were quietly wrong
+
+Analysis-engine changes, so they reach the MCP server, the CLI and the desktop app alike.
+
+- **`resolve_injection` discloses optional constructor dependencies.** A constructor
+  parameter with a default (`IFoo? foo = null`) that nothing in the registration set fills
+  used to fall between two answers — the tool listed what was registered, never whether it
+  arrived. The answer now carries an `optionalDependencies` axis naming every such consumer,
+  with a verdict of `yes`, `no` or `unknown` per construction. The verdict follows **who
+  selects the constructor**: the container when the consumer is registered by type, the
+  argument list when a factory lambda or a hand-built instance constructs it. Where the
+  analyzer cannot see how the consumer is built — construction inside a helper method,
+  `ActivatorUtilities`, several constructors to choose between, two types of the same short
+  name — it answers `unknown` with a reason rather than a plausible guess. Answers for
+  services with no optional consumer are byte-identical to before.
+- **A static constructor no longer shares its caller entry with the parameterless one.**
+  `static C()` and `C()` were registered under one key, so `find_usages` merged the callers
+  of the two bodies and could not tell which one called what. The static constructor now
+  keys as `C.static C()`, in `find_usages`, `call_graph`, `impact_of_change` and the
+  exported Markdown.
+- **Saved snapshots:** the payload format moves to 56, so a snapshot written by an older
+  version is re-analyzed instead of loaded. Nothing is lost; the first analysis after the
+  update takes its usual time.
+- The desktop app is otherwise unchanged since 0.5.464.32.
+
 ## 0.5.464.33 — manuals linked from the package page
 
 - Full manuals as PDF (General, MCP server, Desktop app) in
