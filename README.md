@@ -44,7 +44,10 @@ Abridged output from the bundled `ColorMixer.SelectionLab` sample:
 }
 ```
 
-[![A coding agent uses the AICB impact_of_change MCP tool and summarizes the result](https://raw.githubusercontent.com/gregordadera/AICB/main/docs/assets/aicb-mcp-usage.png)](https://github.com/gregordadera/AICB/blob/main/docs/GETTING-STARTED.md)
+The desktop app's **MCP Usage** page records calls locally and separates guided
+refusals from suspected defects:
+
+[![AICB MCP Usage statistics showing calls, sessions, latency and the most-used tools](https://raw.githubusercontent.com/gregordadera/AICB/main/docs/assets/aicb-mcp-usage.png)](https://www.dadera.de/en/aicb-mcp.html)
 
 That answer comes from the Roslyn symbol graph, not a substring search. AICB
 distinguishes overloads, follows interface and override relationships, understands
