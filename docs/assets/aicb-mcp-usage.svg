@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="820" viewBox="0 0 1440 820" role="img" aria-labelledby="title description">
+  <title id="title">AICB MCP usage example</title>
+  <desc id="description">A coding agent asks what could be affected by changing ColorMixerService, calls the AICB impact_of_change MCP tool, and summarizes the Roslyn-based result.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1220"/>
+      <stop offset="1" stop-color="#111c33"/>
+    </linearGradient>
+    <linearGradient id="tool" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#12345a"/>
+      <stop offset="1" stop-color="#102b49"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="10" stdDeviation="16" flood-color="#020617" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <rect width="1440" height="820" rx="26" fill="url(#background)"/>
+  <rect x="1" y="1" width="1438" height="818" rx="25" fill="none" stroke="#263756" stroke-width="2"/>
+
+  <circle cx="42" cy="38" r="7" fill="#fb7185"/>
+  <circle cx="66" cy="38" r="7" fill="#fbbf24"/>
+  <circle cx="90" cy="38" r="7" fill="#4ade80"/>
+  <text x="720" y="45" text-anchor="middle" fill="#94a3b8" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18" font-weight="600">Coding agent · MCP session</text>
+  <rect x="1190" y="21" width="204" height="34" rx="17" fill="#0f2d29" stroke="#1c6657"/>
+  <circle cx="1213" cy="38" r="6" fill="#34d399"/>
+  <text x="1230" y="44" fill="#a7f3d0" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16" font-weight="600">aicb connected</text>
+  <line x1="0" y1="74" x2="1440" y2="74" stroke="#263756"/>
+
+  <g filter="url(#shadow)">
+    <circle cx="76" cy="127" r="25" fill="#334155"/>
+    <text x="76" y="134" text-anchor="middle" fill="#e2e8f0" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="20" font-weight="700">U</text>
+    <rect x="120" y="98" width="1190" height="86" rx="18" fill="#172238" stroke="#31415f"/>
+    <text x="148" y="128" fill="#94a3b8" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="1.4">YOU</text>
+    <text x="148" y="159" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="22">What could be affected if I change <tspan fill="#7dd3fc" font-family="Cascadia Code, Consolas, monospace">ColorMixerService</tspan>? Use AICB.</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="120" y="216" width="1190" height="350" rx="18" fill="url(#tool)" stroke="#256b9a" stroke-width="2"/>
+    <rect x="146" y="240" width="52" height="52" rx="13" fill="#0ea5e9"/>
+    <path d="M160 275l12-22 12 22h-7l-5-9-5 9z" fill="#f8fafc"/>
+    <text x="216" y="260" fill="#bae6fd" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="1.4">AICB MCP TOOL</text>
+    <text x="216" y="286" fill="#f8fafc" font-family="Cascadia Code, Consolas, monospace" font-size="23" font-weight="700">impact_of_change</text>
+    <rect x="1118" y="246" width="162" height="34" rx="17" fill="#0b2239" stroke="#2879aa"/>
+    <circle cx="1140" cy="263" r="6" fill="#38bdf8"/>
+    <text x="1156" y="269" fill="#bae6fd" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="15" font-weight="600">Roslyn graph</text>
+
+    <line x1="146" y1="312" x2="1284" y2="312" stroke="#2b5375"/>
+    <text x="150" y="346" fill="#7dd3fc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="1.1">INPUT</text>
+    <text x="150" y="378" fill="#94a3b8" font-family="Cascadia Code, Consolas, monospace" font-size="17">symbol</text>
+    <text x="262" y="378" fill="#f8fafc" font-family="Cascadia Code, Consolas, monospace" font-size="17">ColorMixerService</text>
+    <text x="150" y="407" fill="#94a3b8" font-family="Cascadia Code, Consolas, monospace" font-size="17">solution</text>
+    <text x="262" y="407" fill="#f8fafc" font-family="Cascadia Code, Consolas, monospace" font-size="17">C:\repo\ColorMixer.SelectionLab.sln</text>
+
+    <text x="758" y="346" fill="#7dd3fc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="1.1">RESULT</text>
+    <rect x="758" y="364" width="160" height="72" rx="12" fill="#0b2239" stroke="#2c6083"/>
+    <text x="778" y="390" fill="#94a3b8" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="14">Direct</text>
+    <text x="778" y="420" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="25" font-weight="700">1</text>
+    <rect x="932" y="364" width="160" height="72" rx="12" fill="#0b2239" stroke="#2c6083"/>
+    <text x="952" y="390" fill="#94a3b8" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="14">Transitive</text>
+    <text x="952" y="420" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="25" font-weight="700">2</text>
+    <rect x="1106" y="364" width="174" height="72" rx="12" fill="#102e2a" stroke="#287361"/>
+    <text x="1126" y="390" fill="#94a3b8" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="14">Risk</text>
+    <text x="1126" y="420" fill="#6ee7b7" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="23" font-weight="700">LOW</text>
+
+    <rect x="146" y="460" width="1138" height="76" rx="12" fill="#0b2239" stroke="#2c6083"/>
+    <text x="168" y="488" fill="#94a3b8" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="14">DIRECT IMPACT</text>
+    <text x="168" y="518" fill="#f8fafc" font-family="Cascadia Code, Consolas, monospace" font-size="18">DemoCompositionRoot</text>
+    <text x="1025" y="508" fill="#bae6fd" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16" font-weight="600">2 production impacts</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <circle cx="76" cy="624" r="25" fill="#075985"/>
+    <path d="M64 624h24M76 612v24" stroke="#e0f2fe" stroke-width="3" stroke-linecap="round"/>
+    <rect x="120" y="596" width="1190" height="148" rx="18" fill="#172238" stroke="#31415f"/>
+    <text x="148" y="627" fill="#7dd3fc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="1.4">AGENT</text>
+    <text x="148" y="661" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="21">The change has a contained blast radius. <tspan fill="#7dd3fc" font-family="Cascadia Code, Consolas, monospace">DemoCompositionRoot</tspan> is directly affected.</text>
+    <text x="148" y="696" fill="#cbd5e1" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="20">Review the composition wiring and covering tests before editing the service.</text>
+    <rect x="148" y="713" width="260" height="4" rx="2" fill="#0ea5e9"/>
+  </g>
+
+  <text x="720" y="786" text-anchor="middle" fill="#64748b" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="15">Semantic impact analysis · local execution · no source upload</text>
+</svg>

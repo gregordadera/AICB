@@ -44,6 +44,8 @@ Abridged output from the bundled `ColorMixer.SelectionLab` sample:
 }
 ```
 
+[![A coding agent uses the AICB impact_of_change MCP tool and summarizes the result](https://raw.githubusercontent.com/gregordadera/AICB/main/docs/assets/aicb-mcp-usage.png)](https://github.com/gregordadera/AICB/blob/main/docs/GETTING-STARTED.md)
+
 That answer comes from the Roslyn symbol graph, not a substring search. AICB
 distinguishes overloads, follows interface and override relationships, understands
 partial types and records DI construction paths.
