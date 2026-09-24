@@ -1,7 +1,7 @@
 # Getting started
 
 This page takes you from nothing to a coding agent that asks `aicb` instead of
-grepping — in about five minutes. Detailed German documentation (PDF) follows.
+grepping — in about five minutes. The full reference manuals are in English.
 
 ## 1. Pick your form
 
@@ -177,4 +177,6 @@ map of all tools. A generated reference of the default tool set is in
 
 Still stuck? Open an [issue](https://github.com/gregordadera/AICB/issues) with
 `aicb --version`, the `server_info` answer and — for the desktop app —
-`%APPDATA%\AIContextBuilder\aicb.log`. Never attach your source code.
+`%APPDATA%\AIContextBuilder\aicb.log`. If GitHub does not offer a **New issue**
+button, use [Discussions](https://github.com/gregordadera/AICB/discussions).
+Never attach your source code.

@@ -1,9 +1,10 @@
 # Tool reference
 
 Generated from the `tools/list` answer of `aicb 0.5.464.31` with the default
-profile - the **54 tools** an agent sees after `aicb init`. Further tools are one profile
-switch away (`aicb mcp --mcp-profile mcp-profile/full`); `list_skills` shows the complete map,
-and the `docs` tool is the server's built-in manual.
+profile - the **54 tools** an agent sees after `aicb init`. The default-profile
+surface is unchanged through `0.5.464.36`. Further tools are one profile switch
+away (`aicb mcp --mcp-profile mcp-profile/full`); `list_skills` shows the complete
+map, and the `docs` tool is the server's built-in manual.
 
 Every tool that takes a `sessionId` also accepts the absolute path of a `.sln`, `.slnx` or
 `.slnf` there and analyzes it on first use.

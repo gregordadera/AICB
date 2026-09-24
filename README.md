@@ -1,127 +1,123 @@
 # AIContextBuilder (`aicb`)
 
+<!-- mcp-name: io.github.gregordadera/aicb -->
+
 [![NuGet Version](https://img.shields.io/nuget/v/AIContextBuilder)](https://www.nuget.org/packages/AIContextBuilder)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/AIContextBuilder)](https://www.nuget.org/packages/AIContextBuilder)
 [![MCP Registry](https://img.shields.io/badge/MCP%20Registry-listed-1584ad)](https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.gregordadera%2Faicb)
 [![License](https://img.shields.io/badge/license-custom%20EULA-lightgrey)](https://github.com/gregordadera/AICB/blob/main/EULA.md)
-
 [![M8ven Score](https://m8ven.ai/badge/mcp/gregordadera-aicb-zb5d9e?v=677e2e58f84eb0a4e92f2063b588e004)](https://m8ven.ai/mcp/gregordadera-aicb-zb5d9e)
 
-**Roslyn-based .NET → dense, LLM-optimized Markdown context.** `aicb` turns a
-C#/.NET solution into structured Markdown built for AI models, and exposes the
-same engine as an **MCP server** so coding agents (Claude Code, Cursor, Cline, …)
-can navigate your code *semantically* instead of by text search.
+**Give coding agents a Roslyn-accurate map of your C#/.NET solution.** `aicb`
+answers questions about callers, implementations, dependency injection, tests,
+side effects and change impact, then packs the relevant code into compact
+Markdown for an LLM. It runs locally as an MCP server and CLI; a Windows desktop
+app adds visual context selection, analysis and editing.
 
-> **Status:** free for individuals and for organizations below the EULA
-> thresholds — see [License](#license). The MCP server and CLI install from
-> nuget.org; the Windows desktop app downloads from
-> [GitHub Releases](https://github.com/gregordadera/AICB/releases). Closed source — the public repository
-> [`gregordadera/AICB`](https://github.com/gregordadera/AICB) carries the documentation, the licence and the
-> releases.
+> The software is closed source. This public repository contains its
+> documentation, licence and releases. It is free for individuals, education and
+> organizations below the [licence thresholds](#licence-at-a-glance).
 
-## Why
+## See it answer a code question
 
-`grep` finds substrings. `aicb` understands the **Roslyn symbol graph** —
-overloads, partial types, interface dispatch, DI registration — and answers the
-questions an agent actually has *before* it edits:
+Ask your coding agent:
 
-- **Who calls / uses this? What's the blast radius?** — `find_usages`,
-  `impact_of_change` (transitive fan-in, including consumers a compile won't catch).
-- **Where is this implemented / overridden?** — `find_implementations`,
-  `find_overrides`, `get_type_hierarchy`.
-- **What grep can't see** — `find_by_side_effects`, `find_dead_code`,
-  `detect_circular_dependencies`, `resolve_injection`, `calls_external`.
-- **Pack just enough context for a task** — `get_context`, `pack_for_task`,
-  `prepare_task` (edit-ready: covering tests + siblings), `explain_symbol`,
-  `export_markdown`.
+> What could be affected if I change `ColorMixerService`? Use AICB.
 
-Every tool also accepts the `.sln` path directly as its `session_id`
-(**self-init**) — no separate analyze step needed.
+Or call the same tool from a terminal:
+
+```sh
+aicb call impact_of_change --sln C:/repo/App.sln --arg symbol=ColorMixerService
+```
+
+Abridged output from the bundled `ColorMixer.SelectionLab` sample:
+
+```json
+{
+  "symbol": "ColorMixerService",
+  "resolvedKind": "type",
+  "directCount": 1,
+  "transitiveCount": 2,
+  "risk": "low",
+  "productionImpactCount": 2,
+  "directImpact": { "items": ["DemoCompositionRoot"] }
+}
+```
+
+That answer comes from the Roslyn symbol graph, not a substring search. AICB
+distinguishes overloads, follows interface and override relationships, understands
+partial types and records DI construction paths.
+
+[![AIContextBuilder desktop app with a loaded solution](https://www.dadera.de/img/aicb-main-light.png)](https://www.dadera.de/en/aicb-gui.html)
+
+## Where it helps
+
+| Question | Tool |
+|---|---|
+| Who calls or uses this? | `find_usages` |
+| What is the blast radius of a change? | `impact_of_change` |
+| Where is this interface implemented or overridden? | `find_implementations`, `find_overrides` |
+| Which tests exercise this symbol? | `find_tests_for` |
+| What gets injected here? | `resolve_injection` |
+| Which code has side effects or calls an external API? | `find_by_side_effects`, `calls_external` |
+| What context does an agent need for this task? | `explain_symbol`, `prepare_task`, `pack_for_task` |
+
+AICB is most useful for non-trivial C#/.NET solutions and semantic questions that
+plain text search cannot answer reliably. It is not a general-purpose code search
+tool and does not analyze non-.NET projects. The first question opens and analyzes
+the solution, which can take seconds to minutes; later questions reuse the warm
+session.
 
 ## Install
 
-`aicb` comes in two forms that share one analysis engine. **Install one of them per
-machine:**
+Install **one** form per machine:
 
-- **Windows, and you want the desktop app:** the installer. It contains the MCP server
-  and CLI as well, so one update brings both to the same version. If the .NET tool is
-  already installed, the installer offers to remove it (on by default).
-- **Everything else** (Linux, macOS, CI, or no desktop app): the .NET tool.
+| You want | Install | Platform |
+|---|---|---|
+| MCP server and CLI | [.NET global tool](https://www.nuget.org/packages/AIContextBuilder) | Windows, Linux, macOS |
+| Desktop app plus the same MCP server and CLI | [Windows installer or portable ZIP](https://github.com/gregordadera/AICB/releases/latest) | Windows |
 
-Both put an `aicb` command on `PATH`. With both installed, the installer's copy is the
-one that runs, and `dotnet tool update` would update a copy nothing starts; `aicb init`
-warns when it finds more than one.
-
-### MCP server and CLI — Windows, Linux, macOS
-
-A .NET global tool. It needs the **.NET 8 SDK**, which is also what analyzing a
-solution needs.
+The .NET tool needs the **.NET 8 SDK**:
 
 ```sh
 dotnet tool install -g AIContextBuilder
 aicb --version
 ```
 
-`dotnet tool update -g AIContextBuilder` updates it later. The MCP server is not a
-separate program: `aicb mcp` is a verb of this same command.
+Update it later with `dotnet tool update -g AIContextBuilder`.
 
-### Desktop app — Windows
+The Windows downloads are self-contained, but analyzing a solution still needs
+MSBuild from a .NET SDK or Visual Studio. The installer is not code-signed yet, so
+Windows SmartScreen displays a warning; every release provides SHA-256 checksums.
 
-Download from [GitHub Releases](https://github.com/gregordadera/AICB/releases):
+## Connect a coding agent
 
-- `AIContextBuilder-Setup-<version>.exe` — installer (needs administrator rights;
-  puts the `aicb` command on `PATH` unless you untick it). Consoles, editors and agents
-  that were already open see the new `PATH` only after a restart.
-- `AIContextBuilder-<version>-win-x64.zip` — portable, no installation: `gui\aicb-ui.exe`
-  is the desktop app, `cli\aicb.exe` the same CLI/MCP server as above.
-
-Both are self-contained, so no .NET *runtime* is needed to start them — but opening a
-solution runs MSBuild, so the machine still needs a **.NET SDK or Visual Studio** to
-analyze anything. The installer is not code-signed yet: Windows SmartScreen shows
-"Windows protected your PC", and *More info → Run anyway* continues. Every release
-lists SHA-256 checksums for its files.
-
-## Use as an MCP server
-
-From your project directory:
+Run this from the project you want the agent to work on:
 
 ```sh
 aicb init
 ```
 
-That writes the pieces a client needs — the `.mcp.json` entry below and the
-[agent skill](#agent-skills) — and reports what it did per file. It never
-overwrites (`--force` if you want it to), so re-running is safe.
-
-**It also installs a blocking hook, and you should know that before it fires.**
-If the project shows a marker for an agent harness aicb knows (`.claude/`,
-`.codex/`, `.opencode/`), `init` writes the **symbol guard** into it and wires it
-up. The guard is not a hint: it **refuses** a C# symbol search — a grep or a file
-read aimed at a type or member name — and points at the aicb tool that answers it
-properly. That is what makes the tools get used rather than grepped past, and it
-is also the one thing in this install that changes how your agent behaves.
+It writes the MCP configuration and the `aicb-csharp-context` agent skill without
+overwriting existing files. If it detects Claude Code, Codex or OpenCode project
+configuration, it also installs a **symbol guard** that blocks C# symbol searches
+by grep and redirects the agent to the semantic tool. This intentionally changes
+agent behaviour. Opt out with:
 
 ```sh
-aicb init --hooks none        # install nothing of the sort
-aicb init --hooks claude-code # or codex / opencode / all — install it deliberately
+aicb init --hooks none
 ```
 
-To remove a guard that is already installed, delete the aicb entry from the
-harness's own configuration — `.claude/settings.json`, `.codex/hooks.json` or
-`opencode.json`. `--hooks none` governs what the *next* run writes; it does not
-undo an installation. `aicb init` prints both the path and this sentence whenever
-it installs one.
+Client-specific status:
 
-Two limits worth knowing if you are not on Claude Code. The agent skill is written
-to `.claude/skills/` and nowhere else — where OpenCode and Codex look for skills
-has never been measured here, and `init` does not guess, because a guessed path
-writes a file nothing loads. And OpenCode discovers MCP servers only through its
-own `opencode.json`, not through the shared `.mcp.json` — measured against a
-running client, not read off documentation — so an OpenCode user adds the aicb
-entry there by hand. `aicb init` names both gaps in its output rather than
-reporting a clean success over them.
+| Client | MCP setup | Skill and guard |
+|---|---|---|
+| Claude Code | `.mcp.json` written by `aicb init` | Skill and optional guard installed |
+| Codex | Add `aicb mcp` through the client's MCP configuration | Optional guard supported; skill location is not guessed |
+| OpenCode | Add `aicb mcp` to `opencode.json` | Optional guard supported; skill location is not guessed |
+| Cursor / Cline / other stdio clients | Add command `aicb` with argument `mcp` | Use the published skill if the client supports Agent Skills |
 
-To do it by hand instead: drop an `.mcp.json` in your project root.
+Manual `.mcp.json` configuration for clients that read it:
 
 ```json
 {
@@ -134,214 +130,94 @@ To do it by hand instead: drop an `.mcp.json` in your project root.
 }
 ```
 
-Then ask your agent something like *"find the callers of `OrderService.Submit`"* —
-it will reach for the semantic tools instead of grep.
+Verify the connection by asking the client to call `server_info`. Every analysis
+tool accepts an absolute `.sln`, `.slnx` or `.slnf` path as its session, so no
+separate analyze step is required. See the [five-minute guide](docs/GETTING-STARTED.md)
+for setup, first questions and troubleshooting.
 
-### Protocol compatibility
+## Tool sets and Agent Skills
 
-One binary serves **both** current MCP protocol revisions over stdio, from the
-same tool pool:
+| Set | Size | Purpose |
+|---|---:|---|
+| Default MCP profile | 54 tools | Curated semantic and structural tools for normal agent work |
+| Full analysis profile | 72 tools | Default set plus the measured long tail |
+| Complete server surface | 82 tools | Full profile plus opt-in infrastructure tools |
 
-| Revision | Entry point |
-|---|---|
-| `2026-07-28` | `server/discover` — stateless, every request carries its own metadata |
-| `2025-11-25` | `initialize` handshake |
+Start the full analysis profile with
+`aicb mcp --mcp-profile mcp-profile/full`. Set `AICB_MCP_TOOLS=all` to add
+the infrastructure tools. The generated [tool reference](docs/TOOLS.md) documents
+the default set; the [MCP reference manual](docs/manual/AICB-MCP-Server-Reference-V0.5.464.36.pdf)
+documents all 82 tools and their parameters.
 
-This matters because MCP has no fall-forward: a client that speaks only the older
-revision has no way to reach a server that speaks only the newer one. Serving both
-means the client picks whichever revision it knows, so `aicb` connects to harnesses
-that have already moved to `2026-07-28` and to those that have not.
+Three Agent Skills ship in [`skills/`](skills/):
 
-Both revisions are pinned by an integration test that drives the real server over
-raw stdio JSON-RPC (`McpDualEraProtocolTests`):
-per revision it asserts that the entry point answers, that `tools/list` is narrowed
-to the active profile, that a pooled tool dispatches, and that a tool *outside* the
-pool is refused.
+- `aicb-csharp-context` routes semantic C# questions to the right tool.
+- `aicb-code-review` checks a completed change for correctness.
+- `aicb-code-simplifier` looks for unnecessary complexity.
 
-Two limits worth stating plainly:
+The review pair is opt-in: `aicb init --skills=all`.
 
-- **stdio only.** There is no HTTP/SSE transport, so the HTTP-specific parts of the
-  newer revision (session headers, resumability, OAuth) do not apply here.
-- **Server instructions are delivered, not pushed.** On `2026-07-28` they travel in
-  the discover result, but whether a client ever re-discovers is the client's
-  decision — so after changing the active profile, restart the server to be sure the
-  agent sees the new instructions.
+## CLI at a glance
 
-### Agent Skills
-
-[`skills/aicb-csharp-context/`](https://github.com/gregordadera/AICB/blob/main/skills/aicb-csharp-context/SKILL.md) is an
-[Agent Skill](https://agentskills.io) that teaches an agent *when* to reach for
-these tools — the routing table, the pre-edit blast-radius gate, and when plain
-grep is still right. It uses only standard `SKILL.md` fields, so it works in any
-skills-compatible agent. `aicb init` writes it to `.claude/skills/aicb-csharp-context/`
-for you; copy or symlink that folder to `~/.claude/skills/` to have it in every
-project rather than one.
-
-It has to be copied there — the `dotnet tool` install cannot do it. A tool install
-unpacks the package into a `.store` directory beside the launcher, and no agent scans
-that for skills, so a `SKILL.md` shipped inside the nupkg would land on disk and never
-be found. That is what `aicb init` is for.
-
-Two further skills ship alongside it and are **opt-in**: `aicb init --skills=all` also
-writes [`aicb-code-review`](https://github.com/gregordadera/AICB/blob/main/skills/aicb-code-review/SKILL.md) and
-[`aicb-code-simplifier`](https://github.com/gregordadera/AICB/blob/main/skills/aicb-code-simplifier/SKILL.md), a post-change review pair
-— one for correctness, one for unnecessary complexity — that checks its own findings
-against aicb facts rather than guessing from the diff. They stay out of a default `init`
-because they are an opinion about how you work, not part of the tool.
-
-The `aicb-` prefix is not decoration. `code-review` and `code-simplifier` are common
-names: an agent may already have a built-in command or a personal skill under either,
-and a same-named skill loses silently — nothing reports the collision.
-
-
-By default `aicb mcp` exposes a **lean 54-tool pool** covering all nine task
-facets — the semantic/structural set that complements grep/Read, minus a
-long-tail of tools whose signal did not hold up. Those are still registered and
-one profile switch away: `--mcp-profile mcp-profile/full` serves the unnarrowed 72.
-Set `AICB_MCP_TOOLS=all` to add the opt-in infrastructure tools on top. With
-`--db-path` it is
-profile-aware (reads the per-solution exclusions / test / layer config and the
-active MCP profile from an `aicb` config DB), and `--mcp-profile <id>` pins which
-profile that is for this server process — process-local, it writes nothing back,
-so a second server or the GUI keeps its own. Pinning at start also keeps
-`tools/list` stable for the lifetime of the process, which is what the newer
-protocol revision asks for.
-
-## CLI
-
-```
-aicb init      Wire aicb into this project (.mcp.json + the agent skill + the symbol guard).
-aicb analyze   Run Roslyn analysis on a solution and emit context Markdown.
-aicb export    Re-render Markdown from an existing session DB (no Roslyn re-run).
-aicb import    Import a constellation JSON into a target DB.
-aicb list      List built-in + custom master entities (run-templates / detail-presets / model-profiles).
-aicb mcp       Start the MCP server (stdio JSON-RPC) for Claude Code / Cursor / Cline.
-aicb call      Invoke ONE MCP tool once and print its result — no server, no client needed.
-```
-
-`aicb call` is the shortcut worth knowing: it answers a single semantic question from a
-plain shell, and it reaches **every** tool — including the opt-in ones outside the
-default profile's pool:
-
-```sh
-aicb call find_usages --sln C:/repo/App.sln --arg symbol=OrderService
+```text
+aicb init      Connect a project to the MCP server and install the agent skill.
+aicb analyze   Analyze a solution and emit context Markdown.
+aicb export    Re-render Markdown from an existing session database.
+aicb import    Import a constellation JSON.
+aicb list      List built-in and custom profiles and presets.
+aicb mcp       Start the stdio MCP server.
+aicb call      Invoke one MCP tool without an MCP client.
 ```
 
 Run `aicb <command> --help` for options.
 
-## Per-solution configuration (optional)
+## Local by default
 
-`aicb` can tailor analysis per solution — namespace exclusions, a test-detection
-profile, and a layer-mapping profile. The MCP guided-setup tools
-(`solution_config_status` → `init_solution_config` → `apply_solution_config`)
-write this both to a config DB and to a git-tracked `<Solution>.aicb.json`
-sidecar next to the `.sln`, so the config travels with your repo. Omit `dbPath`
-to use the default config DB.
+- The CLI and MCP server have no outbound network capability and do not modify
+  the source code they analyze.
+- There is no telemetry, analytics, update check, account or licence server.
+- The desktop app sends context to an LLM only when you press **Send to API**;
+  the endpoint may be a local model. Its Details tab is also a real editor and
+  saves a file only when you explicitly use Save.
+- Opening a solution runs its MSBuild logic to resolve references. Analyze only
+  solutions you trust. AICB does not run third-party Roslyn analyzers or source
+  generators.
 
-One sidecar setting has no wizard and is written by hand — analysis scope:
+A small number of explicitly named tools can write configuration or an export;
+their tool descriptions state this. The complete threat model and private
+reporting route are in [`SECURITY.md`](SECURITY.md).
 
-```json
-{ "analyzePreferredTfmOnly": true }
-```
+## Licence at a glance
 
-A multi-targeted project (`<TargetFrameworks>net8.0;netstandard2.0</…>`) is
-loaded once per target framework, so every source file is analyzed N times. With
-this key set, `aicb` analyzes only the newest target framework's instance of each
-project. The markdown export drops from N copies of each project to one.
-
-The type and method **inventory** is unchanged — every symbol a query can name is
-still there. Two things do change, and both are pinned by tests: a fan-in edge whose
-only source is a non-preferred instance is lost, so `find_usages`, `impact_of_change`
-and `call_graph` can report a smaller blast radius; and transitive side-effect facts
-shift, because the narrower run sidesteps a separate index defect that let the
-alphabetically-last instance overwrite the preferred one. `find_dead_code` does not
-turn false-positive on this — it abstains when fan-in is unknown rather than claiming
-a symbol is dead.
-Default is off, and on a solution without multi-targeting the setting does
-nothing at all — the saving is entirely solution-specific (measured: 63 % of the
-documents on `dotnet/roslyn`, 0 % on nopCommerce and on mapperly).
-
-## Documentation
-
-Current reference manuals (PDF, English, written against `0.5.464.36`):
-
-- [General reference manual](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-General-Reference-V0.5.464.36.pdf) — installation, licence, CLI reference, the context document, analysis rules, troubleshooting
-- [MCP server reference manual](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-MCP-Server-Reference-V0.5.464.36.pdf) — client setup, profiles, all 82 tools with their parameters
-- [Desktop app reference manual](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-Desktop-App-Reference-V0.5.464.36.pdf) — every page, panel, dialog and setting of the Windows app
-
-Introductory reading (PDF, English, previous `0.5.464.32` editions retained at
-their established URLs):
-
-- [General](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-General.pdf)
-- [MCP server](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-MCP-Server.pdf)
-- [Desktop app](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-Desktop-App.pdf)
-
-Shorter guides: [`docs/GETTING-STARTED.md`](https://github.com/gregordadera/AICB/blob/main/docs/GETTING-STARTED.md), [`docs/TOOLS.md`](https://github.com/gregordadera/AICB/blob/main/docs/TOOLS.md),
-[`docs/LICENSING.md`](https://github.com/gregordadera/AICB/blob/main/docs/LICENSING.md).
-
-## Security
-
-**The MCP server never modifies the code it analyses.** Nothing any tool writes is
-anything Roslyn reads, so an answer is always about the tree you wrote. What it
-*does* write is named rather than implied: `apply_solution_config` persists a
-git-tracked `<Solution>.aicb.json` sidecar next to the `.sln` and returns its path,
-`install_agent_hooks` installs the symbol guard into your agent harness's own
-configuration on explicit request, and `export_markdown` writes the file you point
-`outputPath` at. Every tool that persists anything says so in its own `tools/list`
-description.
-
-**The desktop app is the deliberate exception.** Its Details tab is a real editor:
-a source file that loads cleanly becomes editable and can be written back with Save
-or `Ctrl+S`, keeping its original encoding and line endings. A file that is missing
-or fails to load stays read-only. The MCP server and the CLI cannot do this at all —
-the capability is not in those assemblies.
-
-**Nothing leaves your machine unless you send it.** The CLI and the MCP server have
-no outbound network capability whatsoever: the product's single `HttpClient` is
-registered in the desktop graph alone, so it is absent rather than switched off. The
-desktop app can send a rendered context to an LLM — that is what its "Send to API"
-button does, and the endpoint may be a local model — and it does so only on your
-action. There is no telemetry, no update check, no crash reporting and no analytics
-anywhere in the product.
-
-One caveat, unchanged: opening a solution runs its MSBuild build logic to resolve
-references — exactly like Visual Studio or `dotnet build` — so **only analyze
-solutions you trust**. `aicb` does **not** load or run your solution's third-party
-Roslyn analyzers or source generators (`get_diagnostics` returns compiler
-diagnostics only). Details and how to report a vulnerability:
-[`SECURITY.md`](https://github.com/gregordadera/AICB/blob/main/SECURITY.md).
-
-## License
-
-**Free to use** for:
+Use is free for:
 
 - private, hobby and educational use by natural persons,
-- accredited educational institutions, for teaching, learning and
+- accredited educational institutions for teaching, learning and
   non-commercial research,
-- organizations that reach **none** of these three thresholds: 100 employees,
+- organizations that reach **none** of these thresholds: 100 employees,
   EUR 10 million annual turnover, 21 developers.
 
-The thresholds measure **your** organization only — the size of the clients you
-work for does not matter, including on their premises.
+The thresholds apply to your organization, not to your clients. Reaching any one
+threshold requires a commercial licence; contact `aicb@dadera.de`. There is no
+technical licence enforcement. Redistribution, modification, repackaging and
+competing products are not permitted. See the [plain-language guide](docs/LICENSING.md),
+[`LICENSE.txt`](LICENSE.txt) and the full bilingual [`EULA.md`](EULA.md).
 
-Once your organization reaches one of them, a commercial licence is required
-before further use, and you have 90 days to arrange it; terms are agreed
-individually, so please get in touch. A
-[donation](https://github.com/sponsors/gregordadera) is welcome but separate — it
-does not replace a licence where one is required. The software contains no
-technical verification of any of this: no licence server, no activation token, no
-telemetry. Compliance is your own responsibility.
+## Documentation and support
 
-Redistribution, modification, repackaging, and competing products are not
-permitted. See [`LICENSE.txt`](https://github.com/gregordadera/AICB/blob/main/LICENSE.txt) for the summary and
-[`EULA.md`](https://github.com/gregordadera/AICB/blob/main/EULA.md) for the full bilingual EULA.
+- [Getting started](docs/GETTING-STARTED.md) — install, connect and ask the first question
+- [Tool reference](docs/TOOLS.md) — generated reference for the default MCP profile
+- [General reference manual](docs/manual/AICB-General-Reference-V0.5.464.36.pdf)
+- [MCP server reference manual](docs/manual/AICB-MCP-Server-Reference-V0.5.464.36.pdf)
+- [Desktop app reference manual](docs/manual/AICB-Desktop-App-Reference-V0.5.464.36.pdf)
+- [Changelog](CHANGELOG.md) and [latest release](https://github.com/gregordadera/AICB/releases/latest)
 
-## Support
-
-Questions, bugs and feature requests: [GitHub Issues](https://github.com/gregordadera/AICB/issues). Please
-include `aicb --version` and — for the MCP server — the output of the `server_info`
-tool. Security issues go the private route described in `SECURITY.md`, not into a
-public issue.
+Questions and feature requests are welcome in
+[GitHub Discussions](https://github.com/gregordadera/AICB/discussions). Report bugs
+through [GitHub Issues](https://github.com/gregordadera/AICB/issues); if GitHub does
+not offer a **New issue** button, use Discussions. Include `aicb --version` and,
+for MCP problems, the output of `server_info`. Report security issues privately as
+described in [`SECURITY.md`](SECURITY.md).
 
 "AIContextBuilder" and "AIContextBuilder for .NET" are unregistered trademarks of
 Gregor Dadera.
