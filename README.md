@@ -48,7 +48,7 @@ That answer comes from the Roslyn symbol graph, not a substring search. AICB
 distinguishes overloads, follows interface and override relationships, understands
 partial types and records DI construction paths.
 
-[![AIContextBuilder desktop app with a loaded solution](https://www.dadera.de/img/aicb-main-light.png)](https://www.dadera.de/en/aicb-gui.html)
+[![AIContextBuilder desktop app with a loaded solution](https://raw.githubusercontent.com/gregordadera/AICB/main/docs/assets/aicb-main-light.png)](https://www.dadera.de/en/aicb-gui.html)
 
 ## Where it helps
 
@@ -132,7 +132,7 @@ Manual `.mcp.json` configuration for clients that read it:
 
 Verify the connection by asking the client to call `server_info`. Every analysis
 tool accepts an absolute `.sln`, `.slnx` or `.slnf` path as its session, so no
-separate analyze step is required. See the [five-minute guide](docs/GETTING-STARTED.md)
+separate analyze step is required. See the [five-minute guide](https://github.com/gregordadera/AICB/blob/main/docs/GETTING-STARTED.md)
 for setup, first questions and troubleshooting.
 
 ## Tool sets and Agent Skills
@@ -145,11 +145,11 @@ for setup, first questions and troubleshooting.
 
 Start the full analysis profile with
 `aicb mcp --mcp-profile mcp-profile/full`. Set `AICB_MCP_TOOLS=all` to add
-the infrastructure tools. The generated [tool reference](docs/TOOLS.md) documents
-the default set; the [MCP reference manual](docs/manual/AICB-MCP-Server-Reference-V0.5.464.36.pdf)
+the infrastructure tools. The generated [tool reference](https://github.com/gregordadera/AICB/blob/main/docs/TOOLS.md) documents
+the default set; the [MCP reference manual (0.5.464.36)](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-MCP-Server-Reference-V0.5.464.36.pdf)
 documents all 82 tools and their parameters.
 
-Three Agent Skills ship in [`skills/`](skills/):
+Three Agent Skills ship in [`skills/`](https://github.com/gregordadera/AICB/tree/main/skills):
 
 - `aicb-csharp-context` routes semantic C# questions to the right tool.
 - `aicb-code-review` checks a completed change for correctness.
@@ -185,7 +185,7 @@ Run `aicb <command> --help` for options.
 
 A small number of explicitly named tools can write configuration or an export;
 their tool descriptions state this. The complete threat model and private
-reporting route are in [`SECURITY.md`](SECURITY.md).
+reporting route are in [`SECURITY.md`](https://github.com/gregordadera/AICB/blob/main/SECURITY.md).
 
 ## Licence at a glance
 
@@ -197,27 +197,28 @@ Use is free for:
 - organizations that reach **none** of these thresholds: 100 employees,
   EUR 10 million annual turnover, 21 developers.
 
-The thresholds apply to your organization, not to your clients. Reaching any one
-threshold requires a commercial licence; contact `aicb@dadera.de`. There is no
-technical licence enforcement. Redistribution, modification, repackaging and
-competing products are not permitted. See the [plain-language guide](docs/LICENSING.md),
-[`LICENSE.txt`](LICENSE.txt) and the full bilingual [`EULA.md`](EULA.md).
+The thresholds apply to your organization, not to your clients. After first
+reaching any one threshold, you have 90 days to agree a commercial licence; use
+remains free during that period. Contact `aicb@dadera.de`. There is no technical
+licence enforcement. Redistribution, modification, repackaging and competing
+products are not permitted. See the [plain-language guide](https://github.com/gregordadera/AICB/blob/main/docs/LICENSING.md),
+[`LICENSE.txt`](https://github.com/gregordadera/AICB/blob/main/LICENSE.txt) and the full bilingual [`EULA.md`](https://github.com/gregordadera/AICB/blob/main/EULA.md).
 
 ## Documentation and support
 
-- [Getting started](docs/GETTING-STARTED.md) — install, connect and ask the first question
-- [Tool reference](docs/TOOLS.md) — generated reference for the default MCP profile
-- [General reference manual](docs/manual/AICB-General-Reference-V0.5.464.36.pdf)
-- [MCP server reference manual](docs/manual/AICB-MCP-Server-Reference-V0.5.464.36.pdf)
-- [Desktop app reference manual](docs/manual/AICB-Desktop-App-Reference-V0.5.464.36.pdf)
-- [Changelog](CHANGELOG.md) and [latest release](https://github.com/gregordadera/AICB/releases/latest)
+- [Getting started](https://github.com/gregordadera/AICB/blob/main/docs/GETTING-STARTED.md) — install, connect and ask the first question
+- [Tool reference](https://github.com/gregordadera/AICB/blob/main/docs/TOOLS.md) — generated reference for the default MCP profile
+- [General reference manual (0.5.464.36)](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-General-Reference-V0.5.464.36.pdf)
+- [MCP server reference manual (0.5.464.36)](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-MCP-Server-Reference-V0.5.464.36.pdf)
+- [Desktop app reference manual (0.5.464.36)](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-Desktop-App-Reference-V0.5.464.36.pdf)
+- [Changelog](https://github.com/gregordadera/AICB/blob/main/CHANGELOG.md) and [latest release](https://github.com/gregordadera/AICB/releases/latest)
 
 Questions and feature requests are welcome in
 [GitHub Discussions](https://github.com/gregordadera/AICB/discussions). Report bugs
 through [GitHub Issues](https://github.com/gregordadera/AICB/issues); if GitHub does
 not offer a **New issue** button, use Discussions. Include `aicb --version` and,
 for MCP problems, the output of `server_info`. Report security issues privately as
-described in [`SECURITY.md`](SECURITY.md).
+described in [`SECURITY.md`](https://github.com/gregordadera/AICB/blob/main/SECURITY.md).
 
 "AIContextBuilder" and "AIContextBuilder for .NET" are unregistered trademarks of
 Gregor Dadera.
