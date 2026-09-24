@@ -6,7 +6,7 @@
 [![NuGet Downloads](https://img.shields.io/nuget/dt/AIContextBuilder)](https://www.nuget.org/packages/AIContextBuilder)
 [![MCP Registry](https://img.shields.io/badge/MCP%20Registry-listed-1584ad)](https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.gregordadera%2Faicb)
 [![License](https://img.shields.io/badge/license-custom%20EULA-lightgrey)](https://github.com/gregordadera/AICB/blob/main/EULA.md)
-[![M8ven Score](https://m8ven.ai/badge/mcp/gregordadera-aicb-zb5d9e?v=677e2e58f84eb0a4e92f2063b588e004)](https://m8ven.ai/mcp/gregordadera-aicb-zb5d9e)
+[![M8ven Verified](https://img.shields.io/badge/M8ven%20Verified-publisher%20verified-4c1)](https://m8ven.ai/mcp/gregordadera-aicb-zb5d9e)
 
 **Give coding agents a Roslyn-accurate map of your C#/.NET solution.** `aicb`
 answers questions about callers, implementations, dependency injection, tests,
