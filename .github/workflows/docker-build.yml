@@ -1,0 +1,76 @@
+# Builds the Dockerfile and checks that the resulting container actually serves MCP.
+#
+# Why this exists: the Dockerfile installs the PUBLISHED .NET tool from nuget.org rather
+# than building from source, and it deliberately does not pin a version. Nothing else in
+# this repository would notice if that stopped working.
+#
+# ⚠ A RED RUN IS NOT NECESSARILY YOUR COMMIT. Because the install is unpinned, this job
+# also fails when nuget.org is unreachable or when a freshly published package is broken.
+# That is intentional - it is the only automated smoke test the published package has -
+# but read the log before looking for a mistake in the Dockerfile.
+#
+# Deliberately NOT here: pushing the image anywhere. An image in a registry is a
+# distribution channel with its own upkeep, and a stale one is worse than none.
+
+name: Docker image
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "Dockerfile"
+      - ".github/workflows/docker-build.yml"
+  pull_request:
+    paths:
+      - "Dockerfile"
+      - ".github/workflows/docker-build.yml"
+  # For running it by hand after publishing a release, when the Dockerfile itself
+  # has not changed but the package it installs has.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build the image
+        run: docker build -t aicb:ci .
+
+      - name: The server starts and answers an MCP handshake
+        run: |
+          # The three lines a client sends before it can call anything. stdin is held
+          # open past the last one on purpose: the server shuts down when stdin closes,
+          # and a plain `cat file | docker run` closes it before the answers come back
+          # (measured locally - it produced an empty stdout and exit code 0, which is
+          # the failure mode this step exists to make impossible).
+          {
+            printf '%s\n' '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"ci","version":"1"}}}'
+            printf '%s\n' '{"jsonrpc":"2.0","method":"notifications/initialized"}'
+            printf '%s\n' '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}'
+            sleep 25
+          } | docker run --rm -i aicb:ci > answers.json 2> server.log || true
+          # `|| true` because the container's exit code on a closed stdin is not the
+          # signal - the answers are. The assertions below are what pass or fail this job.
+
+          echo "--- server log ---"
+          cat server.log || true
+          echo "--- bytes of stdout ---"
+          wc -c < answers.json
+
+          grep -q '"serverInfo"' answers.json \
+            || { echo "FAIL: no initialize response - the server did not start or did not reply"; exit 1; }
+
+          tools=$(grep -o '"name":"[a-z_]*"' answers.json | sort -u | wc -l)
+          echo "distinct tools advertised: $tools"
+          # A floor, not an exact count: the default pool is curated and its size changes
+          # between releases. Asserting the exact number would turn every curation wave red.
+          [ "$tools" -ge 20 ] \
+            || { echo "FAIL: tools/list advertised $tools tools, expected at least 20"; exit 1; }
+
+          echo "OK: the container serves MCP and advertises $tools tools."
