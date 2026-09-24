@@ -4,6 +4,46 @@ Versions follow `Major.Minor.Series.Build`. The build number rises by one for ev
 change that lands, so gaps between published versions are normal — not every build is
 released.
 
+## 0.5.464.40 — `resolve_injection` stops giving confident wrong answers
+
+Four builds (`.37` to `.40`) that all repair the same tool. Every one of them replaces an answer
+that looked definite with one that is either correct or openly says it does not know — which is
+the point: a `false` that means "nobody does this" is far more expensive than a "cannot tell".
+
+**Who is affected.** The MCP server and the `aicb` CLI. **The desktop app is unchanged** — it does
+not use this analyzer. Saved snapshots stay valid; there is no database change and no re-analysis.
+
+- **`consumedAsCollection` is answered for every query, not only for a conflicting one.** The field
+  says whether anything consumes a service as a set (`IEnumerable<T>` in a constructor,
+  `GetServices<T>()`). It used to be computed only where it could also downgrade a registration
+  conflict, and read `false` everywhere else — so a service registered once, or registered several
+  times through factories, always answered `false` no matter how many consumers took the whole set.
+  Measured on this project's own code, two services answered `false` while a constructor took each
+  of them as `IEnumerable<T>`.
+- **A factory registration that *returns* its object is now resolved.** `AddSingleton(sp => Foo.Build())`
+  and the block form `AddSingleton(sp => { ...; return Foo.Build(); })` used to leave the registration
+  with no type name at all — and in this single-argument form the produced type *is* the service, so
+  the whole registration answered to no name. `AddSingleton(sp => new Foo())` always worked; the
+  difference was only that one returns instead of constructing. A block body is read only when all of
+  its `return` statements agree, and a `return` inside a nested lambda or local function is correctly
+  ignored.
+- **A registration the scanner can see but cannot parse is now disclosed as such.** Before, such a
+  site was invisible, and the answer explained the resulting zero with *"Autofac, Castle Windsor and
+  Scrutor are out of scope"* — pointing away from the file that actually held the binding. The note
+  now separates *"a Microsoft-DI registration was seen here but its type could not be read"* from
+  *"no Microsoft-DI registration was found"*, and names the site.
+- **Optional and nullable collection parameters count.** `IEnumerable<IFoo>? foos = null` — a consumer
+  that tolerates an empty set — was not counted as consuming the collection, and neither was
+  `IEnumerable<IFoo?>`.
+- **Consumers declared in test projects no longer count by default.** This one changes an answer you
+  may have relied on: collection consumption now obeys the same `includeTests` filter the registration
+  list has always obeyed. Before, a test fixture taking `IEnumerable<T>` could mark a genuine
+  production conflict between two registrations as deliberate, hiding it. Pass `includeTests=true` to
+  get the old, solution-wide reading.
+
+If your client caches tool descriptions, reconnect it once — the text of `resolve_injection` changed
+along with its behaviour.
+
 ## 0.5.464.36 — internal wiring, nothing you can see
 
 A plumbing release. No tool changes its answer, the CLI and the desktop app behave
