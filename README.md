@@ -67,6 +67,11 @@ partial types and records DI construction paths.
 | Which code has side effects or calls an external API? | `find_by_side_effects`, `calls_external` |
 | What context does an agent need for this task? | `explain_symbol`, `prepare_task`, `pack_for_task` |
 
+The desktop app turns code-quality, security, design and architecture findings
+into an actionable review queue:
+
+[![AICB Insights page with prioritized code-quality, security, design and architecture findings](https://raw.githubusercontent.com/gregordadera/AICB/main/docs/assets/aicb-gui-insights.png)](https://www.dadera.de/en/aicb-gui.html)
+
 AICB is most useful for non-trivial C#/.NET solutions and semantic questions that
 plain text search cannot answer reliably. It is not a general-purpose code search
 tool and does not analyze non-.NET projects. The first question opens and analyzes
