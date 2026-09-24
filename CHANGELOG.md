@@ -4,6 +4,28 @@ Versions follow `Major.Minor.Series.Build`. The build number rises by one for ev
 change that lands, so gaps between published versions are normal — not every build is
 released.
 
+## 0.5.464.41 — `resolve_injection` says how visible a service is in constructors
+
+**Who is affected.** The MCP server and the `aicb` CLI. **The desktop app is unchanged.** Saved
+snapshots stay valid; no database change, no re-analysis.
+
+- **New field `constructorConsumerCount`**: how many distinct types take the queried service as a
+  plain constructor parameter. It is on every answer, and a zero is a result rather than a missing
+  field — until now a service half the solution injects and one nobody injects produced the same
+  answer, because only *optional* constructor parameters were ever reported.
+- **Read it as a description, not a verdict.** It counts constructor parameters and nothing else, so
+  a service obtained through `GetService<T>`, built inside a factory lambda, or reached by reflection
+  or XAML counts 0 while being thoroughly alive. The first live reading on our own code makes the
+  point better than any warning: `ICodeAnalyzer`, one of the most used services in the project,
+  reports **2** — because almost everything takes it as a factory delegate. For "is this used at
+  all", `find_usages` remains the tool.
+- An optional parameter counts here too, and such a consumer still appears on `optionalDependencies`;
+  collection consumption keeps its own field and is not counted twice. Consumers declared in test
+  projects follow the existing `includeTests` filter.
+
+If your client caches tool descriptions, reconnect it once — the text of `resolve_injection` changed
+along with its answer.
+
 ## 0.5.464.40 — `resolve_injection` stops giving confident wrong answers
 
 Four builds (`.37` to `.40`) that all repair the same tool. Every one of them replaces an answer
