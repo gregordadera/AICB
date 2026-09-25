@@ -28,18 +28,15 @@
 name: Validate package (macOS + Linux)
 
 on:
-  release:
-    types: [published]
   workflow_dispatch:
     inputs:
       version:
-        description: 'Package version to test, e.g. 0.5.464.44. Empty = whatever is newest on nuget.org.'
+        description: 'Published NuGet package version to test, e.g. 0.5.464.44.'
         type: string
-        required: false
-        default: ''
+        required: true
 
 concurrency:
-  group: validate-package-${{ github.event.release.tag_name || inputs.version || 'latest' }}
+  group: validate-package-${{ inputs.version }}
   cancel-in-progress: true
 
 jobs:
@@ -60,25 +57,21 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      # A release run tests exactly the version that was released; a manual run tests what you
-      # name, or the newest if you name nothing. Resolved in one place so the steps below do not
-      # each re-derive it.
+      # The publishing runbook stages a GitHub draft first, publishes to NuGet, then makes the
+      # GitHub release public. An automatic release-event run would be coupled to that timing for
+      # no benefit. The orchestrator dispatches this workflow only after the exact version is
+      # visible in the NuGet API and the public release exists.
       - name: Resolve the version under test
         id: v
         run: |
-          raw="${{ github.event.release.tag_name || inputs.version }}"
+          raw="${{ inputs.version }}"
           version="${raw#v}"
-          if [ -n "$version" ]; then
-            echo "arg=--version $version" >> "$GITHUB_OUTPUT"
-            echo "Testing AIContextBuilder $version"
-          else
-            echo "arg=" >> "$GITHUB_OUTPUT"
-            echo "Testing the newest AIContextBuilder on nuget.org"
-          fi
+          echo "arg=--version $version" >> "$GITHUB_OUTPUT"
+          echo "Testing AIContextBuilder $version"
 
-      # nuget.org indexes a freshly pushed package with a delay of minutes, and this workflow is
-      # triggered by the release that publishes it - so the first attempt legitimately fails.
-      # Retrying is the difference between a useful gate and one that is red on every release.
+      # nuget.org can still take a few minutes to serve a version consistently across endpoints,
+      # even after the flat-container index exposes it. Retrying keeps that propagation delay from
+      # looking like a product defect.
       - name: Install the published tool (retries while nuget indexes)
         run: |
           for attempt in 1 2 3 4 5 6; do
