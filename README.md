@@ -219,6 +219,68 @@ Configuration precedence is **explicit tool argument → local configuration dat
 configuration it was analyzed with; after editing the sidecar, start a new analysis
 instead of assuming `refresh_session` re-reads it.
 
+## From semantic engine to human-in-the-loop workspace
+
+The MCP server is currently AICB's most complete and operationally mature
+integration surface. Its 82 registered tools cover semantic navigation, change
+impact, dependency injection, test discovery, architecture, quality, context
+packing, review and session management. Profiles expose a curated 54-tool default
+or a 72-tool full analysis set, while sessions, staleness signals and bounded
+responses make the surface practical for coding agents. These numbers describe
+the available product surface; they are not a published benchmark of agent outcome
+quality.
+
+The Windows app complements that agent-facing surface with a visual workspace for
+people: solution navigation, manual context selection, detail and token controls,
+AI-Builder-MD preview and export, snapshots, Insights, reusable configuration and
+manual LLM runs.
+
+### Quality and solution-specific analysis profiles
+
+A **Quality Profile** controls which insight producers run and the thresholds they
+use, such as method length, cyclomatic complexity and class size. It does not by
+itself define finding severity or the CLI quality gate.
+
+[![AICB Quality Profiles editor with producer switches and thresholds](https://raw.githubusercontent.com/gregordadera/AICB/main/docs/manual/general/img/gui-settings-quality-profiles.png)](https://github.com/gregordadera/AICB/blob/main/docs/manual/general/08-insights-the-code-quality-catalog.md#85-quality-profiles)
+
+Each solution also has three independent analysis axes:
+
+| Axis | Question it answers | What it controls |
+|---|---|---|
+| **Layer Profile** | Where does this code belong architecturally? | Namespace-pattern-to-layer mappings and whether violations are advisory or strict |
+| **Exclude Namespaces** | What should stay outside the analysis? | Named namespace patterns skipped by the analyzer |
+| **Test Profile** | What counts as test code? | Test-project naming rules and method attributes that identify test cases |
+
+The desktop app presents these three pickers side by side for the selected
+solution. They can be persisted with the solution in `<Solution>.aicb.json`, so
+the CLI and MCP server apply the same architecture, scope and test-detection rules
+headlessly. See [profiles and solution configuration](https://github.com/gregordadera/AICB/blob/main/docs/manual/general/07-profiles-master-data-and-solution-configuration.md).
+
+### Context templates and run templates
+
+The two template types have different responsibilities:
+
+| Template type | Purpose |
+|---|---|
+| **Context Template** (`Templates`) | Defines what goes into an export: prompt, Markdown profile, detail presets, expansion strategies, compression, quality settings and export switches |
+| **Run Template** (`Run Templates`) | Defines how a task is executed: run type, selected context template, model defaults and run-specific options |
+
+Detail Presets, Markdown Profiles, Expansion Strategies, Compression Rules,
+Pipeline Profiles and Quality Profiles are reusable building blocks referenced by
+a context template; a run template selects that context template.
+
+[![AICB Context Templates editor with prompt, detail-level and export configuration](https://raw.githubusercontent.com/gregordadera/AICB/main/docs/manual/general/img/gui-templates.png)](https://github.com/gregordadera/AICB/blob/main/docs/manual/desktop-app/09-mcp-profiles-mcp-usage-and-templates.md#93-templates)
+
+### Product direction, not a release commitment
+
+The direction for the desktop app is a **human-facing orchestration workspace**: a
+developer selects and constrains context, inspects intermediate results, approves
+decisions and controls what an AI model runs next. `Manual` is the released run
+type today. `Iteration` is intended to process selected nodes one by one, and
+`Preselection` to let a model narrow the relevant context before the main run;
+both are represented in the application but are not released yet. `Pipeline`
+currently exists only as a placeholder in the data model and executes nothing.
+
 ## Install
 
 Install **one** form per machine:
