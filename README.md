@@ -160,7 +160,7 @@ the default set; the [MCP server manual](https://github.com/gregordadera/AICB/bl
 documents all 82 tools and their parameters, and alongside them sessions and
 staleness, profiles, pools and facets, and what `aicb init` writes — twelve
 chapters in Markdown, readable in the browser and by an agent, and also
-published as a [PDF](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-MCP-Server.pdf).
+published as a [PDF](https://github.com/gregordadera/AICB/blob/main/docs/manual/mcp/AICB-MCP-Server.pdf).
 
 Four Agent Skills ship in [`skills/`](https://github.com/gregordadera/AICB/tree/main/skills):
 
@@ -223,8 +223,8 @@ products are not permitted. See the [plain-language guide](https://github.com/gr
 - [Getting started](https://github.com/gregordadera/AICB/blob/main/docs/GETTING-STARTED.md) — install, connect and ask the first question
 - [Tool reference](https://github.com/gregordadera/AICB/blob/main/docs/TOOLS.md) — generated reference for the default MCP profile
 - **[MCP server manual](https://github.com/gregordadera/AICB/blob/main/docs/manual/mcp/README.md)** — the full reference in twelve Markdown chapters: connecting a client, `aicb init`, sessions and staleness, profiles and facets, every tool, troubleshooting
-- [General reference manual](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-General.pdf) — PDF
-- [Desktop app reference manual](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-Desktop-App.pdf) — PDF
+- **[General reference manual](https://github.com/gregordadera/AICB/blob/main/docs/manual/general/README.md)** — the full reference in twelve Markdown chapters, with the printable PDF in the same folder
+- **[Desktop app reference manual](https://github.com/gregordadera/AICB/blob/main/docs/manual/desktop-app/README.md)** — the full reference in eleven Markdown chapters, with the printable PDF in the same folder
 - [Changelog](https://github.com/gregordadera/AICB/blob/main/CHANGELOG.md) and [latest release](https://github.com/gregordadera/AICB/releases/latest)
 
 Questions and feature requests are welcome in

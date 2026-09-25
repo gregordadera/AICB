@@ -2,7 +2,7 @@
 
 The complete reference, one file per chapter. Describes AICB V0.5.464.43.
 
-The same text as one printable document: [AICB-MCP-Server.pdf](../AICB-MCP-Server.pdf).
+The same text as one printable document: [AICB-MCP-Server.pdf](AICB-MCP-Server.pdf).
 
 ## Contents
 
