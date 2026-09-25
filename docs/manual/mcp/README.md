@@ -1,8 +1,8 @@
 # AICB – MCP Server
 
-The complete reference, one file per chapter. Describes AICB V0.5.464.40.
+The complete reference, one file per chapter. Describes AICB V0.5.464.43.
 
-A printable PDF of this manual is in the same folder: [AICB-MCP-Server-Reference-V0.5.464.36.pdf](../AICB-MCP-Server-Reference-V0.5.464.36.pdf). It was cut from an earlier state of this text (V0.5.464.40 here); where the two differ, these chapters are the newer.
+The same text as one printable document: [AICB-MCP-Server.pdf](../AICB-MCP-Server.pdf).
 
 ## Contents
 
