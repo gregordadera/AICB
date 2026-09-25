@@ -204,6 +204,21 @@ An agent can use AICB without memorizing the tool catalog:
 For several independent read-only questions, `batch` reuses one session and returns
 one bounded response. Use `measure` first when the likely response size matters.
 
+## Reproducible analysis, CI and review
+
+| Need | AICB workflow |
+|---|---|
+| Give every developer and agent the same solution rules | Commit `<Solution>.aicb.json` next to the solution. It carries layers, namespace exclusions, test detection, suppressions and analysis scope. Use `solution_config_status` → `init_solution_config` → `apply_solution_config`; `aicb init` does not create this file. |
+| Enforce a quality threshold in CI | Run `aicb analyze -s App.sln -o context.md --fail-on "critical>0 OR debt>120min"`. A failed gate returns exit code `6` and still writes the context document for diagnosis. |
+| Compare an in-place change with a baseline | Call `save_session` before the edit, then `refresh_session` and `compare_with_previous`; use `diff_public_contract` when the public API is the contract that matters. |
+| Review two live analyzed states | `semantic_diff` reports structural changes. `diff_review` adds blast radius, tests and newly introduced findings with a policy verdict. These two-session tools require the Full Select profile. |
+| Curate context visually | The Windows app adds a solution tree, manual context selection, detail and token controls, AI-Builder-MD preview/export, snapshots, Insights, LLM runs and a source editor. |
+
+Configuration precedence is **explicit tool argument → local configuration database
+→ committed `.aicb.json` → built-in heuristic**. A running session keeps the
+configuration it was analyzed with; after editing the sidecar, start a new analysis
+instead of assuming `refresh_session` re-reads it.
+
 ## Install
 
 Install **one** form per machine:

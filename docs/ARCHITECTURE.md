@@ -97,6 +97,66 @@ instead of starting a second analysis of the same session. The complete operatio
 contract is in
 [Sessions and staleness](manual/mcp/03-sessions-and-staleness.md).
 
+### How far does one edit invalidate reuse?
+
+There are two conservative gates. The outer refresh planner permits its incremental
+path only for an existing C# file whose text changed in place. A file addition or
+removal, or a changed non-C# file tracked by the snapshot (including XAML and
+project-shaping files), takes the full reload path because it can change project
+membership, generated code or compilation structure.
+
+The analyzer then decides which previous document results are safe to replay:
+
+- Every changed document is analyzed again, including each target-framework or
+  linked-file instance of the same path.
+- If only method bodies moved and the declaration surface stayed the same, unchanged
+  documents can be reused.
+- If declarations moved—including a public API change—the analyzer also invalidates
+  documents that name a changed identifier, reference a type declared in the changed
+  document, or belong to a transitive derived-type chain rooted there.
+- A changed global using, extern alias or assembly attribute disables document reuse
+  for that run because it can change binding throughout a project without an
+  ordinary reference edge.
+- A changed layer profile, namespace-exclusion provider, target-framework scope,
+  solution assembly set or project set also disables reuse.
+
+“Public” is therefore not a special invalidation switch. What matters is whether the
+declaration surface changed and which documents can bind differently as a result.
+The closures deliberately prefer re-analyzing too much over serving a plausible
+stale edge. This is document-granular reuse, not method-granular patching of an
+already rendered answer.
+
+## Which data structures hold and deduplicate the graph?
+
+The central run state uses separate indexes for separate fact families rather than
+one universal graph object. Method, property, field, event, enum-member and type
+fan-in; interface implementations; interface-method implementations; and resolved
+markup fan-in each have their own keyed index.
+
+Most fan-in indexes have the shape
+`Dictionary<canonical symbol key, HashSet<consumer key>>`. The dictionary gives
+direct lookup by symbol; the set makes insertion idempotent and avoids storing the
+same edge twice when several analysis paths discover it. Method keys include the
+containing type and parameter types, and explicit-interface implementations keep
+the interface identity in the key, so overloads and two distinct explicit
+implementations do not collapse onto one node.
+
+Raw facts that require a later binding step—XAML bindings and type references,
+Razor member/parameter references and top-level-statement type references—are kept
+in lists during the document walk. Post-processing resolves them against the built
+types and folds the result into the corresponding fan-in index. Transitive change
+impact and similar answers traverse these reusable indexes when requested rather
+than storing every possible path in advance.
+
+Document analysis can run in parallel. Short index insertions share one mutation
+lock, which avoids cross-index lock ordering and keeps a document's registrations
+consistent. For incremental reuse, each document additionally records a
+contribution log containing every index insertion it made. An unchanged document
+can replay that log into the new run state; the `HashSet`-backed indexes make the
+replay idempotent. Its cached record also carries the pristine analyzed file,
+declaration fingerprint, identifier hashes, declared types, base chain and referenced
+type hashes used by the invalidation rules above.
+
 ## Do the GUI and MCP server share the same RAM graph?
 
 No. They share the same analysis and rendering implementation, and by default they
