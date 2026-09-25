@@ -184,6 +184,26 @@ tool and does not analyze non-.NET projects. The first question opens and analyz
 the solution, which can take seconds to minutes; later questions reuse the warm
 session.
 
+## A safe agent workflow
+
+An agent can use AICB without memorizing the tool catalog:
+
+1. Call `server_info` to verify the connection and detect binary or configuration
+   drift. Use `list_skills` for the complete capability map or `docs()` for the
+   built-in operating manual.
+2. Start an edit task with `prepare_task` to collect the named symbols, relevant
+   context, covering tests and likely sibling implementations within one budget.
+3. Before changing a symbol that other code names, call `impact_of_change`; use
+   `find_tests_for` when the task bundle does not give enough test evidence.
+4. Make and save the change. Then call `refresh_session` **before**
+   `get_diagnostics`, so diagnostics compile the post-edit graph rather than the
+   previous session state.
+5. Finish with the repository's real build and test commands. `get_diagnostics`
+   reports Roslyn compiler diagnostics, not third-party analyzer or runtime results.
+
+For several independent read-only questions, `batch` reuses one session and returns
+one bounded response. Use `measure` first when the likely response size matters.
+
 ## Install
 
 Install **one** form per machine:
