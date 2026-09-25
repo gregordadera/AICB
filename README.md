@@ -247,14 +247,47 @@ Each solution also has three independent analysis axes:
 
 | Axis | Question it answers | What it controls |
 |---|---|---|
-| **Layer Profile** | Where does this code belong architecturally? | Namespace-pattern-to-layer mappings and whether violations are advisory or strict |
-| **Exclude Namespaces** | What should stay outside the analysis? | Named namespace patterns skipped by the analyzer |
-| **Test Profile** | What counts as test code? | Test-project naming rules and method attributes that identify test cases |
+| **Layer Profile** | Where does this code belong architecturally? | Ordered namespace-pattern-to-layer mappings for layers such as Domain, Application and Infrastructure. The first matching rule wins. The profile also determines whether a detected cross-layer violation is `Advisory` (warning) or `Strict` (critical). |
+| **Exclude Namespaces** | What should stay outside the analysis? | Named namespace patterns skipped by the analyzer, using `Contains`, `StartsWith`, `EndsWith` or `Exact` matching. This keeps framework, generated or vendor dependencies from dominating the semantic graph; shipped presets cover the BCL and SAP Business One. |
+| **Test Profile** | What counts as test code? | Project-name rules plus method-attribute markers. The built-in profiles recognize xUnit, NUnit and MSTest conventions, and production-focused tools can exclude the detected test code by default. |
 
 The desktop app presents these three pickers side by side for the selected
-solution. They can be persisted with the solution in `<Solution>.aicb.json`, so
-the CLI and MCP server apply the same architecture, scope and test-detection rules
-headlessly. See [profiles and solution configuration](https://github.com/gregordadera/AICB/blob/main/docs/manual/general/07-profiles-master-data-and-solution-configuration.md).
+solution. The Settings pages are the library editors; the Workspace pickers choose
+which library entry applies to this particular solution. A per-solution choice wins
+over the global default.
+
+[![AICB Workspace showing Layer Profile, Exclude Namespaces and Test Profile side by side](https://raw.githubusercontent.com/gregordadera/AICB/main/docs/manual/general/img/aicb-gui-profiles.png)](https://github.com/gregordadera/AICB/blob/main/docs/manual/general/07-profiles-master-data-and-solution-configuration.md#the-three-axes-in-workspace)
+
+#### Initialize the three axes
+
+In the desktop app, each picker can arm initialization for the next solution load.
+Layer rules and exclusions can be proposed through one LLM call; test detection is
+derived deterministically from the analyzed projects and test attributes. AICB asks
+for confirmation, never overwrites an already configured axis and clears the option
+after a successful initialization. If a committed sidecar already covers the axis,
+it is restored without an LLM call. `Initialize Now` only performs that immediate
+sidecar restore; it does not call a model or analyze the solution.
+
+An agent can guide the same setup explicitly:
+
+1. `solution_config_status` reports which axes are initialized and whether their
+   active values come from the local database, the sidecar or neither.
+2. `init_solution_config` returns proposal material: declared namespaces for the
+   layer map, referenced namespaces for exclusions, and detected test projects and
+   attributes for the test profile.
+3. After reviewing or adapting that proposal, `apply_solution_config` creates and
+   activates the custom entries, marks the axes initialized and writes both the
+   local configuration database and `<SolutionName>.aicb.json` beside the solution.
+4. Commit the sidecar so developers, CI, the CLI and MCP clients use the same rules.
+   Later, `check_solution_config_drift` reports namespaces or test projects no
+   longer covered by that configuration.
+
+`aicb init` is a different operation: it connects a repository to the MCP server
+and installs the agent skill and optional symbol guard. It does **not** initialize
+these three solution axes or create `<SolutionName>.aicb.json`.
+
+See [profiles and solution configuration](https://github.com/gregordadera/AICB/blob/main/docs/manual/general/07-profiles-master-data-and-solution-configuration.md)
+for precedence, the sidecar schema and the full initialization behavior.
 
 ### Context templates and run templates
 
