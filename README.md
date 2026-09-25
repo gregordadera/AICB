@@ -260,13 +260,18 @@ over the global default.
 
 #### Initialize the three axes
 
-In the desktop app, each picker can arm initialization for the next solution load.
-Layer rules and exclusions can be proposed through one LLM call; test detection is
-derived deterministically from the analyzed projects and test attributes. AICB asks
-for confirmation, never overwrites an already configured axis and clears the option
-after a successful initialization. If a committed sidecar already covers the axis,
-it is restored without an LLM call. `Initialize Now` only performs that immediate
-sidecar restore; it does not call a model or analyze the solution.
+When a new solution is loaded for the first time, AICB initializes these three axes
+as part of its first-time setup. Layer rules and exclusions are proposed through one
+LLM call; test detection is derived deterministically from the analyzed projects and
+test attributes. AICB asks for confirmation and never overwrites an axis that is
+already configured.
+
+The resulting per-solution configuration is stored beside the solution as
+`<SolutionName>.aicb.json`. From then on, that portable sidecar travels with the
+repository and supplies the same layer mapping, analysis boundary and test detection
+to the desktop app, CLI, CI and MCP server. On another machine or a later setup, an
+existing sidecar is restored without an LLM call. `Initialize Now` performs only
+that immediate restore; it does not call a model or analyze the solution.
 
 An agent can guide the same setup explicitly:
 
