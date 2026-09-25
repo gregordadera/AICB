@@ -43,7 +43,7 @@ aicb init
 |---|---|---|
 | `--path <dir>` | the current directory | The project directory to wire up. A directory that does not exist is an error: `error: directory not found: <dir>`, exit code `1`. |
 | `--force` | off | Overwrite artefacts that are already there. Without it, an existing aicb entry, skill file, guard script or wiring entry is left exactly as it is — which is what makes re-running the command safe. |
-| `--skills <context\|all>` | `context` | `context` writes only `aicb-csharp-context`; `all` additionally writes the `aicb-code-review` / `aicb-code-simplifier` review pair. |
+| `--skills <context\|all>` | `context` | `context` writes only `aicb-csharp-context`; `all` additionally writes the `aicb-code-review` / `aicb-code-simplifier` review pair and `aicb-usage-check`. |
 | `--hooks <auto\|none\|all\|claude-code\|codex\|opencode>` | `auto` | Which harnesses get the symbol guard and its wiring. `auto` installs for the harnesses already used in this project; `none` installs no enforcement at all; `all` installs for all three; the three ids name one harness each. |
 
 An unknown `--hooks` value is rejected before the directory is even checked, because a typo in your own text does not depend on the file system:
@@ -57,7 +57,7 @@ error: --hooks '<value>' is not one of: auto, none, all, claude-code, codex, ope
 ## 2.4 Step by step: the first setup
 
 1. Install `aicb` and confirm it answers: `aicb --version`.
-2. Change into your project directory and run `aicb init`. Add `--skills all` if you also want the review pair, or `--hooks none` if you want no enforcement.
+2. Change into your project directory and run `aicb init`. Add `--skills all` if you also want the review pair and the usage check, or `--hooks none` if you want no enforcement.
 3. Read the report. Every artefact gets one line; if a line says `refused`, nothing was written for that file, the exit code is `1`, and the line says what to fix. Repair the file and run the command again.
 4. Restart or reconnect your MCP client — a client reads its server list at startup, and this is the one step `aicb init` cannot do for you.
 5. Call `server_info` to confirm the connection. It needs no session, no solution and no build, so it is the cheapest proof that the wiring took.
@@ -112,10 +112,11 @@ A skill is a `SKILL.md` file with YAML front matter that an agent harness loads 
 | `aicb-csharp-context` | every run (default) | The manual for driving aicb itself, addressed to the agent |
 | `aicb-code-review` | `--skills all` | The correctness half of a post-task review pair: finds bugs |
 | `aicb-code-simplifier` | `--skills all` | The complexity half: finds over-engineering, not bugs |
+| `aicb-usage-check` | `--skills all` | Reads `usage_report` at the end of a task: what this server was reached for, what went untouched, what it cost |
 
 The names carry the `aicb-` prefix deliberately: `code-review` and `code-simplifier` are already taken in a typical Claude Code installation, and a skill that silently loses to a same-named neighbor is worse than one that is absent, because nothing reports the collision.
 
-The review pair is opt-in because it is an opinion about how you should work, not part of the product — if you already have a review routine, aicb's should not turn up beside it unasked.
+The three are opt-in because each is an opinion about how you should work, not part of the product — if you already have a review routine, aicb's should not turn up beside it unasked, and whether you audit your own tool use is your habit to choose.
 
 ### What `aicb-csharp-context` tells the agent
 

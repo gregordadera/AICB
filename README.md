@@ -162,13 +162,14 @@ staleness, profiles, pools and facets, and what `aicb init` writes — twelve
 chapters in Markdown, readable in the browser and by an agent, and also
 published as a [PDF](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-MCP-Server-Reference-V0.5.464.36.pdf).
 
-Three Agent Skills ship in [`skills/`](https://github.com/gregordadera/AICB/tree/main/skills):
+Four Agent Skills ship in [`skills/`](https://github.com/gregordadera/AICB/tree/main/skills):
 
 - `aicb-csharp-context` routes semantic C# questions to the right tool.
 - `aicb-code-review` checks a completed change for correctness.
 - `aicb-code-simplifier` looks for unnecessary complexity.
+- `aicb-usage-check` reports what this server was actually reached for.
 
-The review pair is opt-in: `aicb init --skills=all`.
+The last three are opt-in: `aicb init --skills=all`.
 
 ## CLI at a glance
 

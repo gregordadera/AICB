@@ -120,7 +120,7 @@ Run `aicb init` in your project directory. It writes the entry your client needs
 |---|---|---|
 | `--path <dir>` | Project directory to wire up. | the current directory |
 | `--force` | Overwrite artefacts that are already there. Without it, an existing `aicb` entry or skill file is left untouched. | off |
-| `--skills context\|all` | `context` writes the `aicb-csharp-context` skill; `all` adds the `aicb-code-review` / `aicb-code-simplifier` review pair. | `context` |
+| `--skills context\|all` | `context` writes the `aicb-csharp-context` skill; `all` adds the `aicb-code-review` / `aicb-code-simplifier` review pair and `aicb-usage-check`. | `context` |
 | `--hooks auto\|none\|all\|claude-code\|codex\|opencode` | Which agent harnesses to install the symbol guard for: the ones already used in this project, none, all, or one by name. | `auto` |
 
 The run reports each artefact with one of four labels — `created`, `updated`, `kept`, `refused` — and ends with:
