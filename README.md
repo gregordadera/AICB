@@ -53,6 +53,57 @@ That answer comes from the Roslyn symbol graph, not a substring search. AICB
 distinguishes overloads, follows interface and override relationships, understands
 partial types and records DI construction paths.
 
+## Build context that fits the task
+
+AICB does more than answer individual symbol questions. It can assemble a focused,
+task-specific context package for an agent instead of sending an unfiltered source
+dump:
+
+| Need | Tool | What it returns |
+|---|---|---|
+| Read one symbol in context | `get_context` | The symbol plus its direct dependencies and callees |
+| Explore a named symbol with selected surroundings | `explain_symbol` | Callers, callees, implementations, tests or other requested dimensions |
+| Pack context for a natural-language goal | `pack_for_task` | Goal-named symbols and their semantic neighbourhood |
+| Prepare to edit | `prepare_task` | The goal-focused context plus covering tests and likely siblings such as a factory or validator |
+| Check the response cost first | `measure` | The exact token count of one or more planned tool answers, without returning their large payloads |
+
+The focused context tools accept a **token budget**. Explicitly named seed symbols
+stay in the package; AICB first reduces method detail and then removes less-relevant
+surrounding content when the budget is tight. It does not cut text in the middle of
+a block, and a leading note discloses types, tests or siblings that were omitted.
+Whole-document rendering can use the same budget pipeline through a pipeline profile,
+including a configurable overshoot allowance and an optional trimming report.
+
+The result is **AI-Builder-MD**: structured Markdown for an LLM, containing the
+selected code together with symbol relationships, architecture graphs, semantic
+metadata and provenance. It can use the established tag notation or YAML. See the
+[context-document guide](https://github.com/gregordadera/AICB/blob/main/docs/manual/general/05-the-context-document-ai-builder-md.md)
+and the [task-packing tools](https://github.com/gregordadera/AICB/blob/main/docs/manual/mcp/09-tool-reference-markup-export-review-and-insights.md#92-packing-and-exporting-context).
+
+### Add explicit meaning with AI annotations
+
+AICB works without annotations. Where source structure and conventions are not
+enough, optional `<ai>` tags in XML documentation let a developer state the intended
+role of a type or method explicitly:
+
+```csharp
+/// <ai
+///   role="service"
+///   layer="Application"
+///   responsibility="Coordinates order validation and submission."
+///   stability="Stable"
+/// />
+public sealed class OrderService
+```
+
+Annotations can describe semantics such as role, domain, architectural layer,
+priority, stability, responsibility and side effects. Explicit values take
+precedence over heuristic inference; sentinel values such as `none` can deliberately
+suppress inference for one field. AICB preserves provenance so an agent can
+distinguish source-derived facts, author-provided meaning and inferred hints. The
+[AI annotation reference](https://github.com/gregordadera/AICB/blob/main/docs/manual/general/03-core-concepts.md#39-the-ai-annotation)
+documents the supported forms and fields.
+
 [![AIContextBuilder desktop app with a loaded solution](https://raw.githubusercontent.com/gregordadera/AICB/main/docs/assets/aicb-main-light.png)](https://www.dadera.de/en/aicb-gui.html)
 
 ## Where it helps
@@ -66,6 +117,11 @@ partial types and records DI construction paths.
 | What gets injected here? | `resolve_injection` |
 | Which code has side effects or calls an external API? | `find_by_side_effects`, `calls_external` |
 | What context does an agent need for this task? | `explain_symbol`, `prepare_task`, `pack_for_task` |
+| How large would these answers be before I pull them? | `measure` |
+| Where is this property or resource used in XAML/AXAML? | `find_binding_usages`, `find_resource_usages` |
+| Which markup bindings cannot be resolved safely? | `find_unresolved_bindings` |
+| What changed between two analyzed states? | `semantic_diff`, `diff_review` |
+| Does this change set violate a policy or public contract? | `evaluate_change_set`, `compare_public_api` |
 
 The desktop app turns code-quality, security, design and architecture findings
 into an actionable review queue:
