@@ -4,6 +4,26 @@ Versions follow `Major.Minor.Series.Build`. The build number rises by one for ev
 change that lands, so gaps between published versions are normal — not every build is
 released.
 
+## 0.5.464.44 — usage check skill and complete browser-readable manuals
+
+**Who is affected.** Users who run `aicb init --skills=all`, and anyone reading the public
+documentation. The analysis engine, MCP tool answers, desktop app and saved snapshots are unchanged.
+
+- **A fourth optional Agent Skill ships:** `aicb-usage-check` calls `usage_report` at the end of a
+  task and summarizes which AICB tools were actually used, which offered tools went untouched, and
+  what the calls cost. It is deliberately opt-in alongside the review pair; the default
+  `aicb init` still writes only `aicb-csharp-context`. Run `aicb init --skills=all` again in an
+  existing project to install it there.
+- **The three reference manuals are now readable as Markdown in the browser and by coding agents,**
+  one chapter per file, with the printable PDFs beside them under stable names. The manuals describe
+  product state 0.5.464.43; build .44 changes only the guard described next.
+- **The package page can no longer silently omit a shipped skill.** A derived test now checks every
+  name in the actual shipped-skill list against the install page, CLI help and packed README. This
+  closes the gap that briefly left the nuget.org page describing only three skills.
+- **Windows validation is less timing-sensitive under a saturated runner.** Two tests now wait on
+  the state they need or retry the real bounded protocol call instead of racing fixed wall-clock
+  delays. Product behavior is unchanged.
+
 ## 0.5.464.41 — `resolve_injection` says how visible a service is in constructors
 
 **Who is affected.** The MCP server and the `aicb` CLI. **The desktop app is unchanged.** Saved

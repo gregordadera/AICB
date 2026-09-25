@@ -1,0 +1,160 @@
+# Cross-platform smoke of the PUBLISHED package on macOS and Linux.
+#
+# WHY IT LIVES HERE AND NOT IN THE SOURCE REPOSITORY. Actions on a public repository are
+# free; the private source repository bills against a monthly quota, and GitHub charges a
+# macOS minute at ten times a Linux one. Measured on the source repository's own workflow,
+# one macOS+Linux run from source costs ~109 billed minutes - which is a whole month's
+# headroom for a single run. The same two operating systems cost nothing here.
+#
+# WHY IT INSTALLS INSTEAD OF BUILDING. This repository carries no source, so building is not
+# an option - but that is not a compromise. Installing the published package tests what a user
+# actually receives: the package itself, its tool manifest, its entry point and its dependency
+# closure on that operating system. A source build would pass even if the packaging were broken.
+#
+# WHY IT DOES REAL WORK AND NOT JUST `--version`. A version string proves that the launcher
+# starts, and nothing else. What can genuinely differ between Windows and a Unix system is the
+# discovery of MSBuild and the Roslyn workspace it opens - so the smoke generates a throwaway
+# solution and asks a semantic question about it. That step is the actual measurement; the two
+# before it only narrow down where a failure sits.
+#
+# AND IT ASSERTS THE ANSWER, NOT THE EXIT CODE. A tool that resolves nothing still exits 0 and
+# prints a well-formed answer saying so. Checking only the exit code would therefore be green on
+# a machine where the workspace never opened - the failure this job exists to catch.
+#
+# A RED RUN IS NOT NECESSARILY A DEFECT. The install reaches nuget.org, so this job also goes
+# red when nuget.org is unreachable, and for a few minutes after a release while the package is
+# still being indexed (which is why the install retries). Read the log before looking for a bug.
+
+name: Validate package (macOS + Linux)
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Package version to test, e.g. 0.5.464.44. Empty = whatever is newest on nuget.org.'
+        type: string
+        required: false
+        default: ''
+
+concurrency:
+  group: validate-package-${{ github.event.release.tag_name || inputs.version || 'latest' }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    steps:
+      # The tool targets net8.0, and opening a solution runs MSBuild from an SDK - so the SDK is
+      # the prerequisite, not just the runtime. Same requirement the README states for users.
+      - name: Setup .NET 8 SDK
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '8.0.x'
+
+      # A release run tests exactly the version that was released; a manual run tests what you
+      # name, or the newest if you name nothing. Resolved in one place so the steps below do not
+      # each re-derive it.
+      - name: Resolve the version under test
+        id: v
+        run: |
+          raw="${{ github.event.release.tag_name || inputs.version }}"
+          version="${raw#v}"
+          if [ -n "$version" ]; then
+            echo "arg=--version $version" >> "$GITHUB_OUTPUT"
+            echo "Testing AIContextBuilder $version"
+          else
+            echo "arg=" >> "$GITHUB_OUTPUT"
+            echo "Testing the newest AIContextBuilder on nuget.org"
+          fi
+
+      # nuget.org indexes a freshly pushed package with a delay of minutes, and this workflow is
+      # triggered by the release that publishes it - so the first attempt legitimately fails.
+      # Retrying is the difference between a useful gate and one that is red on every release.
+      - name: Install the published tool (retries while nuget indexes)
+        run: |
+          for attempt in 1 2 3 4 5 6; do
+            if dotnet tool install -g AIContextBuilder ${{ steps.v.outputs.arg }}; then
+              echo "installed on attempt $attempt"
+              exit 0
+            fi
+            echo "attempt $attempt failed - waiting 30s for nuget.org to index"
+            sleep 30
+          done
+          echo "::error::could not install AIContextBuilder after 6 attempts"
+          exit 1
+
+      - name: Put the tool on PATH
+        run: echo "$HOME/.dotnet/tools" >> "$GITHUB_PATH"
+
+      - name: It starts and reports a version
+        run: |
+          aicb --version
+          test -n "$(aicb --version)" || { echo "::error::aicb --version printed nothing"; exit 1; }
+
+      - name: It lists its commands
+        run: |
+          aicb --help
+          aicb --help | grep -q 'analyze' || { echo "::error::aicb --help does not list the analyze verb"; exit 1; }
+
+      # A tool that needs no solution: separates "the process runs" from "the workspace opens",
+      # so a failure in the next step can only be about MSBuild and Roslyn.
+      - name: It answers a question that needs no solution
+        run: aicb call server_info
+
+      - name: Build a throwaway solution for the real question
+        run: |
+          mkdir -p probe
+          dotnet new console -o probe/app -n ProbeApp
+          cat > probe/app/Greeter.cs <<'CSHARP'
+          namespace ProbeApp;
+
+          public sealed class Greeter
+          {
+              public string Greet(string who) => $"hello {who}";
+          }
+          CSHARP
+          cat > probe/app/Program.cs <<'CSHARP'
+          using ProbeApp;
+
+          var greeter = new Greeter();
+          System.Console.WriteLine(greeter.Greet("world"));
+          CSHARP
+          dotnet new sln -o probe -n Probe
+          dotnet sln probe/Probe.sln add probe/app/ProbeApp.csproj
+          dotnet build probe/Probe.sln -c Debug
+
+      # The measurement. It opens the solution through MSBuild, builds the Roslyn symbol graph and
+      # answers a fan-in question - the whole path that could differ on a Unix system.
+      #
+      # The two assertions are written against the MEASURED output shape, not an assumed one
+      # (checked 2026-09-25 against 0.5.464.41): progress goes to the log, and the answer is one
+      # line of compact JSON, e.g.
+      #   {"symbol":"ColorMixerService","resolvedKind":"type","usedBy":{"items":["DemoCompositionRoot"],...}}
+      # Hence "is there an answer at all" and "did the symbol resolve" are two separate checks:
+      # `resolvedKind":"not_found"` is a perfectly successful run that means the graph came up
+      # empty, which is precisely the failure a Unix-specific workspace problem would produce.
+      - name: It opens a real solution and answers a semantic question
+        run: |
+          out="$(aicb call find_usages --sln "$PWD/probe/Probe.sln" --arg symbol=Greeter)"
+          echo "$out"
+
+          if ! printf '%s' "$out" | grep -q '"resolvedKind"'; then
+            echo "::error::no resolvedKind in the answer - the tool did not answer at all"
+            exit 1
+          fi
+
+          if printf '%s' "$out" | grep -q '"resolvedKind" *: *"not_found"'; then
+            echo "::error::Greeter did not resolve - the workspace opened but the symbol graph is empty"
+            exit 1
+          fi
+
+          echo "OK: the symbol resolved on ${{ matrix.os }}"
