@@ -156,7 +156,7 @@ AICB is deliberately narrow. Knowing the limits saves time:
 | Symbol-level answers | Most tools name the declaring type and member rather than a file-and-line position you can click. For position-level navigation, use your IDE or a language server. |
 | No fuzzy search | `find_symbol` matches case-insensitively by substring. A typo returns no hits; a `nearest` suggestion names the closest declared symbol. |
 | Diagnostics are not cached | `get_diagnostics` compiles on every call. Its `scope` parameter makes the answer smaller, not the work. |
-| No outbound network | The CLI and the MCP server have no outbound network capability at all. The desktop app can send a rendered context to an LLM endpoint you configure, and only when you press "Send to API". |
+| No outbound network in headless surfaces | The CLI and the MCP server have no outbound network capability at all. The desktop app can contact only an LLM endpoint you configure: for a run, a model-profile connection test, or the first-load Layer Profile / Exclude Namespaces proposal when those auto-init flags are armed. |
 | A local call log | The MCP server records the tool calls it handles in your configuration database — that is what `usage_report` and the desktop app's usage panel read. The log stays on your machine and nothing is transmitted. |
 
 Note: opening a solution runs its MSBuild build logic to resolve references — exactly as Visual Studio or `dotnet build` does. Analyze only solutions you trust.

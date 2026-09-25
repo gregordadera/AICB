@@ -86,13 +86,15 @@ The precedence for each axis is:
 
 ### First-time setup on load
 
-Each picker carries a checkbox: `Auto-initialize via LLM on next load` for the layer profile and the exclusion list, `Auto-initialize on next load` for the test profile. It arms the next time you open that solution in the Context Builder — the loading happens there, not in the `Workspace` tab.
+Each picker carries a checkbox: `Auto-initialize via LLM on next load` for the layer profile and the exclusion list, `Auto-initialize on next load` for the test profile. A freshly registered solution starts with all three flags enabled. They are evaluated the next time you open that solution in the Context Builder — the loading happens there, not in the `Workspace` tab.
 
 When such a solution is loaded and an armed axis is still unconfigured, AICB offers to set it up:
 
 - If the sidecar covers the axis, it is **restored**, with no LLM call. The created entry carries the description `Restored from the .aicb.json sidecar`; its name stays `<solution> - layers`, `<solution> - exclusions` or `<solution> - tests`.
-- Otherwise the axis is **generated**: the layer rules and exclusions come from one LLM call using the default model profile, the test axis from a heuristic over the analysis. The created entry carries `Auto-initialized on load`.
-- Both paths ask for confirmation first and report what was created and activated. An axis that already has a choice is never overwritten, and after a successful initialization the checkbox is cleared.
+- Otherwise the axis is **generated**: with a usable default model profile, the layer rules and exclusions come from one LLM call over the solution's declared and referenced namespace lists; the test axis comes from a local heuristic over the analysis. The created entry carries `Auto-initialized on load`. If no model profile is available or no tests are detected, the corresponding proposal may remain unavailable.
+- A restore asks for confirmation before it is applied. For generated layer/exclusion proposals, the LLM request is made first and the resulting proposal is then shown for confirmation; declining prevents the database change but cannot undo the request. An axis that already has a choice is never overwritten, and after a successful initialization the checkbox is cleared.
+
+Successful first-load setup creates and activates per-solution entries in the local configuration database. It does **not** write the sidecar. Use `Workspace > Profiles > Export Config` afterwards if the configuration should travel with the repository.
 
 `Initialize Now` in each picker applies a stored configuration immediately, without waiting for a load and without any analysis: it restores the axis from the sidecar. If there is nothing to restore — the axis is already configured, or the sidecar does not cover it — a dialog says so.
 
@@ -170,7 +172,7 @@ The symbol inventory is unchanged — every symbol a query can name is still the
 
 ### Creating and updating the file
 
-- In the graphical interface, select the solution in `Workspace` and use `Export Config`. It writes the active layer profile, exclusion list, test profile, your triage decisions and the auto-init flags to the sidecar. If the file already exists you are asked before it is overwritten. The confirmation reminds you to commit it, because the MCP server and the CLI then apply it headlessly, with no `--db-path` needed.
+- In the graphical interface, select the solution in `Workspace` and use `Export Config`. It writes the active layer profile, exclusion list, test profile, your triage decisions and the auto-init flags to the sidecar. If the file already exists you are asked before it is overwritten. The confirmation reminds you to commit it. Headless analysis auto-discovers the sidecar without `--db-path`, but applies each field according to the per-axis matrix below rather than treating the whole file as one profile.
 - `Import Config` reads the layer rules and exclusions from a selected JSON/sidecar file and applies those two axes to the selected solution: it creates and activates a custom layer profile and exclusion list. It does not import the sidecar's test profile, suppressions, auto-init flags or analysis-scope key.
 - `apply_solution_config` writes the configuration database and the sidecar together and returns the path.
 - You can edit the file by hand; it is designed for that.

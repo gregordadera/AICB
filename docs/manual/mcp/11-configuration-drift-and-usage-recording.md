@@ -105,13 +105,20 @@ A server without a usable database is not broken, but it is **profile-blind**: i
 
 ### The per-solution sidecar
 
-Alongside the database, a solution can carry its own configuration as a git-tracked file next to the `.sln`: `<SolutionName>.aicb.json`. Of the guided setup tools, only `apply_solution_config` persists the proposed configuration into the database and sidecar; `solution_config_status` reads status (while ensuring the solution record exists) and `init_solution_config` only gathers proposal material. `apply_solution_config` returns the written path as `sidecarPath`; commit it so everyone working on that solution gets the same layers, exclusions and test detection.
+Alongside the database, a solution can carry its own configuration as a git-tracked file next to the `.sln`: `<SolutionName>.aicb.json`. Of the guided setup tools, only `apply_solution_config` persists the proposed configuration into the database and sidecar; `solution_config_status` reads status (while ensuring the solution record exists) and `init_solution_config` only gathers proposal material. `apply_solution_config` returns the written path as `sidecarPath`; commit it to version the portable configuration. The file can contain all three profile definitions, but not every headless resolution path consumes every axis from it.
 
-For the analysis itself the precedence is:
+For the MCP analysis itself, resolution is per axis:
 
-**explicit argument > config DB > `.aicb.json` sidecar > built-in heuristic**
+| Axis | MCP analysis resolution |
+|---|---|
+| Layer profile | explicit profile argument where offered > database (per-solution, then global) > sidecar > role-based heuristic |
+| Namespace exclusions | database, as soon as a usable database exists > sidecar > none |
+| Test profile | database (per-solution, then global) > built-in default; the sidecar's test definition is not in this chain |
+| Analysis scope | sidecar |
+| Suppressions | not part of the semantic analysis configuration; suppression-aware reading tools combine their documented database and sidecar sources |
+| Auto-init flags | reported as setup state where applicable, not evaluated by headless analysis |
 
-That means a repository with a sidecar is fully configured even on a machine whose configuration database has never seen it.
+A repository with only a sidecar can therefore supply layer rules, exclusions and analysis scope to a database-free headless analysis, but it is not accurate to call every axis fully configured from that file alone.
 
 `solution_config_status` reports, per axis, which source is currently active: `db`, `sidecar` or `none`.
 
@@ -121,7 +128,7 @@ Note: a session keeps the configuration it was analyzed with. `refresh_session` 
 
 | Setting | Stored in | When the MCP server reads it |
 |---|---|---|
-| Per-solution configuration (layer, exclusions, test detection) | config DB and the git-tracked `.aicb.json` sidecar | at analysis time; applies automatically, no `dbPath` argument needed |
+| Per-solution configuration (layer, exclusions, test detection) | config DB and the git-tracked `.aicb.json` sidecar | at analysis time, according to the per-axis matrix above; layer/exclusion sidecar fallback needs no `dbPath`, while headless test detection does not consume the sidecar test axis |
 | Active MCP profile (tools, instructions, token budget) | config DB | once at server start: tool list, callability, instructions and auto-refresh mode |
 | Session cache (TTL, max sessions, sweep) | `aicb.mcp.json` / `AICB_MCP_SESSION` only - there is no editor in the desktop application | at server start |
 | Tool-set spec (`lean` / `all` / list) | `aicb.mcp.json` / `AICB_MCP_TOOLS` only | at server start (static once set) |

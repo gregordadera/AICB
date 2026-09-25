@@ -55,7 +55,7 @@ The header carries a 12 px color dot, the solution name and the solution path (s
 | `Open` | `Open this solution live in a new Context Builder tab.` | Opens the solution and runs the analysis. |
 | Re-Analyze | `Re-Analyze: re-run the open-solution workflow on this solution (creates a fresh snapshot).` | Runs the open workflow again, which produces a fresh analysis and a new automatic snapshot. Afterwards an info dialog says `Re-Analyze started - a new snapshot will appear in the snapshot history.` If the `.sln` is missing, a warning says `The .sln file was not found at the given path.` |
 | Pin Snapshot | `Pin Snapshot: promote the newest snapshot to a named manual snapshot (manual ones are kept longer).` | Promotes the newest snapshot to a named manual snapshot (see "Snapshots"). |
-| Export Config | `Export Config: write the active layer profile + exclusion list to a git-tracked <Solution>.aicb.json sidecar next to the .sln. The headless MCP server / CLI auto-discover and apply it (no --db-path needed).` | Writes the solution configuration to the sidecar file (see "Exporting and importing the solution configuration"). |
+| Export Config | `Export Config: write the active layer profile + exclusion list to a git-tracked <Solution>.aicb.json sidecar next to the .sln. The headless MCP server / CLI auto-discover and apply it (no --db-path needed).` | Writes the solution configuration to the sidecar file. The tooltip summarizes the original layer/exclusion behavior; the file now carries additional axes whose consumers differ (see "Exporting and importing the solution configuration"). |
 | Import Config | `Import Config: read a .aicb.json sidecar and apply it to this solution - creates + activates a layer profile and an exclusion list in the DB.` | Reads a sidecar file and applies it to this solution. |
 | Show in Explorer | `Show in Explorer: open the Solution folder in Windows Explorer.` | Opens Windows Explorer with the `.sln` selected. If the file is missing, a warning appears. |
 | Remove (red) | `Remove: take the Solution out of the workspace - the files on disk are kept.` | Removes the solution and its dependent data after a confirmation that lists everything that is deleted with it. |
@@ -123,13 +123,15 @@ Each picker shows its title with the number of available entries in parentheses,
 
 | Element | What it does |
 |---|---|
-| `Auto-initialize via LLM on next load` | Checkbox. On the next load of this solution in the Context Builder, the app proposes a layer profile / exclusion list via the default model profile and asks for confirmation before applying. The test profile's checkbox is labeled `Auto-initialize on next load`, because its detection is heuristic and needs no language model. |
+| `Auto-initialize via LLM on next load` | Checkbox. A freshly registered solution starts with all three auto-init flags enabled. On its next load in the Context Builder, the app uses the default model profile to request one proposal for the still-unconfigured layer and exclusion axes, then asks whether to apply it. The request therefore precedes the confirmation. The test profile's checkbox is labeled `Auto-initialize on next load`, because its detection is local and needs no language model. Missing model settings, no detected tests or a declined proposal can leave an axis unconfigured. Existing choices are not overwritten. |
 | `Initialize Now` | Restores this axis from the solution's `<Solution>.aicb.json` sidecar immediately - no LLM, no analysis. On success a dialog reports `Restored + activated for this solution (from the sidecar):` with the restored name and rule count, and the checkbox is cleared because the pending intent is fulfilled. If there is nothing to restore, a dialog explains that the axis is already configured or the sidecar is missing or does not cover the axis. |
 | Card list | One card per library entry with the name, a `Built-in` pill for built-in entries and a checkmark on the selected card. The meta line under the name shows the size of the entry (`N mappings`, `N pattern(s)`, or `N project rule(s) · N attribute(s)`). The selected card additionally unfolds a preview of its rules: `Pattern > Layer` for layer profiles, `MatchType Pattern` for exclusion lists, and for test profiles the attribute chips under `Test attributes` plus the project rules under `Test projects`. |
 
 Selecting a card persists the choice for that solution only. The resolution order is always: **per solution → global default (Settings) → built-in default**. If no solution has its own choice, the global default applies.
 
 Selecting a different layer profile takes effect from the next analysis run; selecting a different exclusion list takes effect from the next run as well. The test profile is resolved freshly for every analysis run.
+
+Auto-initialization writes the resulting per-solution choices to the local database only. It does not create the sidecar automatically; use `Export Config` after reviewing the three axes if the configuration should be versioned with the repository.
 
 ![Profiles region: the layer profile, namespace exclusion and test profile pickers side by side](img/aicb-gui-profiles.png)
 
@@ -155,7 +157,9 @@ Layer rules: N   Exclusions: M   Test rules: K   Suppressed findings: L
 Commit the .aicb.json next to the .sln - the MCP server / CLI then apply it headless (no --db-path needed).
 ```
 
-`Import Config` opens a file dialog (`Import solution config (sidecar)`, filters `AICB sidecar (*.aicb.json)`, `JSON files (*.json)`, `All files (*.*)`), reads the file and applies it to the selected solution: it creates and activates a layer profile named `Imported layer profile (<Solution>)` and an exclusion list named `Imported exclusions (<Solution>)`, and marks both axes as initialized. A file without layer rules and without exclusions is rejected with `The file contains no layer rules or exclusions to import.` The import covers the layer and exclusion axes only; the test profile and the other parts of the file are applied by the headless MCP/CLI path.
+That sentence is the application's confirmation text. “Apply it” is not one uniform precedence rule: database-free headless analysis uses the sidecar's layer/exclusion fallback and analysis scope, while test detection resolves from the database or built-in default. Suppression-aware reading tools handle sidecar suppressions separately.
+
+`Import Config` opens a file dialog (`Import solution config (sidecar)`, filters `AICB sidecar (*.aicb.json)`, `JSON files (*.json)`, `All files (*.*)`), reads the file and applies it to the selected solution: it creates and activates a layer profile named `Imported layer profile (<Solution>)` and an exclusion list named `Imported exclusions (<Solution>)`, and marks both axes as initialized. A file without layer rules and without exclusions is rejected with `The file contains no layer rules or exclusions to import.` GUI import covers the layer and exclusion axes only. The sidecar's test definition, suppressions, auto-init flags and analysis-scope key remain in the file, but each has its own reading path; they are not all applied by one generic headless-profile resolver.
 
 ## 2.4 Sessions
 

@@ -262,7 +262,7 @@ Two notes on this table:
 
 ### The per-solution configuration file
 
-The file `<SolutionName>.aicb.json` sits next to your `.sln`. It is meant to be committed with your repository, so a headless MCP server or CLI run applies the same configuration without any database. It can contain:
+The file `<SolutionName>.aicb.json` sits next to your `.sln`. It is meant to be committed with your repository. A database-free headless MCP server or CLI run auto-discovers its layer and exclusion fallbacks and its analysis scope; other fields have the consumer-specific behavior documented in the configuration chapter. It can contain:
 
 - `layerRules` — the layer mapping (pattern, match type, layer),
 - `exclusions` — namespace exclusion patterns,
@@ -272,7 +272,7 @@ The file `<SolutionName>.aicb.json` sits next to your `.sln`. It is meant to be 
 - `suppressions` — triage decisions (producer, type, member, reason),
 - `analyzePreferredTfmOnly` — the analysis-scope opt-in (see "Profiles, master data and solution configuration"; it has no database counterpart and is edited by hand).
 
-The file is written atomically through a temporary file (`<name>.aicb.json.tmp`); a failed move can leave that temporary file behind. It is hand-editable: comments, trailing commas and case-insensitive keys are accepted, and an invalid value fails the whole file rather than silently dropping one axis — with one exception: a malformed entry in `suppressions` costs only that entry. In the Solutions tab, `Export Config` writes the active layer profile, exclusion list, test profile, triage decisions and the analysis-scope value into the sidecar, and `Import Config` reads a sidecar and applies it to the solution.
+The file is written atomically through a temporary file (`<name>.aicb.json.tmp`); a failed move can leave that temporary file behind. It is hand-editable: comments, trailing commas and case-insensitive keys are accepted, and an invalid value fails the whole file rather than silently dropping one axis — with one exception: a malformed entry in `suppressions` costs only that entry. In the Solutions tab, `Export Config` writes the active layer profile, exclusion list, test profile, triage decisions and the analysis-scope value into the sidecar. `Import Config` reads only the layer and exclusion axes into the desktop database; the remaining fields keep their separate reading paths.
 
 ## 10.7 Removing your data
 
@@ -305,19 +305,20 @@ If you work only with the CLI or the MCP server, you have **no** built-in way to
 
 ### The network surface
 
-**Nothing leaves your machine unless you send it.** The product's entire outgoing network capability consists of its three LLM clients. There is no update check, no version ping, no crash or error reporting, no analytics — and no component that could transmit anything even if it wanted to:
+**Nothing leaves your machine except through an LLM action or armed desktop auto-initialization that you configure.** The product's entire outgoing network capability consists of its three LLM clients. There is no update check, no version ping, no crash or error reporting, no analytics — and no other component that could transmit anything:
 
 - The desktop application is the only part that owns an HTTP client. In the CLI and in the MCP server the capability is **absent**, not switched off: the MCP server composes no LLM client at all, so no code path exists that could open a connection.
 - No client sends a credential over unencrypted HTTP to a remote host. All three refuse plain `http://` to a non-localhost address instead of sending. Plain HTTP to `localhost` remains allowed — that is Ollama or LM Studio on your own machine.
 
 ### The LLM calls
 
-There are exactly two entry points that can contact a model, and both require an explicit action by you:
+There are exactly three entry points that can contact a model:
 
 1. **A run** — triggered from the workspace.
 2. **The connection test** — the `Test Connection` button in the model profile settings. It sends a ping of 16 tokens with a 20-second budget.
+3. **First-load solution setup** — when `Auto-initialize via LLM on next load` is armed for Layer Profile or Exclude Namespaces, loading an unconfigured solution sends one request containing its declared and referenced namespace lists. The returned proposal is shown for confirmation before it is applied. Declining prevents the configuration change, but the request has already been sent. Freshly registered solutions start with these flags armed; clear them before the next Context Builder load if you do not want this call.
 
-Both abort *before* a socket is opened if the profile is incomplete: the Anthropic and OpenAI clients require a model name and an API key, the local client requires a model name and an endpoint.
+All three paths stop *before* a socket is opened if the selected profile is incomplete: the remote clients require their model and credential fields, while a local client requires a model name and endpoint.
 
 The built-in model profiles come with pre-filled endpoints — Anthropic (`https://api.anthropic.com/v1/messages`), OpenAI (`https://api.openai.com/v1/chat/completions`), Google Gemini (`https://generativelanguage.googleapis.com/v1beta`), OpenRouter (`https://openrouter.ai/api/v1`), and the local ones Ollama (`http://localhost:11434/v1`) and LM Studio (`http://localhost:1234/v1`). A profile entry is a **template**: it carries an address but no key. Nothing is contacted until you select the profile, store a key and start a run or the connection test.
 

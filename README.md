@@ -71,6 +71,8 @@ The focused context tools accept a **token budget**. Explicitly named seed symbo
 stay in the package; AICB first reduces method detail and then removes less-relevant
 surrounding content when the budget is tight. It does not cut text in the middle of
 a block, and a leading note discloses types, tests or siblings that were omitted.
+AICB can therefore tell you that a bundle was structurally reduced or capped; it
+cannot certify that the remaining budget is sufficient to solve the task correctly.
 Whole-document rendering can use the same budget pipeline through a pipeline profile,
 including a configurable overshoot allowance and an optional trimming report.
 
@@ -80,7 +82,7 @@ metadata and provenance. It can use the established tag notation or YAML. See th
 [context-document guide](https://github.com/gregordadera/AICB/blob/main/docs/manual/general/05-the-context-document-ai-builder-md.md)
 and the [task-packing tools](https://github.com/gregordadera/AICB/blob/main/docs/manual/mcp/09-tool-reference-markup-export-review-and-insights.md#92-packing-and-exporting-context).
 
-### Add explicit meaning with AI annotations
+### Add explicit meaning with AI Tags and semantic annotations
 
 AICB works without annotations. Where source structure and conventions are not
 enough, optional `<ai>` tags in XML documentation let a developer state the intended
@@ -179,8 +181,9 @@ into an actionable review queue:
 [![AICB Insights page with prioritized code-quality, security, design and architecture findings](https://raw.githubusercontent.com/gregordadera/AICB/main/docs/assets/aicb-gui-insights.png)](https://www.dadera.de/en/aicb-gui.html)
 
 AICB is most useful for non-trivial C#/.NET solutions and semantic questions that
-plain text search cannot answer reliably. It is not a general-purpose code search
-tool and does not analyze non-.NET projects. The first question opens and analyzes
+plain text search cannot answer reliably. It analyzes C#; selected XAML/AXAML
+relationships supplement that graph. Other programming languages are out of scope.
+The first question opens and analyzes
 the solution, which can take seconds to minutes; later questions reuse the warm
 session.
 
@@ -208,16 +211,19 @@ one bounded response. Use `measure` first when the likely response size matters.
 
 | Need | AICB workflow |
 |---|---|
-| Give every developer and agent the same solution rules | Commit `<Solution>.aicb.json` next to the solution. It carries layers, namespace exclusions, test detection, suppressions and analysis scope. Use `solution_config_status` → `init_solution_config` → `apply_solution_config`; `aicb init` does not create this file. |
+| Version the portable solution rules | Commit `<Solution>.aicb.json` next to the solution. It can carry layer rules, namespace exclusions, test definitions, suppressions, auto-init flags and analysis scope. Each surface consumes only the axes documented for it; the sidecar contains configuration, not analysis results, sessions, snapshots or credentials. Use `solution_config_status` → `init_solution_config` → `apply_solution_config`; `aicb init` does not create this file. |
 | Enforce a quality threshold in CI | Run `aicb analyze -s App.sln -o context.md --fail-on "critical>0 OR debt>120min"`. A failed gate returns exit code `6` and still writes the context document for diagnosis. |
 | Compare an in-place change with a baseline | Call `save_session` before the edit, then `refresh_session` and `compare_with_previous`; use `diff_public_contract` when the public API is the contract that matters. |
 | Review two live analyzed states | `semantic_diff` reports structural changes. `diff_review` adds blast radius, tests and newly introduced findings with a policy verdict. These two-session tools require the Full Select profile. |
 | Curate context visually | The Windows app adds a solution tree, manual context selection, detail and token controls, AI-Builder-MD preview/export, snapshots, Insights, LLM runs and a source editor. |
 
-Configuration precedence is **explicit tool argument → local configuration database
-→ committed `.aicb.json` → built-in heuristic**. A running session keeps the
-configuration it was analyzed with; after editing the sidecar, start a new analysis
-instead of assuming `refresh_session` re-reads it.
+Configuration precedence is axis- and surface-specific. For example, headless layer
+mapping can fall back to the sidecar, while headless test detection currently resolves
+from the database or built-in rules rather than the sidecar's test axis. The exact
+matrix is in the
+[configuration guide](https://github.com/gregordadera/AICB/blob/main/docs/manual/general/07-profiles-master-data-and-solution-configuration.md#which-axis-wins).
+A running MCP session keeps the configuration it was analyzed with; after editing the
+sidecar, start a new analysis instead of assuming `refresh_session` re-reads it.
 
 ## From semantic engine to human-in-the-loop workspace
 
@@ -229,6 +235,11 @@ or a 72-tool full analysis set, while sessions, staleness signals and bounded
 responses make the surface practical for coding agents. These numbers describe
 the available product surface; they are not a published benchmark of agent outcome
 quality.
+
+The active MCP profile also selects task-oriented facets: each facet connects agent
+guidance, a context-template slot and the corresponding tool subset. `list_skills`
+is the runtime source of truth for which tools are exposed, which are callable, and
+which additional registered tools sit outside the active pool.
 
 The Windows app complements that agent-facing surface with a visual workspace for
 people: solution navigation, manual context selection, detail and token controls,
@@ -248,7 +259,7 @@ Each solution also has three independent analysis axes:
 | Axis | Question it answers | What it controls |
 |---|---|---|
 | **Layer Profile** | Where does this code belong architecturally? | Ordered namespace-pattern-to-layer mappings for layers such as Domain, Application and Infrastructure. The first matching rule wins. The profile also determines whether a detected cross-layer violation is `Advisory` (warning) or `Strict` (critical). |
-| **Exclude Namespaces** | What should stay outside the analysis? | Named namespace patterns skipped by the analyzer, using `Contains`, `StartsWith`, `EndsWith` or `Exact` matching. This keeps framework, generated or vendor dependencies from dominating the semantic graph; shipped presets cover the BCL and SAP Business One. |
+| **Exclude Namespaces** | What should stay outside the analysis? | Named namespace patterns skipped by the analyzer, using `Contains`, `StartsWith`, `EndsWith` or `Exact` matching. This keeps configured framework or vendor dependencies from dominating the semantic graph; shipped presets cover the BCL and SAP Business One. |
 | **Test Profile** | What counts as test code? | Project-name rules plus method-attribute markers. The built-in profiles recognize xUnit, NUnit and MSTest conventions, and production-focused tools can exclude the detected test code by default. |
 
 The desktop app presents these three pickers side by side for the selected
@@ -260,18 +271,22 @@ over the global default.
 
 #### Initialize the three axes
 
-When a new solution is loaded for the first time, AICB initializes these three axes
-as part of its first-time setup. Layer rules and exclusions are proposed through one
-LLM call; test detection is derived deterministically from the analyzed projects and
-test attributes. AICB asks for confirmation and never overwrites an axis that is
-already configured.
+For a freshly registered solution, all three auto-init flags start enabled. The next
+time the desktop Context Builder loads it, AICB attempts each still-unconfigured axis.
+If a sidecar already covers an axis, the GUI offers to restore it without a model
+call. Otherwise, with a usable default model profile, one LLM request proposes layer
+rules and exclusions from declared and referenced namespace lists; test detection is
+derived locally from the analyzed projects and test attributes. The confirmation
+dialog decides whether the proposal is applied—the LLM request has already happened
+at that point. A missing model profile, no detected tests, or declining the proposal
+can leave an axis unconfigured. Existing choices are never overwritten.
 
-The resulting per-solution configuration is stored beside the solution as
-`<SolutionName>.aicb.json`. From then on, that portable sidecar travels with the
-repository and supplies the same layer mapping, analysis boundary and test detection
-to the desktop app, CLI, CI and MCP server. On another machine or a later setup, an
-existing sidecar is restored without an LLM call. `Initialize Now` performs only
-that immediate restore; it does not call a model or analyze the solution.
+Successful GUI auto-initialization stores the chosen profiles in the local database.
+It does **not** create `<SolutionName>.aicb.json` automatically. Use `Workspace →
+Profiles → Export Config` to write that portable sidecar, then commit it. A later GUI
+can restore the supported axes from it without an LLM call; headless consumers apply
+the per-axis rules described in the configuration matrix. `Initialize Now` performs
+only an immediate sidecar restore—it does not call a model or analyze the solution.
 
 An agent can guide the same setup explicitly:
 
@@ -430,10 +445,14 @@ Run `aicb <command> --help` for options.
 
 - The CLI and MCP server have no outbound network capability and do not modify
   the source code they analyze.
-- There is no telemetry, analytics, update check, account or licence server.
-- The desktop app sends context to an LLM only when you press **Send to API**;
-  the endpoint may be a local model. Its Details tab is also a real editor and
-  saves a file only when you explicitly use Save.
+- There is no **outbound** telemetry, analytics, update check, account or licence
+  server. The MCP server records its tool calls locally for `usage_report` and the
+  desktop app's **MCP Usage** page; that log never leaves the machine.
+- The desktop app can contact only an LLM endpoint you configure: for a manual run,
+  a model-profile connection test, or first-load proposals for Layer Profile and
+  Exclude Namespaces when those auto-init flags are armed. The endpoint may be a
+  local model. The Details tab is also a real editor and saves a file only when you
+  explicitly use Save.
 - Opening a solution runs its MSBuild logic to resolve references. Analyze only
   solutions you trust. AICB does not run third-party Roslyn analyzers or source
   generators.

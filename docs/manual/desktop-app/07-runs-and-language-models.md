@@ -325,7 +325,7 @@ You can also manage the entry in the Windows Credential Manager yourself (Contro
 
 The key is sent only over HTTPS, or over HTTP to a loopback address (localhost). All three clients refuse to send a key over plain HTTP to a non-local host with a message such as `Anthropic: API key not sent over plain HTTP to a non-localhost host. Use an HTTPS endpoint.` Plain HTTP to `localhost` remains allowed, which is what local Ollama and LM Studio installations need.
 
-Apart from the call to the LLM endpoint you configured, the app does not send anything over the network: there is no telemetry upload, no update check and no crash reporting. With the default profiles, the only hosts contacted are `api.anthropic.com` and `api.openai.com`.
+Apart from calls to an LLM endpoint you configured, the app does not send anything over the network: there is no telemetry upload, no update check and no crash reporting. The configured endpoint may be Anthropic, OpenAI, Google Gemini, OpenRouter, a custom OpenAI-compatible service, or a local Ollama/LM Studio address. A profile template contains no credential, and nothing contacts its endpoint until a run, connection test or armed first-load layer/exclusion proposal uses it.
 
 ### Testing a connection
 

@@ -126,6 +126,17 @@ The closures deliberately prefer re-analyzing too much over serving a plausible
 stale edge. This is document-granular reuse, not method-granular patching of an
 already rendered answer.
 
+The regression suite compares the complete normalized analysis dump from an
+incrementally refreshed session with a separately opened full-reload session. Its
+single-edit matrix covers method-body changes, added and deleted methods, changed
+signatures, deleted and renamed types, changes in one half of a partial type, and
+re-running source-generated members on the forked Roslyn snapshot. It also asserts
+that the incremental path really ran, so an accidental full reload cannot make the
+comparison pass vacuously. File additions or removals and changes to `.csproj`,
+`.props`, `.targets`, solution, XAML and other project-shaping files deliberately
+fall back to a full reload. A combined public matrix for simultaneous multi-file
+edits and branch switches has not yet been published.
+
 ## Which data structures hold and deduplicate the graph?
 
 The central run state uses separate indexes for separate fact families rather than
@@ -190,6 +201,21 @@ repository:
 5. `measure` can return the exact token cost of planned answers before their payloads
    are requested.
 
+This is bounded task preparation, not an autonomous solution to arbitrary task
+semantics. If a goal names `DiscountCalculator`, for example, the bundle can seed
+that symbol and add known callers, callees, dependencies, tests and a conventionally
+named sibling. It cannot guarantee discovery of an unmentioned runtime registration,
+a relationship hidden in configuration, or the business meaning of “discount.” The
+agent still chooses the goal, interprets the evidence and calls specialized tools
+for DI, markup, runtime uncertainty or other axes when the manifest and hints require
+them.
+
+Likewise, AICB detects **structural** budget pressure: the manifest reports omitted
+types, tests and siblings, result caps, truncation and cases where a seed had to fall
+back to a smaller structural rendering. It cannot prove that a budget is semantically
+large enough for the agent to complete the task correctly. That needs task-level
+evaluation, which is a separate benchmark question.
+
 For budgeted whole-document rendering, the active relevance score uses factors such
 as log-damped fan-in, visibility, explicit priority, entry-point status, role, file
 path and user hints. A personalized PageRank implementation exists but is **not
@@ -251,6 +277,7 @@ The documentation separates observations from intended benefits.
 | AICB returns semantic, aggregated answers that differ structurally from text search | Explained with concrete compiler-semantic and markup cases in the general manual |
 | AICB versus the Roslyn language server on a selected symbol sample | Method and measured examples are published in the introduction; it is explicitly a structural comparison, not a general agent-quality benchmark |
 | Token-budget and context-selection behavior | Selection rules, floors, precedence and omission disclosures are documented |
+| Incremental refresh versus a clean full reload | A regression matrix compares the complete normalized analysis for the listed single-edit shapes; a combined public multi-file/branch-switch matrix is not yet published |
 | Standardized performance on a very large public solution | **Not yet published** |
 | Agent success, time, tool calls and tokens with versus without AICB | **Not yet published** |
 | Reproducible head-to-head comparison with CodeLens, DotLens or another named product | **Not yet published** |
