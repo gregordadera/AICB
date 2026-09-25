@@ -138,11 +138,16 @@ depending on its size; later calls reuse the warm session.
 | Which compiler errors do I have right now? | `get_diagnostics` |
 
 After editing code: `refresh_session` first, **then** `get_diagnostics` — diagnostics
-are computed from the session's snapshot, not from the files on disk.
+are computed from the session's snapshot, not from the files on disk. On the shipped
+default the server already repairs a drifted session before it answers (auto-refresh
+mode **Reactive**), so that call is usually redundant — but it stays correct in every
+mode, and answers carry a `staleness` note either way. The three modes and how to
+change them: [MCP manual §3.6](manual/mcp/03-sessions-and-staleness.md#36-auto-refresh-off-reactive-proactive).
 
 The server documents itself: the `docs` tool is its built-in manual, `list_skills` the
 map of all tools. A generated reference of the default tool set is in
-[`TOOLS.md`](TOOLS.md).
+[`TOOLS.md`](TOOLS.md), and the full reference — every tool, plus sessions, profiles,
+facets and troubleshooting — is the [MCP server manual](manual/mcp/README.md).
 
 ## 7. The desktop app in one minute
 

@@ -156,8 +156,11 @@ for setup, first questions and troubleshooting.
 Start the full analysis profile with
 `aicb mcp --mcp-profile mcp-profile/full`. Set `AICB_MCP_TOOLS=all` to add
 the infrastructure tools. The generated [tool reference](https://github.com/gregordadera/AICB/blob/main/docs/TOOLS.md) documents
-the default set; the [MCP reference manual (0.5.464.36)](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-MCP-Server-Reference-V0.5.464.36.pdf)
-documents all 82 tools and their parameters.
+the default set; the [MCP server manual](https://github.com/gregordadera/AICB/blob/main/docs/manual/mcp/README.md)
+documents all 82 tools and their parameters, and alongside them sessions and
+staleness, profiles, pools and facets, and what `aicb init` writes — twelve
+chapters in Markdown, readable in the browser and by an agent, and also
+published as a [PDF](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-MCP-Server-Reference-V0.5.464.36.pdf).
 
 Three Agent Skills ship in [`skills/`](https://github.com/gregordadera/AICB/tree/main/skills):
 
@@ -218,9 +221,9 @@ products are not permitted. See the [plain-language guide](https://github.com/gr
 
 - [Getting started](https://github.com/gregordadera/AICB/blob/main/docs/GETTING-STARTED.md) — install, connect and ask the first question
 - [Tool reference](https://github.com/gregordadera/AICB/blob/main/docs/TOOLS.md) — generated reference for the default MCP profile
-- [General reference manual (0.5.464.36)](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-General-Reference-V0.5.464.36.pdf)
-- [MCP server reference manual (0.5.464.36)](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-MCP-Server-Reference-V0.5.464.36.pdf)
-- [Desktop app reference manual (0.5.464.36)](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-Desktop-App-Reference-V0.5.464.36.pdf)
+- **[MCP server manual](https://github.com/gregordadera/AICB/blob/main/docs/manual/mcp/README.md)** — the full reference in twelve Markdown chapters: connecting a client, `aicb init`, sessions and staleness, profiles and facets, every tool, troubleshooting
+- [General reference manual (0.5.464.36)](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-General-Reference-V0.5.464.36.pdf) — PDF
+- [Desktop app reference manual (0.5.464.36)](https://github.com/gregordadera/AICB/blob/main/docs/manual/AICB-Desktop-App-Reference-V0.5.464.36.pdf) — PDF
 - [Changelog](https://github.com/gregordadera/AICB/blob/main/CHANGELOG.md) and [latest release](https://github.com/gregordadera/AICB/releases/latest)
 
 Questions and feature requests are welcome in
