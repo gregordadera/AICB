@@ -106,6 +106,56 @@ documents the supported forms and fields.
 
 [![AIContextBuilder desktop app with a loaded solution](https://raw.githubusercontent.com/gregordadera/AICB/main/docs/assets/aicb-main-light.png)](https://www.dadera.de/en/aicb-gui.html)
 
+## How analysis and memory work
+
+```text
+.sln / .slnx / .slnf + C# + XAML/AXAML
+                 ↓
+        MSBuild + Roslyn semantic models
+                 ↓
+  AICB facts and consolidated semantic indexes
+                 ↓
+ individual answers or budgeted AI-Builder-MD
+```
+
+AICB is more than a response cache around Roslyn. During analysis it walks the
+solution's C# documents, records declarations, calls, type references and other
+facts, then consolidates caller and type fan-in, implementations, resolved markup
+references and transitive side-effect classifications. Tools traverse or project
+that warm model for a particular question; context tools select and render a
+task-specific slice. This does **not** mean that every possible answer or runtime
+relationship is precomputed.
+
+An MCP session belongs to one `aicb mcp` process and pins both the analyzed graph
+and its Roslyn workspace. A second server process builds its own session. The
+desktop app, CLI and MCP server use the same analysis and rendering engine and can
+share configuration and persisted snapshots through the local database, but they
+do not share one live in-memory graph. Within one session, only one refresh runs at
+a time; concurrent callers join it. A source-only edit can take the incremental
+path, replaying changed document text without reloading the workspace. When that
+path is unavailable, or when `force: true` is requested, AICB fully reloads it.
+
+### What the model can and cannot prove
+
+- AICB analyzes statically visible C# and selected XAML/AXAML relationships. Code
+  reached only through reflection, runtime assembly scanning, dynamic configuration
+  or an external consumer can remain invisible.
+- DI analysis recognizes statically readable Microsoft-DI-shaped registrations;
+  runtime-produced registrations are disclosed as dynamic or unknown rather than
+  invented.
+- XAML binding analysis resolves paths only where the source and data type are safe
+  to establish. Unknown scopes are skipped conservatively.
+- A reported side effect is a conservative static contact classification propagated
+  through known call edges. It is not general data-flow, taint or runtime state
+  analysis.
+- Responses disclose stale sessions, unresolved projects and capped result sets.
+  Read `staleness`, `incompleteProjects`, `totalFound` and `truncated` before treating
+  an empty or short answer as proof.
+
+The question-first [architecture, limits and evidence guide](https://github.com/gregordadera/AICB/blob/main/docs/ARCHITECTURE.md)
+explains what lives in memory, how refresh and context selection work, which claims
+are measured, and which benchmarks have not yet been published.
+
 ## Where it helps
 
 | Question | Tool |
@@ -278,6 +328,7 @@ products are not permitted. See the [plain-language guide](https://github.com/gr
 
 - [Getting started](https://github.com/gregordadera/AICB/blob/main/docs/GETTING-STARTED.md) — install, connect and ask the first question
 - [Tool reference](https://github.com/gregordadera/AICB/blob/main/docs/TOOLS.md) — generated reference for the default MCP profile
+- [Architecture, limits and evidence](https://github.com/gregordadera/AICB/blob/main/docs/ARCHITECTURE.md) — in-memory model, refresh, context selection, static-analysis boundaries and benchmark status
 - **[MCP server manual](https://github.com/gregordadera/AICB/blob/main/docs/manual/mcp/README.md)** — the full reference in twelve Markdown chapters: connecting a client, `aicb init`, sessions and staleness, profiles and facets, every tool, troubleshooting
 - **[General reference manual](https://github.com/gregordadera/AICB/blob/main/docs/manual/general/README.md)** — the full reference in twelve Markdown chapters, with the printable PDF in the same folder
 - **[Desktop app reference manual](https://github.com/gregordadera/AICB/blob/main/docs/manual/desktop-app/README.md)** — the full reference in eleven Markdown chapters, with the printable PDF in the same folder
