@@ -59,6 +59,22 @@ Two live-only results are not reconstructed from a persisted snapshot: unresolve
 XAML bindings and the project-completeness record. A recalled snapshot therefore
 has a narrower contract than a freshly analyzed session.
 
+The persistence surfaces have deliberately different contracts:
+
+| Surface | Stores | Does not store |
+|---|---|---|
+| Live MCP session | Analyzed graph plus the Roslyn workspace in one server process | Cross-process state or unsaved editor buffers |
+| Remembered codebase | A persisted model that `recall_codebase` can rehydrate without Roslyn | A live workspace, reliable line numbers, the layer profile or every live-only insight |
+| Saved snapshot | A named analysis baseline for later comparisons | A mutable live session |
+| `<Solution>.aicb.json` | Portable layer, exclusion, test, suppression and analysis-scope configuration | Analysis results, sessions, snapshots or credentials |
+
+`remember_codebase` returns a live session and persists the model. A later process
+can use `recall_codebase`; its response discloses payload, analyzer and file-set
+drift even though the recalled graph remains available. `refresh_remembered`
+performs a new live analysis, restores the live-only contract and persists the new
+snapshot. This distinction prevents “persistent memory” from being mistaken for a
+shared live Roslyn workspace.
+
 ## What does AICB add beyond Roslyn?
 
 Roslyn is the semantic foundation. AICB adds product-level questions and

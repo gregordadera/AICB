@@ -137,6 +137,22 @@ a time; concurrent callers join it. A source-only edit can take the incremental
 path, replaying changed document text without reloading the workspace. When that
 path is unavailable, or when `force: true` is requested, AICB fully reloads it.
 
+### Live sessions, snapshots and persistent codebase memory
+
+These states serve different purposes and should not be treated as interchangeable:
+
+| State | Lifetime and purpose | Important boundary |
+|---|---|---|
+| Live MCP session | In-memory graph and Roslyn workspace reused by one server process | Sees saved files, not unsaved editor buffers; another server process has a separate session |
+| Remembered codebase | `remember_codebase` persists an analyzed model; `recall_codebase` can rehydrate it later or in another process without running Roslyn | A recalled session has no live workspace, no reliable line numbers and a reduced insight contract; use `refresh_remembered` when live precision is required |
+| Saved snapshot | Named baseline used by `compare_with_previous` and public-contract comparison | A comparison baseline, not a live workspace |
+| `<Solution>.aicb.json` | Git-trackable solution configuration | Contains rules and choices, never analysis results, sessions or credentials |
+
+`recall_codebase` reports whether the persisted model still matches the source,
+payload schema and analyzer identity. It deliberately returns the recalled model
+even when it is stale, with metadata that tells the agent when a live re-analysis
+is necessary. See [sessions, recall and staleness](https://github.com/gregordadera/AICB/blob/main/docs/manual/mcp/03-sessions-and-staleness.md).
+
 ### What the model can and cannot prove
 
 - AICB analyzes statically visible C# and selected XAML/AXAML relationships. Code
@@ -153,6 +169,32 @@ path is unavailable, or when `force: true` is requested, AICB fully reloads it.
 - Responses disclose stale sessions, unresolved projects and capped result sets.
   Read `staleness`, `incompleteProjects`, `totalFound` and `truncated` before treating
   an empty or short answer as proof.
+
+### How an agent should judge an answer
+
+An AICB response is evidence together with its limits. Before acting on an empty,
+short or apparently definitive result, inspect the accompanying signals:
+
+| Signal | Meaning | Typical response |
+|---|---|---|
+| `staleness` | Saved source changed after the analysis, or an automatic refresh ran or failed | Save the files and refresh if the response is not current |
+| `incompleteProjects` or `verdict: "inconclusive"` | Project references could not be resolved well enough for a complete semantic graph | Restore or build, then call `refresh_session(force: true)` |
+| `totalFound` and `truncated` | More matches exist than were returned | Narrow the scope, paginate or raise the documented cap |
+| Bundle manifest or leading omission note | A token budget removed surrounding types, tests or sibling implementations | Increase the budget or request the missing axis explicitly |
+| `mergedNamesakes`, ambiguity or multiple candidates | A name did not resolve to one unique symbol | Repeat the query with a qualified symbol name |
+| `confidence`, provenance, dynamic or unknown markers | A value is measured, author-supplied, inferred or not statically knowable | Preserve the uncertainty and verify the relevant runtime configuration when needed |
+| `origin: "Recalled"` or `lineNumbersAvailable: false` | The answer came from persisted memory rather than a live Roslyn workspace | Use `refresh_remembered` before relying on live-only details |
+
+The MCP profile controls automatic refresh. `Off` only discloses drift,
+`Reactive` refreshes before a reading tool answers and is the normal shipped
+setting, while `Proactive` starts analysis after saved edits settle. Automatic
+refresh never sees unsaved editor buffers. Staleness is also different from
+reference incompleteness: the first needs a refresh; the second normally needs a
+restore or build followed by a forced refresh.
+
+AICB also distinguishes **unknown** from **verified absent**. Tools such as
+`assert_absence` return `confirmed`, `refuted` or `indeterminate` rather than
+turning missing evidence into a false negative.
 
 The question-first [architecture, limits and evidence guide](https://github.com/gregordadera/AICB/blob/main/docs/ARCHITECTURE.md)
 explains what lives in memory, how refresh and context selection work, which claims
@@ -174,6 +216,21 @@ are measured, and which benchmarks have not yet been published.
 | Which markup bindings cannot be resolved safely? | `find_unresolved_bindings` |
 | What changed between two analyzed states? | `semantic_diff`, `diff_review` |
 | Does this change set violate a policy or public contract? | `evaluate_change_set`, `compare_public_api` |
+| Is the claim that this symbol is unused, untested or absent actually supported? | `assert_absence`, `verify_claim` |
+| What evidence should a reviewer see for these changed symbols? | `review_context` |
+| Where are concurrency, resource-lifetime or event-subscription risks? | `find_by_concurrency_risk`, `find_by_resource_leak`, `find_by_event_subscription` |
+| Where did repeated structures, conventions or documentation drift apart? | `find_structural_twins`, `check_pattern_drift`, `check_doc_drift` |
+
+These tools form a broader capability map rather than a flat search catalog:
+
+| Capability | Examples |
+|---|---|
+| Semantic navigation | usages, implementations, overrides, hierarchy, DI and XAML |
+| Change safety | impact, tests, diagnostics, review context and public API comparison |
+| Runtime-risk indicators | concurrency, resources, events, external calls and side effects |
+| Architecture and consistency | layers, cycles, structural twins, pattern drift and documentation drift |
+| Verification | negative claims, baseline-to-changed claims and change-set policy |
+| Context economy | task packing, measurement, token budgets and compression |
 
 The desktop app turns code-quality, security, design and architecture findings
 into an actionable review queue:
@@ -183,9 +240,15 @@ into an actionable review queue:
 AICB is most useful for non-trivial C#/.NET solutions and semantic questions that
 plain text search cannot answer reliably. It analyzes C#; selected XAML/AXAML
 relationships supplement that graph. Other programming languages are out of scope.
-The first question opens and analyzes
-the solution, which can take seconds to minutes; later questions reuse the warm
-session.
+The first question opens and analyzes the solution, which can take seconds to
+minutes; later questions reuse the warm session.
+
+Multi-targeted projects are loaded once per target framework by default, while
+query surfaces generally deduplicate them to one logical project. Setting
+`analyzePreferredTfmOnly` in `<Solution>.aicb.json` reduces analysis and export work
+to the newest target-framework instance. The symbol inventory remains available,
+but fan-in edges that exist only in another target can disappear, so this is a
+documented precision-versus-cost choice rather than a transparent optimization.
 
 ## A safe agent workflow
 
@@ -198,10 +261,15 @@ An agent can use AICB without memorizing the tool catalog:
    context, covering tests and likely sibling implementations within one budget.
 3. Before changing a symbol that other code names, call `impact_of_change`; use
    `find_tests_for` when the task bundle does not give enough test evidence.
-4. Make and save the change. Then call `refresh_session` **before**
-   `get_diagnostics`, so diagnostics compile the post-edit graph rather than the
-   previous session state.
-5. Finish with the repository's real build and test commands. `get_diagnostics`
+4. Read uncertainty and completeness signals before treating an empty result as
+   proof. Qualify ambiguous symbol names; restore and force-refresh incomplete
+   projects.
+5. Make and save the change. Then call `refresh_session` **before**
+   `get_diagnostics`. Under the normal `Reactive` profile this is usually redundant,
+   but it remains correct in every mode and makes the intended boundary explicit.
+6. Use `review_context`, `evaluate_change_set` or `verify_claim` when the task makes
+   a review or policy claim; do not infer absence merely from a short search result.
+7. Finish with the repository's real build and test commands. `get_diagnostics`
    reports Roslyn compiler diagnostics, not third-party analyzer or runtime results.
 
 For several independent read-only questions, `batch` reuses one session and returns
@@ -215,6 +283,7 @@ one bounded response. Use `measure` first when the likely response size matters.
 | Enforce a quality threshold in CI | Run `aicb analyze -s App.sln -o context.md --fail-on "critical>0 OR debt>120min"`. A failed gate returns exit code `6` and still writes the context document for diagnosis. |
 | Compare an in-place change with a baseline | Call `save_session` before the edit, then `refresh_session` and `compare_with_previous`; use `diff_public_contract` when the public API is the contract that matters. |
 | Review two live analyzed states | `semantic_diff` reports structural changes. `diff_review` adds blast radius, tests and newly introduced findings with a policy verdict. These two-session tools require the Full Select profile. |
+| Reuse an analyzed model across processes | `remember_codebase` persists it, `recall_codebase` loads it without Roslyn, and `refresh_remembered` restores a full live analysis when required. |
 | Curate context visually | The Windows app adds a solution tree, manual context selection, detail and token controls, AI-Builder-MD preview/export, snapshots, Insights, LLM runs and a source editor. |
 
 Configuration precedence is axis- and surface-specific. For example, headless layer
@@ -224,6 +293,9 @@ matrix is in the
 [configuration guide](https://github.com/gregordadera/AICB/blob/main/docs/manual/general/07-profiles-master-data-and-solution-configuration.md#which-axis-wins).
 A running MCP session keeps the configuration it was analyzed with; after editing the
 sidecar, start a new analysis instead of assuming `refresh_session` re-reads it.
+Suppressions hide accepted findings from suppression-aware reading surfaces, but
+`solution_metrics` and the CLI quality gate continue to count them. A shared
+suppression is therefore an explicit review decision, not a way to lower the gate.
 
 ## From semantic engine to human-in-the-loop workspace
 
@@ -298,9 +370,11 @@ An agent can guide the same setup explicitly:
 3. After reviewing or adapting that proposal, `apply_solution_config` creates and
    activates the custom entries, marks the axes initialized and writes both the
    local configuration database and `<SolutionName>.aicb.json` beside the solution.
-4. Commit the sidecar so developers, CI, the CLI and MCP clients use the same rules.
-   Later, `check_solution_config_drift` reports namespaces or test projects no
-   longer covered by that configuration.
+4. Commit the sidecar so the portable solution configuration travels with the
+   repository. Each consumer applies the supported axes described above; do not
+   assume every surface resolves every field identically. Later,
+   `check_solution_config_drift` reports namespaces or test projects no longer
+   covered by that configuration.
 
 `aicb init` is a different operation: it connects a repository to the MCP server
 and installs the agent skill and optional symbol guard. It does **not** initialize

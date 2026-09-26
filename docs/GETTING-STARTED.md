@@ -144,6 +144,22 @@ mode **Reactive**), so that call is usually redundant — but it stays correct i
 mode, and answers carry a `staleness` note either way. The three modes and how to
 change them: [MCP manual §3.6](manual/mcp/03-sessions-and-staleness.md#36-auto-refresh-off-reactive-proactive).
 
+Save editor buffers before asking: AICB reads files on disk, not unsaved editor
+state. Also read the answer's limits before treating an empty or short result as
+proof:
+
+| Signal | What it means | What to do |
+|---|---|---|
+| `staleness` | Saved source differs from the analyzed graph | Refresh when the response is not current |
+| `incompleteProjects` or an inconclusive verdict | Project references were not resolved completely | Restore/build, then `refresh_session(force: true)` |
+| `truncated` with `totalFound` | The response contains only a bounded subset | Narrow or paginate the query |
+| ambiguous candidates or `mergedNamesakes` | The name did not identify one symbol | Use a qualified type or member name |
+| `origin: "Recalled"` | The model was restored from persistent memory without a live workspace | Use `refresh_remembered` for live-only detail and line numbers |
+
+For claims such as “unused”, “untested” or “absent”, prefer `assert_absence` or
+`verify_claim`. They preserve `indeterminate` when the analyzed model cannot prove
+the claim.
+
 The server documents itself: the `docs` tool is its built-in manual, `list_skills` the
 map of all tools. A generated reference of the default tool set is in
 [`TOOLS.md`](TOOLS.md), and the full reference — every tool, plus sessions, profiles,
