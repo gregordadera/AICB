@@ -14,7 +14,7 @@ The tool prints its own one-line description:
 aicb - Roslyn-based .NET Markdown context generator for AI/LLM workflows. (c) Gregor Dadera - free for private, hobby and educational use and qualifying organizations; see LICENSE.txt.
 ```
 
-AICB is not an IDE, a build tool or a refactoring tool. It reads your solution and reports on it; it does not compile or run your code. The one exception is the desktop app's Details tab, which can edit and save a source file — everywhere else, AICB only tells you things.
+AICB is not an IDE, a build tool or a refactoring tool. It reads your solution and reports on it; it produces no assemblies and does not execute your application code. Two boundary cases keep that read from being a passive one, and both are documented in "How the analysis works": diagnostics are computed from in-memory Roslyn compilations, and opening a solution runs its MSBuild design-time logic. The one exception to read-only behaviour is the desktop app's Details tab, which can edit and save a source file — everywhere else, AICB only tells you things.
 
 ## 1.2 The problem it solves
 

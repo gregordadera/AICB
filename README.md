@@ -438,7 +438,9 @@ Run this from the project you want the agent to work on:
 aicb init
 ```
 
-It writes the MCP configuration and the `aicb-csharp-context` agent skill without
+It writes the MCP configuration for the client it detects (`.mcp.json` for Claude
+Code — other clients need the manual step named below) and the
+`aicb-csharp-context` agent skill without
 overwriting existing files. If it detects Claude Code, Codex or OpenCode project
 configuration, it also installs a **symbol guard** that blocks C# symbol searches
 by grep and redirects the agent to the semantic tool. This intentionally changes

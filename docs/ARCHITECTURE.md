@@ -146,7 +146,9 @@ The regression suite compares the complete normalized analysis dump from an
 incrementally refreshed session with a separately opened full-reload session. Its
 single-edit matrix covers method-body changes, added and deleted methods, changed
 signatures, deleted and renamed types, changes in one half of a partial type, and
-re-running source-generated members on the forked Roslyn snapshot. It also asserts
+re-deriving attribute-declared source-generated members on the forked Roslyn
+snapshot (name reconstruction from the parsed syntax — source generators are never
+executed). It also asserts
 that the incremental path really ran, so an accidental full reload cannot make the
 comparison pass vacuously. File additions or removals and changes to `.csproj`,
 `.props`, `.targets`, solution, XAML and other project-shaping files deliberately
