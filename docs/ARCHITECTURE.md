@@ -310,11 +310,36 @@ not a declared support limit. The desktop app can record per-phase load timings 
 distributions. These let a team measure its own solution rather than extrapolate
 from an unrelated repository.
 
-A standardized public benchmark that reports cold analysis time, warm-query time,
-incremental refresh time and peak RAM on a large public .NET solution has not yet
-been published. No universal scale or speed claim should be inferred until such a
-benchmark includes the repository revision, target frameworks, restore state,
-machine, AICB version, commands, cache state and raw results.
+### Published benchmark (2026-09-26)
+
+A standardized public benchmark that reports cold analysis time, warm-query time
+and peak RAM on three public .NET solutions is published below. Measurement
+procedure: each repository was analyzed at the stated revision after a restore
+with its pinned SDK; a fresh MCP server process answered `solution_metrics` twice
+on the restored solution. The first call is **cold** — it carries the full MSBuild
+load and Roslyn analysis, with no warm AICB session, no persisted analysis and no
+session cache. The second identical call in the same session is the **warm**
+query. Peak RAM is the peak working set of the AICB process tree during the cold
+phase, sampled once per second. NuGet and MSBuild machine caches were warm from
+the restore; the very first analysis on a cold machine additionally pays one-time
+MSBuild node startup (about 9 s on the test machine). `get_diagnostics` reported
+`incompleteProjects: []` on all three solutions.
+
+| Solution | Repository revision | C# LOC (git-tracked) | Cold | Warm | Peak RAM | Production types / methods |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| `Serilog.sln` | `serilog/serilog` `2ef6364` | ≈ 24,700 | 9.5 s | 188 ms | 1.21 GB | 129 / 657 |
+| `src/MahApps.Metro.sln` | `MahApps/MahApps.Metro` `72099e3` | ≈ 54,700 | 30.1 s | 215 ms | 2.92 GB | 322 / 1,840 |
+| `RavenDB.sln` | `ravendb/ravendb` `5415dde` | ≈ 1.76 M | 96.6 s | 1.86 s | 4.05 GB | 9,316 / 33,606 |
+
+Machine: Windows 10 Pro, Intel Core i9-9900K (8 cores / 16 threads), 32 GB RAM.
+AICB `0.5.464.52` (build `d7935ebb`), measured 2026-09-26.
+
+Reading notes: the MahApps solution as published carries 755 compiler diagnostics
+in its `net462` test project; they do not affect the production-scope analysis.
+Serilog's restore required `-p:NuGetAudit=false` because a vulnerable transitive
+test dependency would otherwise fail the restore as an error. Incremental refresh
+time is not yet covered by this benchmark, and these numbers are measured data
+points on one machine, not a universal performance promise.
 
 ## What long-term reliability and compatibility are promised?
 

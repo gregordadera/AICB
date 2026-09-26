@@ -146,7 +146,7 @@ What the switch does and does not change:
 
 ## 4.6 How long it takes
 
-There is no published rule of thumb of the form "solution size → analysis duration"; the time depends on the number of projects and documents, on restore state and on disk speed. Two practical statements hold:
+There is no universal formula of the form "solution size → analysis duration"; the time depends on the number of projects and documents, on restore state and on disk speed. The published benchmark in the [architecture, limits and evidence guide](../../ARCHITECTURE.md#how-does-aicb-scale-on-large-solutions) reports measured cold analysis and warm-query times on three public solutions (≈ 25k, ≈ 55k and ≈ 1.8M lines of C#): about 10 s, 30 s and 97 s cold, warm answers in well under 2 s. Two practical statements hold:
 
 - The analysis itself is usually a matter of minutes even for large solutions.
 - Producing the **full Markdown export** of a very large solution is the expensive step, not the analysis: it builds the document single-threaded and can take considerably longer than the analysis it renders.

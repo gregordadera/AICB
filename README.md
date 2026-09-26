@@ -198,7 +198,7 @@ turning missing evidence into a false negative.
 
 The question-first [architecture, limits and evidence guide](https://github.com/gregordadera/AICB/blob/main/docs/ARCHITECTURE.md)
 explains what lives in memory, how refresh and context selection work, which claims
-are measured, and which benchmarks have not yet been published.
+are measured, and where the published scale benchmark stands.
 
 ## Where it helps
 
@@ -523,10 +523,11 @@ MSBuild loads and optionally set `analyzePreferredTfmOnly` to avoid analyzing ev
 target-framework instance. `summaryOnly`, query scopes and token budgets reduce
 response volume; they do not necessarily reduce the underlying solution analysis.
 The desktop `load-perf.log` and MCP `usage_report` provide local phase and latency
-measurements. A standardized cold/warm time and RAM benchmark on a large public
-.NET solution has **not yet been published**, so these controls are not a universal
-performance claim. The [architecture and evidence guide](https://github.com/gregordadera/AICB/blob/main/docs/ARCHITECTURE.md#how-does-aicb-scale-on-large-solutions)
-states the exact boundary.
+measurements. A standardized cold/warm time and RAM benchmark on three public
+.NET solutions (≈ 25k, ≈ 55k and ≈ 1.8M lines of C#) is published in the
+[architecture and evidence guide](https://github.com/gregordadera/AICB/blob/main/docs/ARCHITECTURE.md#how-does-aicb-scale-on-large-solutions);
+these controls are still not a universal performance claim, but there is now a
+measured boundary.
 
 Public releases currently have no declared LTS window, response-time SLA or promise
 that every MCP response and persisted schema remains unchanged across versions.
