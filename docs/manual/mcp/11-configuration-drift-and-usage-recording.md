@@ -144,7 +144,7 @@ Worth knowing: an edit to the active profile in the desktop application does not
 The answer is assembled from four parts:
 
 ```text
-aicb MCP server (AIContextBuilder) v<version> (commit <sha>) - Roslyn-based .NET context generator. (c) Gregor Dadera - free for individuals and small organizations; see LICENSE.txt for the thresholds.
+aicb MCP server (AIContextBuilder) v<version> (commit <sha>) - Roslyn-based .NET context generator. (c) Gregor Dadera - free for private, hobby and educational use and qualifying organizations; see LICENSE.txt.
 Config DB schema: user_version=<n> (<path to the config DB>).
 <analyzer drift line>
 

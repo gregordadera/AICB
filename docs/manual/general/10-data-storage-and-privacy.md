@@ -407,13 +407,13 @@ Of these 80 components, 76 ship a binary; 4 are metapackages or are supplied by 
 
 The largest parts of that surface are the Roslyn compiler and workspace assemblies (which do the analysis), the MSBuild integration, the MCP SDK (Apache-2.0), and SQLite — including the **native** SQLite binaries for many platforms, which is why the attribution covers machine code and not only managed assemblies. The file also carries the copyright notices and the licence texts of the components that require them.
 
-The product's own licence is separate and sits beside the notices file as `LICENSE.txt`, with the full bilingual EULA referenced from it.
+The product's own licence is separate and sits beside the notices file as the full bilingual `EULA.md`, with the non-binding orientation summary in `LICENSE.txt`.
 
 ## 10.12 What the product promises and requires
 
 The license terms (the three thresholds, the always-free cases, the restrictions and the liability rules) are described in "License, installation and updates"; the prerequisites and the one-installation-per-machine rule are described there as well.
 
-One statement belongs here, because it is about data: the software contains **no technical verification** of the license — no license server, no activation token, no watermark mechanism and no telemetry. This is about what is transmitted and about enforcement; it does not mean that nothing is recorded locally. The one thing the product records locally is the MCP usage table described above, which never leaves your machine.
+One statement belongs here, because it is about data: the 90-day transition period is contractual text only, not a timer in the product. The software transmits no threshold or deadline data, blocks no feature and contains no license server, activation token, watermark mechanism, phone-home or outbound licensing telemetry. This does not mean that nothing is recorded locally: the MCP usage table described above records tool calls for local inspection and never leaves your machine.
 
 Questions, bugs and feature requests go to the project's GitHub Issues; please include `aicb --version` and — for the MCP server — the output of the `server_info` tool. Security issues go through the private route described in `SECURITY.md` (email `aicb@dadera.de`, or GitHub's private "Report a vulnerability").
 

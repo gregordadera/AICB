@@ -6,7 +6,7 @@ AIContextBuilder is closed source: you install a released build, and there is no
 
 ## 2.1 The license
 
-AIContextBuilder is licensed under the AIContextBuilder End-User License Agreement (EULA). The file `LICENSE.txt` is shipped with every distribution form and packed into the NuGet package; it describes itself as a summary for orientation only and states that the EULA is binding. The full bilingual EULA (German / English) is `EULA.md` in the public repository: https://github.com/gregordadera/AICB/blob/main/EULA.md. The German version is binding for users whose habitual residence is in Germany; for all other users the English version is binding.
+AIContextBuilder is licensed under the AIContextBuilder End-User License Agreement (EULA). The full bilingual agreement `EULA.md` and its non-binding orientation summary `LICENSE.txt` are shipped with every distribution form and packed into the NuGet package. The public current text is https://github.com/gregordadera/AICB/blob/main/EULA.md; the immutable reference for version 0.3 is https://github.com/gregordadera/AICB/blob/eula-v0.3/EULA.md. The German version is binding for natural persons habitually resident in Germany and organizations with their registered office or principal place of business in Germany; the English version is binding for other licensees unless an individual agreement selects the German version.
 
 ### Free use below three thresholds
 
@@ -18,16 +18,16 @@ Use is free of charge for as long as your organization reaches **none** of these
 | Annual turnover | EUR 10,000,000 |
 | Developers | 21 |
 
-Reaching or exceeding even one of them requires a commercial license. "Organization" means you together with all linked enterprises: a subsidiary is counted together with its group. The counting rules of EU Recommendation 2003/361/EC are used to determine linked and partner enterprises and to ascertain annual turnover, but the thresholds stated in that recommendation do not apply; only the three values above are authoritative.
+Reaching or exceeding even one of them starts the commercial-license transition described below. "Organization" means you together with enterprises under common direct or indirect control: a subsidiary is counted together with its group. The control tests in Article 3(3) of EU Recommendation 2003/361/EC determine linked enterprises. A minority participation without control does not by itself join two organizations, and the thresholds in that recommendation do not apply; only the three values above are authoritative.
 
 How the terms are counted:
 
 | Term | Counted as |
 |---|---|
 | Employees | all persons working for the organization, regardless of the form or extent of their engagement; counted as headcount, not as full-time equivalents |
-| Developers | every natural person who, in the course of their work for the organization, writes, modifies or reviews source code, regardless of job title, form or extent of engagement. People who only plan, coordinate or test software without reference to source code are not counted |
+| Developers | every natural person who, in the course of their work for the organization, writes, modifies or reviews source code, regardless of job title, form or extent of engagement. People who only plan, coordinate or test software without reference to source code are not counted. Automated systems and LLM agents are not natural persons and do not count as additional developers |
 | Annual turnover | the consolidated turnover of the organization in its most recently completed financial year; foreign currencies are converted at the European Central Bank reference rate on the balance sheet date. For organizations without turnover in the commercial-law sense, this condition is disregarded |
-| Assessment date | the end of each financial year, and any point at which a threshold is first reached |
+| Assessment date | the end of each financial year, and any other point at which documented facts show that a threshold has been reached or exceeded |
 
 Always free of charge, regardless of the thresholds:
 
@@ -38,9 +38,11 @@ Always free of charge, regardless of the thresholds:
 
 ### When a commercial license is required
 
-If your organization reaches or exceeds one of the thresholds, a commercial license must be agreed **before further use**. You have **90 days** from first reaching the threshold to arrange it, and use stays free of charge until that period expires. Terms are agreed individually; contact **aicb@dadera.de**.
+If your organization reaches or exceeds one threshold, a **90-day contractual transition period** begins. Use stays free of charge during that period; a written commercial license is required to continue afterwards. Terms are agreed individually; price and scope can depend on licensed users, requested support and response scope, and agreed priority or delivery commitments for improvement requests. A commercial agreement may include support, version maintenance and prioritized general product improvements; payment alone creates no unstated SLA or implementation promise. Contact **aicb@dadera.de**.
 
-The software contains no technical verification of any of this: no license server, no activation token, no watermarking mechanism and no telemetry. Compliance is your responsibility.
+The 90 days are contractual text only. The software starts no timer, transmits no threshold or deadline data, blocks no feature and does not technically stop when the period ends. There is no license server, activation token, watermarking or outbound licensing telemetry. The MCP server can record tool calls locally for `usage_report` and the desktop app's MCP Usage view; these data are not used for licensing and never leave the machine. Compliance is your responsibility.
+
+Customer code is never collected or used for product improvement automatically. Any examination requires material or access deliberately provided by the customer and a separate agreement on scope, confidentiality and retention. Accepted improvements are developed as general AICB capabilities rather than as a customer-specific fork unless an individual agreement says otherwise.
 
 ### Donations
 
@@ -54,13 +56,13 @@ You may not:
 - remove, alter or obscure copyright notices, trademarks or version information;
 - redistribute, rent, lease, resell or otherwise make the software available to third parties;
 - modify or translate the software, or create derivative works from it;
-- integrate or embed the software, in whole or in part, into other products, services or works;
+- bundle or embed the AICB binaries into another product, or offer them as a hosted/shared service for direct third-party use;
 - present or distribute the software under your own name or brand, or as your own work (re-branding);
 - build competing products on the basis of the software.
 
-Backups for your own use are permitted.
+Backups for your own use are permitted. Connecting AICB to MCP clients, agent harnesses, scripts, build systems and CI/CD through its documented interfaces is also permitted, as is internal use by consultants serving clients. You retain all rights in your source code and may use, adapt, version and share generated context, exports, `.aicb.json` sidecars and files installed by `aicb init`, subject to rights in their underlying material and third-party content.
 
-"**AIContextBuilder**" and "**AIContextBuilder for .NET**" are unregistered trademarks of Gregor Dadera. Factual references (for example "created with AIContextBuilder") are fine; use in your own product names, brands or advertising is not.
+"**AIContextBuilder**" and "**AIContextBuilder for .NET**" are product names used by Gregor Dadera; no registration is claimed. Factual references (for example "created with AIContextBuilder") are fine; re-branding or implying a partnership is not.
 
 ### Warranty, liability and applicable law
 
@@ -141,7 +143,7 @@ dotnet tool uninstall -g AIContextBuilder
    - If a global .NET tool is already installed, an extra group appears: `AICB is already installed as a .NET tool (NuGet):`, with the option `Remove the .NET tool - the MCP server then comes from this installation and is updated with the desktop app (recommended)`, selected by default. See "One installation per machine" below.
 6. Finish the setup; you can launch the app directly from the last page.
 
-The setup installs both executables, `gui\aicb-ui.exe` (the desktop app) and `cli\aicb.exe` (the CLI and MCP server), and the two legal documents `LICENSE.txt` and `THIRD-PARTY-NOTICES.txt` into the install folder.
+The setup installs both executables, `gui\aicb-ui.exe` (the desktop app) and `cli\aicb.exe` (the CLI and MCP server), the full agreement `EULA.md`, its summary `LICENSE.txt`, and `THIRD-PARTY-NOTICES.txt` into the install folder.
 
 Note: A change to the `PATH` reaches only processes started afterwards. Consoles, editors and AI agents that are already open find the `aicb` command only after a restart; the installer's last page says so.
 
@@ -164,7 +166,7 @@ Note: If the .NET tool cannot be removed because it is still running as an agent
 }
 ```
 
-The extracted folder also contains `LIESMICH.txt` (a bilingual readme with the same notes), `LICENSE.txt` and `THIRD-PARTY-NOTICES.txt`. To remove the portable copy, delete the folder; your data stays (see below).
+The extracted folder also contains `LIESMICH.txt` (a bilingual readme with the same notes), `EULA.md`, `LICENSE.txt` and `THIRD-PARTY-NOTICES.txt`. To remove the portable copy, delete the folder; your data stays (see below).
 
 Note: An installed copy and an unpacked copy share the data folder `%APPDATA%\AIContextBuilder\` and therefore the same database. If the unpacked copy is newer than the installed one, it migrates the database to its schema, and that migration is one-way: the installed copy will afterwards refuse to start and report that the database was written by a newer version. That is a safeguard, not a defect. Two ways out: bring the installed copy to the same version, or point `Settings > Storage` at a different database file (which starts you with an empty one there).
 

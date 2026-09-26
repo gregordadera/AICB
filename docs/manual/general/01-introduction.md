@@ -11,7 +11,7 @@ Roslyn is Microsoft's .NET compiler platform — the engine behind the C# compil
 The tool prints its own one-line description:
 
 ```text
-aicb - Roslyn-based .NET Markdown context generator for AI/LLM workflows. (c) Gregor Dadera - free for individuals and small organizations; see LICENSE.txt for the thresholds.
+aicb - Roslyn-based .NET Markdown context generator for AI/LLM workflows. (c) Gregor Dadera - free for private, hobby and educational use and qualifying organizations; see LICENSE.txt.
 ```
 
 AICB is not an IDE, a build tool or a refactoring tool. It reads your solution and reports on it; it does not compile or run your code. The one exception is the desktop app's Details tab, which can edit and save a source file — everywhere else, AICB only tells you things.
@@ -42,9 +42,9 @@ AICB is closed source. The license is free of charge for natural persons (privat
 - EUR 10 million annual turnover,
 - 21 developers.
 
-A subsidiary counts together with its group, and the thresholds measure your organization only — the size of your clients does not matter, including when you work on their premises. Once your organization reaches or exceeds one of the thresholds, a commercial license is required before further use; you have 90 days from first reaching a threshold to arrange it, and use stays free of charge until then. Terms are agreed individually.
+A subsidiary counts together with enterprises under common control, and the thresholds measure your organization only — the size of your clients does not matter, including when you work on their premises. Once your organization reaches or exceeds one threshold, a 90-day contractual transition period begins; use stays free during that period and a commercial license is required to continue afterwards. The period is text in the agreement, not a product timer: AICB sends no threshold or deadline data, blocks no feature and does not technically stop. Terms are agreed individually.
 
-Redistribution, modification, repackaging and competing products are not permitted. The software contains no license server and no activation token; compliance is your own responsibility. `LICENSE.txt` ships with the product and carries the summary; the full bilingual End-User License Agreement (EULA) is published as `EULA.md` in the public repository github.com/gregordadera/AICB. The chapter "License, installation and updates" has the details.
+Connecting AICB to MCP clients, agent harnesses, scripts, build systems and CI through the documented interfaces is permitted. Redistribution, modification, repackaging, resale, hosted third-party access and competing products are not. The software contains no license server, activation token or outbound licensing telemetry; local MCP tool-call usage is not license telemetry. `EULA.md` ships with the product as the full bilingual agreement and `LICENSE.txt` as its summary; both are also published in the public repository github.com/gregordadera/AICB. The chapter "License, installation and updates" has the details.
 
 ## 1.4 The three faces
 

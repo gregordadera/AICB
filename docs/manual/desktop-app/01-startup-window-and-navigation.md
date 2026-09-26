@@ -294,7 +294,7 @@ The `Start` page is what you see while no tab is open. The same page is also ava
 
 From top to bottom it shows:
 
-1. The hero: the AICB logo, the product name in two tones, and the sentence `Turn your C# solution into a semantically compressed context for LLMs. Open a solution or load a previous session to get started.` Below it stand the claims `100 % local analysis - nothing is sent without your action.` and `No telemetry, no update check, no account. The only outbound connection is an LLM request you trigger yourself, and it can point at a local model.`
+1. The hero: the AICB logo, the product name in two tones, and the sentence `Turn your C# solution into a semantically compressed context for LLMs. Open a solution or load a previous session to get started.` Below it stand the claims `100 % local analysis - nothing is sent without your action.` and `No outbound telemetry, no update check, no account. The desktop app contacts only an LLM endpoint you configure - for manual sends, connection tests or armed first-load proposals - and it can point at a local model.`
 2. Three action cards:
 
 | Card | Subtitle | What it does |

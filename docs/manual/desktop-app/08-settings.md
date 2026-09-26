@@ -723,10 +723,10 @@ Note: if a model profile was exported with `Include endpoints` off, the endpoint
 - **The hero card** shows the product name, the current version, the tagline `C# context for LLMs` and a short description.
 - **`Third-party libraries`** lists the key libraries this build ships with, each with the version of the assembly actually loaded at runtime (never maintained by hand): Roslyn (`Microsoft.CodeAnalysis`), WPF-UI, AvalonEdit and MVVM Toolkit (`CommunityToolkit.Mvvm`).
 - **`Contact & community`** lists `Support` ("Questions, bugs and feature requests: https://github.com/gregordadera/AICB/issues") and `Community` ("There are no public community channels yet.").
-- **`Support & Licensing`** carries the license summary: "Free for private, hobby and educational use, and for organizations that reach none of three thresholds: 100 employees, EUR 10 million annual turnover, 21 developers. Once one is reached, a commercial licence is required; you have 90 days to arrange it. Donations are welcome but separate - they do not replace a licence. The software contains no technical verification - compliance is based on trust."
+- **`Support & Licensing`** carries the license summary: "Free for private, hobby and educational use, and for organizations that reach none of three thresholds: 100 employees, EUR 10 million annual turnover, 21 developers. Once one is reached, there is a 90-day contractual transition period to arrange a commercial licence. AICB starts no licence timer, sends no threshold data and blocks no feature. Donations are welcome but separate - they do not replace a licence."
   - `Sponsor on GitHub` opens the project's GitHub Sponsors page in your browser.
-  - `View License Agreement` opens the bundled `LICENSE.txt` (next to the application executable) in your default text editor. `LICENSE.txt` holds the binding terms.
-- **`Copyright`** shows the copyright notice and the trademark attributions.
+  - `View License Agreement` opens the bundled full `EULA.md` from the distribution root in your default editor. A development build without that file falls back to the `LICENSE.txt` summary next to the executable.
+- **`Copyright`** shows the copyright notice and product-name / third-party trademark attributions.
 
 ## 8.22 Configuring AICB for a team
 

@@ -4,8 +4,8 @@ THIRD-PARTY NOTICES FOR AI CONTEXT BUILDER
 AI Context Builder is distributed in three forms - a `dotnet tool` NuGet package, a
 Windows installer and a plain ZIP - and all three carry third-party libraries as
 compiled binaries. This file is the attribution those libraries require. It does NOT
-cover AI Context Builder itself: that is governed by LICENSE.txt, which sits beside
-this file and is a separate, non-open-source agreement.
+cover AI Context Builder itself: that is governed by EULA.md, which sits beside
+this file; LICENSE.txt is its non-binding orientation summary.
 
 The list below is GENERATED from the restored dependency graph of the two projects
 that reach a user, so it is the set of components that actually ship rather than a

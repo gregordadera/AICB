@@ -585,17 +585,24 @@ Use is free for:
 
 The thresholds apply to your organization, not to your clients. After first
 reaching any one threshold, you have 90 days to agree a commercial licence; use
-remains free during that period. Commercial terms are quoted individually. Price
+remains free during that period. The 90 days are contractual text only: AICB
+starts no licence timer, sends no threshold or deadline data, blocks no feature
+and does not technically stop working when the period ends. Commercial terms are
+quoted individually. Price
 and scope depend on the number of users, the requested support level and any agreed
 priority for improvement requests. A commercial agreement can include support,
 defined response or maintenance commitments, and prioritized consideration or
 implementation of improvements—for example, making a generally useful analyzer
 handle patterns found in the customer's code more accurately. Such work improves
 the general AICB product; it does not create a customer-specific fork or specialize
-AICB to one codebase. Exact deliverables, priorities and guarantees exist only when
-written into the individual agreement. Contact `aicb@dadera.de`. There is no
-technical licence enforcement. Redistribution, modification, repackaging and
-competing products are not permitted. See the [plain-language guide](https://github.com/gregordadera/AICB/blob/main/docs/LICENSING.md),
+AICB to one codebase. Customer code is never collected or used for improvement
+automatically; examining it requires material or access deliberately provided by
+the customer and a separate agreement on scope and confidentiality. Exact
+deliverables, priorities and guarantees exist only when written into the individual
+agreement. Connecting AICB to MCP clients, agent harnesses, scripts, build systems
+and CI through its documented interfaces is permitted. Redistributing, modifying,
+repackaging, reselling or offering the AICB binaries as a hosted service is not.
+Contact `aicb@dadera.de`. See the [plain-language guide](https://github.com/gregordadera/AICB/blob/main/docs/LICENSING.md),
 [`LICENSE.txt`](https://github.com/gregordadera/AICB/blob/main/LICENSE.txt) and the full bilingual [`EULA.md`](https://github.com/gregordadera/AICB/blob/main/EULA.md).
 
 ## Documentation and support
@@ -615,5 +622,5 @@ not offer a **New issue** button, use Discussions. Include `aicb --version` and,
 for MCP problems, the output of `server_info`. Report security issues privately as
 described in [`SECURITY.md`](https://github.com/gregordadera/AICB/blob/main/SECURITY.md).
 
-"AIContextBuilder" and "AIContextBuilder for .NET" are unregistered trademarks of
-Gregor Dadera.
+"AIContextBuilder" and "AIContextBuilder for .NET" are product names used by
+Gregor Dadera; no registration is claimed.
