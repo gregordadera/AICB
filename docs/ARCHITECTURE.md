@@ -381,12 +381,12 @@ The documentation separates observations from intended benefits.
 | AICB versus the Roslyn language server on a selected symbol sample | Method and measured examples are published in the introduction; it is explicitly a structural comparison, not a general agent-quality benchmark |
 | Token-budget and context-selection behavior | Selection rules, floors, precedence and omission disclosures are documented |
 | Incremental refresh versus a clean full reload | A regression matrix compares the complete normalized analysis for the listed single-edit shapes; a combined public multi-file/branch-switch matrix is not yet published |
-| Standardized performance on a very large public solution | **Not yet published** |
+| Standardized cold/warm performance and peak RAM on public solutions (≈ 25k, ≈ 55k and ≈ 1.8M lines of C#) | Published with revisions, machine, AICB version, procedure and caveats; see [How does AICB scale on large solutions?](#how-does-aicb-scale-on-large-solutions) |
 | Agent success, time, tool calls and tokens with versus without AICB | **Not yet published** |
 | Reproducible head-to-head comparison with CodeLens, DotLens or another named product | **Not yet published** |
 | Per-tool false-positive and false-negative rates over a representative public corpus | **Not yet published**; conservative tool verdicts and profile curation are safeguards, not a substitute for that measurement |
 
-Until those studies exist, AICB does not claim a measured universal
+Until those remaining studies exist, AICB does not claim a measured universal
 speedup, lower token bill or higher agent success rate. A future benchmark should
 publish the repository and revision, AICB and competitor versions, machine,
 commands, raw outputs, task set and denominators—not only a summary score.
