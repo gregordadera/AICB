@@ -284,6 +284,68 @@ Before treating an empty or short result as proof, inspect the response metadata
 | Bundle manifest / leading comment | Tests, siblings, types or methods were omitted under the token budget | Increase the budget or request the omitted axis directly |
 | Dynamic/unknown placeholders | A relationship exists syntactically but its target cannot be established statically | Verify runtime configuration or construction code |
 
+## How does AICB scale on large solutions?
+
+There is no published hard project-count ceiling. The resource cost depends on the
+shape of the input rather than one number: loaded projects, C# documents,
+target-framework instances, linked files, compilations and the density of the
+resulting relationship indexes all contribute. Multiple warm MCP sessions also
+hold separate graphs and Roslyn workspaces; the session cache therefore has a
+configurable count and time-to-live rather than assuming memory is free.
+
+The available scale controls act at different stages:
+
+| Control | What it reduces | What it does not promise |
+|---|---|---|
+| `.slnf` | Projects loaded by MSBuild and analyzed by AICB | Coverage outside the filter |
+| `analyzePreferredTfmOnly` | Duplicate project instances and document analysis for multi-targeted projects | Fan-in edges that exist only in a non-preferred target framework |
+| Warm sessions and incremental refresh | Repeated load and analysis work after eligible saved-source edits | Incremental handling of added/removed files, project-shaping changes or every branch switch |
+| Persisted recall | Startup analysis when a reduced recalled-session contract is sufficient | A live Roslyn workspace, line numbers or every live-only insight |
+| `summaryOnly`, result caps, scope and token budgets | Response size and agent context cost | Lower solution-load or whole-analysis cost; some scopes are post-filters |
+
+For architecture orientation, `summaryOnly: true` is recommended for extreme
+solutions such as those with 200 or more projects; that is a response safeguard,
+not a declared support limit. The desktop app can record per-phase load timings in
+`load-perf.log`, while `usage_report` records local per-tool latency and result-size
+distributions. These let a team measure its own solution rather than extrapolate
+from an unrelated repository.
+
+A standardized public benchmark that reports cold analysis time, warm-query time,
+incremental refresh time and peak RAM on a large public .NET solution has not yet
+been published. No universal scale or speed claim should be inferred until such a
+benchmark includes the repository revision, target frameworks, restore state,
+machine, AICB version, commands, cache state and raw results.
+
+## What long-term reliability and compatibility are promised?
+
+The public release channel currently declares no LTS support window, response-time
+SLA or immutable compatibility contract for every MCP response, database schema or
+persisted analysis payload. The `0.5.x` line should therefore be treated as an
+evolving product, with the changelog as the release-level record rather than an
+unstated promise of wire- or storage-format stability.
+
+The product does provide defensive compatibility behavior:
+
+- `server_info` reports the product version, build commit, database schema and
+  binary/configuration/analyzer drift.
+- A persisted analysis records its payload schema and analyzer identity. If either
+  is incompatible, AICB discards reuse and performs a full analysis instead of
+  loading a plausible but unsafe model.
+- Database migrations are forward migrations. The desktop application refuses to
+  write a database produced by a newer schema rather than saving an older shape
+  over it.
+- The database and application data survive an update, and optional automatic
+  backups can archive them. `<Solution>.aicb.json` remains the Git-trackable source
+  for portable solution configuration.
+- A safe rollback uses an older binary with a separate database or a backup made
+  before migration; pointing it at a database already migrated by a newer version
+  is not a supported downgrade path.
+
+Free/public support is best effort through Issues and Discussions, without a
+guaranteed response time. An individual commercial agreement can define support
+coverage, response targets, version maintenance and the priority or delivery of
+specific improvements. Those commitments apply only as written in that agreement.
+
 ## What is measured publicly, and what is not?
 
 The documentation separates observations from intended benefits.
@@ -297,8 +359,9 @@ The documentation separates observations from intended benefits.
 | Standardized performance on a very large public solution | **Not yet published** |
 | Agent success, time, tool calls and tokens with versus without AICB | **Not yet published** |
 | Reproducible head-to-head comparison with CodeLens, DotLens or another named product | **Not yet published** |
+| Per-tool false-positive and false-negative rates over a representative public corpus | **Not yet published**; conservative tool verdicts and profile curation are safeguards, not a substitute for that measurement |
 
-Until those last three studies exist, AICB does not claim a measured universal
+Until those studies exist, AICB does not claim a measured universal
 speedup, lower token bill or higher agent success rate. A future benchmark should
 publish the repository and revision, AICB and competitor versions, machine,
 commands, raw outputs, task set and denominators—not only a summary score.
@@ -311,7 +374,9 @@ line counts, development effort, AI-assistance share and a repository-wide cover
 percentage are not currently published. Those numbers are not used as quality
 claims. Release behavior and supported surfaces are documented instead, and the
 public [security policy](../SECURITY.md) explains the local-processing and network
-boundary.
+boundary. No independent security audit or reproducible-build attestation is
+currently published. SHA-256 release checksums verify that a download matches the
+published artifact; they are not an external audit of the proprietary implementation.
 
 ## Where to continue
 

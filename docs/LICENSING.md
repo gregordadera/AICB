@@ -28,6 +28,28 @@ As soon as your organization reaches **one** of the three thresholds, a commerci
 licence is required. You then have **90 days** to arrange it, and use stays free in
 the meantime. Terms are agreed individually — write to **aicb@dadera.de**.
 
+## What a commercial agreement can include
+
+There is no one-size-fits-all public price because commercial scope is agreed for
+the organization. The quote depends in particular on:
+
+- the number of users covered by the licence;
+- the requested support scope and response expectations;
+- any agreed priority or delivery commitment for improvement requests.
+
+Depending on the agreement, the commercial relationship can include product
+support, defined response or version-maintenance commitments, and prioritized
+consideration or implementation of requested improvements. One example is studying
+patterns in the customer's codebase and improving an analyzer or MCP workflow so it
+handles that class of code more accurately.
+
+That does not turn AICB into a customer-specific product: accepted improvements are
+designed as general capabilities and become part of the general AICB product rather
+than a specialized fork tied to one codebase. The exact support level, response
+times, maintenance period, priorities and promised deliverables are whatever the
+individual written agreement says; payment alone does not silently create an
+unstated SLA or implementation guarantee.
+
 ## No licence server
 
 There is no activation, no licence key, no telemetry and no phone-home. Nothing in

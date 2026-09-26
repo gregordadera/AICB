@@ -492,6 +492,17 @@ staleness, profiles, pools and facets, and what `aicb init` writes — twelve
 chapters in Markdown, readable in the browser and by an agent, and also
 published as a [PDF](https://github.com/gregordadera/AICB/blob/main/docs/manual/mcp/AICB-MCP-Server.pdf).
 
+The three published counts are starting points, not fixed editions. In the
+desktop **MCP Profiles** editor you can create or duplicate a profile, enable only
+the task facets you want, and select individual core and facet tools. Every core
+tool can be removed except the locked diagnostic `server_info`, so even a very
+small task-specific `tools/list` is possible. The server's fixed lead-in is
+standing agent guidance, not another selectable tool group. For headless setup,
+`AICB_MCP_TOOLS=methods:<tool>,<tool>,…` exposes exactly the named functions;
+class lists, `lean` and `all` are also supported. Profile and environment changes
+take effect at the next server start. `list_skills` shows the resulting in-pool and
+out-of-pool tools. See [profiles, pools and facets](https://github.com/gregordadera/AICB/blob/main/docs/manual/mcp/04-profiles-pools-and-facets.md).
+
 Four Agent Skills ship in [`skills/`](https://github.com/gregordadera/AICB/tree/main/skills):
 
 - `aicb-csharp-context` routes semantic C# questions to the right tool.
@@ -500,6 +511,33 @@ Four Agent Skills ship in [`skills/`](https://github.com/gregordadera/AICB/tree/
 - `aicb-usage-check` reports what this server was actually reached for.
 
 The last three are opt-in: `aicb init --skills=all`.
+
+## Scale, releases and compatibility
+
+AICB has no published hard project-count limit. Initial cost and peak memory are
+solution-specific and grow with loaded projects, documents, target-framework
+instances and graph density. The first analysis can take seconds to minutes;
+subsequent questions reuse the warm graph, and eligible saved-source edits use the
+incremental refresh path. For a very large repository, use a `.slnf` to reduce what
+MSBuild loads and optionally set `analyzePreferredTfmOnly` to avoid analyzing every
+target-framework instance. `summaryOnly`, query scopes and token budgets reduce
+response volume; they do not necessarily reduce the underlying solution analysis.
+The desktop `load-perf.log` and MCP `usage_report` provide local phase and latency
+measurements. A standardized cold/warm time and RAM benchmark on a large public
+.NET solution has **not yet been published**, so these controls are not a universal
+performance claim. The [architecture and evidence guide](https://github.com/gregordadera/AICB/blob/main/docs/ARCHITECTURE.md#how-does-aicb-scale-on-large-solutions)
+states the exact boundary.
+
+Public releases currently have no declared LTS window, response-time SLA or promise
+that every MCP response and persisted schema remains unchanged across versions.
+Operational safeguards are explicit instead: the changelog records releases;
+`server_info` reports version, build and configuration drift; persisted analyses
+carry payload-schema and analyzer identities and fall back to a live analysis when
+they are incompatible; and the desktop refuses to write a database created by a
+newer schema. Database migrations can be one-way, so a reliable rollback means
+backing up before an update and using the older build with a separate or restored
+pre-migration database. Commercial agreements can define stronger support,
+response-time and version-maintenance commitments where required.
 
 ## CLI at a glance
 
@@ -547,9 +585,17 @@ Use is free for:
 
 The thresholds apply to your organization, not to your clients. After first
 reaching any one threshold, you have 90 days to agree a commercial licence; use
-remains free during that period. Contact `aicb@dadera.de`. There is no technical
-licence enforcement. Redistribution, modification, repackaging and competing
-products are not permitted. See the [plain-language guide](https://github.com/gregordadera/AICB/blob/main/docs/LICENSING.md),
+remains free during that period. Commercial terms are quoted individually. Price
+and scope depend on the number of users, the requested support level and any agreed
+priority for improvement requests. A commercial agreement can include support,
+defined response or maintenance commitments, and prioritized consideration or
+implementation of improvements—for example, making a generally useful analyzer
+handle patterns found in the customer's code more accurately. Such work improves
+the general AICB product; it does not create a customer-specific fork or specialize
+AICB to one codebase. Exact deliverables, priorities and guarantees exist only when
+written into the individual agreement. Contact `aicb@dadera.de`. There is no
+technical licence enforcement. Redistribution, modification, repackaging and
+competing products are not permitted. See the [plain-language guide](https://github.com/gregordadera/AICB/blob/main/docs/LICENSING.md),
 [`LICENSE.txt`](https://github.com/gregordadera/AICB/blob/main/LICENSE.txt) and the full bilingual [`EULA.md`](https://github.com/gregordadera/AICB/blob/main/EULA.md).
 
 ## Documentation and support
