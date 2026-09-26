@@ -590,7 +590,7 @@ reaching any one threshold, you have 90 days to agree a commercial licence; use
 remains free during that period. The 90 days are contractual text only: AICB
 starts no licence timer, sends no threshold or deadline data, blocks no feature
 and does not technically stop working when the period ends. Commercial licences
-start at EUR 10 per licensed developer per month; the exact price and scope depend
+start at EUR 25 per licensed developer per month; the exact price and scope depend
 on the number of users, the requested support level and any agreed priority for
 improvement requests. A commercial agreement can include support, defined response
 or maintenance commitments, prioritized consideration or
@@ -626,7 +626,7 @@ Support follows the licence:
 | Improvement requests | Community-driven | Prioritized consideration; agreed priorities are written into the contract |
 | Source access | None | Code review under NDA can be agreed |
 
-Commercial licences **start at EUR 10 per licensed developer per month**. The
+Commercial licences **start at EUR 25 per licensed developer per month**. The
 targets in this table are typical values an individual agreement can include; they
 bind only when written into the agreement, and payment alone creates no unstated
 SLA. Contact `aicb@dadera.de`.

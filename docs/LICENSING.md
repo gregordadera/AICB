@@ -39,7 +39,7 @@ period ends. Terms are agreed individually — write to **aicb@dadera.de**.
 
 ## What a commercial agreement can include
 
-Commercial licences **start at EUR 10 per licensed developer per month**. The exact
+Commercial licences **start at EUR 25 per licensed developer per month**. The exact
 price depends in particular on:
 
 - the number of users covered by the licence;

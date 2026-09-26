@@ -1,10 +1,10 @@
 AIContextBuilder and AIContextBuilder for .NET
 Copyright (c) 2026 Gregor Dadera. All rights reserved.
 
-This software is licensed under version 0.4 of the AIContextBuilder
+This software is licensed under version 0.5 of the AIContextBuilder
 End-User License Agreement (EULA). The full bilingual text (German /
 English) is shipped as EULA.md and published at this immutable reference:
-https://github.com/gregordadera/AICB/blob/eula-v0.4/EULA.md
+https://github.com/gregordadera/AICB/blob/eula-v0.5/EULA.md
 
 SUMMARY (for orientation only; the EULA is binding)
 ===================================================
@@ -37,7 +37,7 @@ Commercial license required:
   - The ninety days are a contractual period only. The software starts no
     timer, sends no threshold or deadline data, blocks no feature and does
     not technically stop working when the period ends.
-  - Commercial licences start at EUR 10 per licensed developer per
+  - Commercial licences start at EUR 25 per licensed developer per
     month. Price and scope may depend on licensed users, requested
     support and response scope, and agreed priority or delivery
     commitments for improvement requests.

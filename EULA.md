@@ -1,11 +1,11 @@
 # AIContextBuilder End-User License Agreement (EULA)
 
-**Version 0.4 · 2026-09-26** · Deutsch / English
+**Version 0.5 · 2026-09-26** · Deutsch / English
 
 Licensor: Gregor Dadera · Contact: aicb@dadera.de
 
 The immutable public reference for this version is
-[`eula-v0.4`](https://github.com/gregordadera/AICB/blob/eula-v0.4/EULA.md).
+[`eula-v0.5`](https://github.com/gregordadera/AICB/blob/eula-v0.5/EULA.md).
 A short summary is in [`LICENSE.txt`](LICENSE.txt) and, in plain words, in
 [`docs/LICENSING.md`](https://github.com/gregordadera/AICB/blob/main/docs/LICENSING.md).
 The summaries are for orientation only; this document is binding.
@@ -34,7 +34,7 @@ Fassung massgeblich (§11.5 / §21.5).
 
 §2.1 — Dieses Endbenutzer-Lizenzabkommen ("**EULA**") gilt fuer jede Ausgabe der
 Software "**AIContextBuilder**" und "**AIContextBuilder for .NET**" (im Folgenden
-"**Software**"), die dieses EULA in Version 0.4 enthaelt oder ausdruecklich darauf
+"**Software**"), die dieses EULA in Version 0.5 enthaelt oder ausdruecklich darauf
 verweist.
 
 §2.2 — Eine spaeter veroeffentlichte EULA-Fassung aendert die Bedingungen einer
@@ -159,7 +159,8 @@ werden. Nach Ablauf dieser Frist ist vor weiterer Nutzung eine schriftliche
 kommerzielle Lizenz zu vereinbaren. Die Ausnahmen des §4.3 bleiben unberuehrt.
 
 §4a.2 — Die Konditionen werden individuell vereinbart. Kommerzielle Lizenzen
-werden ab zehn Euro (10 EUR) je lizenziertem Entwickler und Monat angeboten. Preis
+werden ab fuenfundzwanzig Euro (25 EUR) je lizenziertem Entwickler und Monat
+angeboten. Preis
 und Umfang koennen insbesondere von der Zahl der lizenzierten Nutzer, dem
 gewuenschten Support- und Reaktionsumfang sowie einer vereinbarten Priorisierung
 oder Lieferzusage fuer Verbesserungswuensche abhaengen. Kontakt:
@@ -342,7 +343,7 @@ Abhilferechte bleiben unberuehrt.
 
 §12.1 — This End-User License Agreement ("**EULA**") applies to each distribution
 of "**AIContextBuilder**" and "**AIContextBuilder for .NET**" (the
-"**Software**") that contains or expressly references version 0.4 of this EULA.
+"**Software**") that contains or expressly references version 0.5 of this EULA.
 
 §12.2 — A later EULA version does not retroactively change the terms governing a
 Software version already obtained. A Software version obtained or updated later
@@ -455,7 +456,8 @@ that period expires, a written commercial license must be agreed before further
 use. The exceptions in §14.3 remain unaffected.
 
 §14a.2 — Commercial terms are agreed individually. Commercial licenses are
-offered starting at ten Euro (EUR 10) per licensed developer per month. Price and
+offered starting at twenty-five Euro (EUR 25) per licensed developer per month.
+Price and
 scope may depend in particular on the number of licensed users, requested support
 and response scope, and any agreed priority or delivery commitment for improvement
 requests. Contact: **aicb@dadera.de**.
