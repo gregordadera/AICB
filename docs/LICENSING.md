@@ -39,23 +39,36 @@ period ends. Terms are agreed individually — write to **aicb@dadera.de**.
 
 ## What a commercial agreement can include
 
-There is no one-size-fits-all public price because commercial scope is agreed for
-the organization. The quote depends in particular on:
+Commercial licences **start at EUR 10 per licensed developer per month**. The exact
+price depends in particular on:
 
 - the number of users covered by the licence;
 - the requested support scope and response expectations;
 - any agreed priority or delivery commitment for improvement requests.
 
-Depending on the agreement, the commercial relationship can include product
-support, defined response or version-maintenance commitments, and prioritized
-consideration or implementation of requested improvements. One example is studying
-patterns in the customer's codebase and improving an analyzer or MCP workflow so it
-handles that class of code more accurately.
+Support typically compares like this:
+
+| | Free licence | Commercial agreement |
+| --- | --- | --- |
+| Support channel | GitHub Discussions and Issues | Direct contact plus the public channels |
+| Response target | Best effort | ≤ 2 business days |
+| Security fixes | Shipped through public releases | Fix target ≤ 10 business days for confirmed vulnerabilities |
+| Version maintenance | Current release | Individually agreed maintenance window |
+| Improvement requests | Community-driven | Prioritized consideration; agreed priorities are written into the contract |
+| Source access | None | Code review under NDA can be agreed |
+
+The table shows typical targets. Depending on the agreement, the commercial
+relationship can include product support, defined response or version-maintenance
+commitments, and prioritized consideration or implementation of requested
+improvements. One example is studying patterns in the customer's codebase and
+improving an analyzer or MCP workflow so it handles that class of code more
+accurately.
 
 Customer code is never collected or used for improvement automatically. Examining
 customer code or derived patterns requires material or access the customer
 deliberately provides and a separate agreement on scope, confidentiality and
-retention.
+retention. Source-code review under NDA is a commercial-licence option that gives
+the customer audit insight into AICB without releasing the code.
 
 That does not turn AICB into a customer-specific product: accepted improvements are
 designed as general capabilities and become part of the general AICB product rather

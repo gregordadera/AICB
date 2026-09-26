@@ -537,7 +537,8 @@ they are incompatible; and the desktop refuses to write a database created by a
 newer schema. Database migrations can be one-way, so a reliable rollback means
 backing up before an update and using the older build with a separate or restored
 pre-migration database. Commercial agreements can define stronger support,
-response-time and version-maintenance commitments where required.
+response-time and version-maintenance commitments where required; see
+[Support](#support-and-continued-development).
 
 ## CLI at a glance
 
@@ -587,11 +588,11 @@ The thresholds apply to your organization, not to your clients. After first
 reaching any one threshold, you have 90 days to agree a commercial licence; use
 remains free during that period. The 90 days are contractual text only: AICB
 starts no licence timer, sends no threshold or deadline data, blocks no feature
-and does not technically stop working when the period ends. Commercial terms are
-quoted individually. Price
-and scope depend on the number of users, the requested support level and any agreed
-priority for improvement requests. A commercial agreement can include support,
-defined response or maintenance commitments, and prioritized consideration or
+and does not technically stop working when the period ends. Commercial licences
+start at EUR 10 per licensed developer per month; the exact price and scope depend
+on the number of users, the requested support level and any agreed priority for
+improvement requests. A commercial agreement can include support, defined response
+or maintenance commitments, prioritized consideration or
 implementation of improvements—for example, making a generally useful analyzer
 handle patterns found in the customer's code more accurately. Such work improves
 the general AICB product; it does not create a customer-specific fork or specialize
@@ -604,6 +605,30 @@ and CI through its documented interfaces is permitted. Redistributing, modifying
 repackaging, reselling or offering the AICB binaries as a hosted service is not.
 Contact `aicb@dadera.de`. See the [plain-language guide](https://github.com/gregordadera/AICB/blob/main/docs/LICENSING.md),
 [`LICENSE.txt`](https://github.com/gregordadera/AICB/blob/main/LICENSE.txt) and the full bilingual [`EULA.md`](https://github.com/gregordadera/AICB/blob/main/EULA.md).
+
+## Support and continued development
+
+AICB is under active development: the
+[changelog](https://github.com/gregordadera/AICB/blob/main/CHANGELOG.md) records every
+release, and published releases appear on the
+[Releases](https://github.com/gregordadera/AICB/releases) page.
+
+Support follows the licence:
+
+| | Free | Commercial agreement |
+| --- | --- | --- |
+| Who | Everyone below the [thresholds](#licence-at-a-glance) | Organizations at or above a threshold, or anyone who wants stronger terms |
+| Channel | [GitHub Discussions](https://github.com/gregordadera/AICB/discussions), [Issues](https://github.com/gregordadera/AICB/issues) | Direct contact plus the public channels |
+| Response target | Best effort | ≤ 2 business days |
+| Security fixes | Shipped through public releases | Fix target ≤ 10 business days for confirmed vulnerabilities |
+| Version maintenance | Current release | Individually agreed maintenance window |
+| Improvement requests | Community-driven | Prioritized consideration; agreed priorities are written into the contract |
+| Source access | None | Code review under NDA can be agreed |
+
+Commercial licences **start at EUR 10 per licensed developer per month**. The
+targets in this table are typical values an individual agreement can include; they
+bind only when written into the agreement, and payment alone creates no unstated
+SLA. Contact `aicb@dadera.de`.
 
 ## Documentation and support
 
