@@ -334,7 +334,7 @@ MSBuild node startup (about 9 s on the test machine). `get_diagnostics` reported
 | `RavenDB.sln` | `ravendb/ravendb` `5415dde` | ≈ 1.76 M | 96.6 s | 1.86 s | 4.05 GB | 9,316 / 33,606 |
 
 Machine: Windows 10 Pro, Intel Core i9-9900K (8 cores / 16 threads), 32 GB RAM.
-AICB `0.5.464.52` (build `d7935ebb`), measured 2026-09-26.
+AICB `0.5.464.52`, measured 2026-09-26.
 
 Reading notes: the MahApps solution as published carries 755 compiler diagnostics
 in its `net462` test project; they do not affect the production-scope analysis.
