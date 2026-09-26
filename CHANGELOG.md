@@ -4,10 +4,10 @@ Versions follow `Major.Minor.Series.Build`. The build number rises by one for ev
 change that lands, so gaps between published versions are normal — not every build is
 released.
 
-## 0.5.464.56 — the licence that ships is the licence that is published, and six answers stop hiding what they left out
+## 0.5.464.56 - the licence that ships is the licence that is published, and six answers stop hiding what they left out
 
 **Who is affected.** Everyone: the shipped licence text moves from EULA v0.3 to v0.5. Beyond that, this
-release is mostly about MCP answers and exported Markdown telling you what they omitted — `find_usages`,
+release is mostly about MCP answers and exported Markdown telling you what they omitted - `find_usages`,
 `find_symbol`, `symbol_signature`, `architecture_overview`, `solution_config_status`,
 `check_solution_config_drift` and `pack_for_task`. No database change, no re-analysis; saved snapshots stay
 valid. If your client caches tool descriptions, reconnect it once.
@@ -19,7 +19,7 @@ valid. If your client caches tool descriptions, reconnect it once.
   beside it. What v0.4 and v0.5 added over v0.3: commercial licences **start at EUR 25 per licensed
   developer per month**, a commercial agreement can include defined response and security-fix targets,
   version maintenance, prioritized general product improvements and source-code review under NDA. The
-  free thresholds are unchanged — 100 employees, EUR 10 million annual turnover, 21 developers — and so is
+  free thresholds are unchanged - 100 employees, EUR 10 million annual turnover, 21 developers - and so is
   everything about enforcement: no licence server, no activation, no timer, no threshold data leaving the
   machine. The 90-day transition period remains contractual text only.
 - The nuget.org package page now states the same terms as this repository, and the release check derives the
@@ -29,21 +29,21 @@ valid. If your client caches tool descriptions, reconnect it once.
 
 - **`architecture_overview` leads with a `<TRUNCATION>` block** when the document was cut: how many sections
   were capped, how many entries are shown out of how many, and one `SECTION: shown of total` row per cut
-  section. Until now the per-section `+N more` lines each named one section and added up for nobody — on a
+  section. Until now the per-section `+N more` lines each named one section and added up for nobody - on a
   large solution that meant 640 of 8706 entries were shown with no statement anywhere that the rest existed.
   The frontmatter of a truncated document stays where it belongs, so `type`, `title` and `description` are
   still parseable.
-- **`find_usages` reports `selfReferences`** — how many of the listed users are declared on the queried
-  symbol's own type — and adds a note when *all* of them are. That is the answer that reads as outside
+- **`find_usages` reports `selfReferences`** - how many of the listed users are declared on the queried
+  symbol's own type - and adds a note when *all* of them are. That is the answer that reads as outside
   dependence while nothing outside actually depends on the symbol. Self-references are disclosed, never
   filtered out: a self-reference is a real reference.
 - **`find_symbol` and `symbol_signature` say when generated C# was skipped.** Generated sources under `obj/`
-  stay out of the analysis on purpose — the same file often exists once per target framework, so admitting
-  them would multiply every generated type — but a zero-hit answer used to read as "no such type". A
+  stay out of the analysis on purpose - the same file often exists once per target framework, so admitting
+  them would multiply every generated type - but a zero-hit answer used to read as "no such type". A
   zero-hit answer on a solution that has such files now says so in `generatedSourcesNote`.
 - **A broken `.aicb.json` no longer reads as "nothing configured".** `solution_config_status` and
   `check_solution_config_drift` carry `sidecarProblem` when the sidecar next to the `.sln` exists but cannot
-  be used, and they keep an invalid file apart from a locked or unreadable one — a typo is yours to fix, a
+  be used, and they keep an invalid file apart from a locked or unreadable one - a typo is yours to fix, a
   lock is transient. Until now a broken sidecar produced an answer byte-identical to having none, three axes
   reporting `source: "none"`, which is a positive claim that nothing is configured. A healthy answer is
   unchanged.
@@ -62,7 +62,7 @@ valid. If your client caches tool descriptions, reconnect it once.
   the finished document actually contains. On a single-symbol export it had grown to about a third of the
   whole document while explaining blocks that were not in it.
 - **`pack_for_task` fills the budget it was given, also on slices that had to degrade.** A request whose
-  content had to be reduced below the full-code form could settle well under target — measured at about 85 %
+  content had to be reduced below the full-code form could settle well under target - measured at about 85 %
   of a 25 000-token budget where the packer's own target band starts at 92 %; the same request now lands at
   about 96 %.
 
