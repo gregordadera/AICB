@@ -6,7 +6,7 @@ AIContextBuilder is closed source: you install a released build, and there is no
 
 ## 2.1 The license
 
-AIContextBuilder is licensed under the AIContextBuilder End-User License Agreement (EULA). The full bilingual agreement `EULA.md` and its non-binding orientation summary `LICENSE.txt` are shipped with every distribution form and packed into the NuGet package. The public current text is https://github.com/gregordadera/AICB/blob/main/EULA.md; the immutable reference for version 0.5 is https://github.com/gregordadera/AICB/blob/eula-v0.5/EULA.md. The German version is binding for natural persons habitually resident in Germany and organizations with their registered office or principal place of business in Germany; the English version is binding for other licensees unless an individual agreement selects the German version.
+AIContextBuilder is licensed under the AIContextBuilder End-User License Agreement (EULA). The full bilingual agreement `EULA.md` and its non-binding orientation summary `LICENSE.txt` are shipped with every distribution form and packed into the NuGet package. The public current text is https://github.com/gregordadera/AICB/blob/main/EULA.md; the immutable reference for version 0.6 is https://github.com/gregordadera/AICB/blob/eula-v0.6/EULA.md. The German version is binding for natural persons habitually resident in Germany and organizations with their registered office or principal place of business in Germany; the English version is binding for other licensees unless an individual agreement selects the German version.
 
 ### Free use below three thresholds
 
