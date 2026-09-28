@@ -8,11 +8,12 @@
 [![License](https://img.shields.io/badge/license-custom%20EULA-lightgrey)](https://github.com/gregordadera/AICB/blob/main/EULA.md)
 [![M8ven Verified](https://img.shields.io/badge/M8ven%20Verified-publisher%20verified-4c1)](https://m8ven.ai/mcp/gregordadera-aicb-zb5d9e)
 
-**Give coding agents a Roslyn-accurate map of your C#/.NET solution.** `aicb`
-answers questions about callers, implementations, dependency injection, tests,
-side effects and change impact, then packs the relevant code into compact
-Markdown for an LLM. It runs locally as an MCP server and CLI; a Windows desktop
-app adds visual context selection, analysis and editing.
+**Give coding agents a Roslyn-accurate map of your C#/.NET solution.** `aicb` is
+a code intelligence server for C# and .NET: it answers questions about callers,
+implementations, dependency injection, tests, side effects and change impact,
+then packs the relevant code into compact Markdown for an LLM. It runs locally as
+an MCP server and CLI; a Windows desktop app adds visual context selection,
+analysis and editing.
 
 > The software is closed source. This public repository contains its
 > documentation, licence and releases. It is free for individuals, education and
