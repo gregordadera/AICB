@@ -22,6 +22,28 @@ Windows one download covers both.
   .NET tool).
 - The desktop app and the ZIP bring their own .NET runtime; nothing else to install.
 
+### Supported projects
+
+AICB loads C# projects in the SDK project format:
+
+| Target | Versions |
+|---|---|
+| .NET Framework | 4.6.2, 4.7.2, 4.8.1 (SDK-style projects) |
+| .NET Standard | 2.0, 2.1 |
+| .NET | 6, 8, 9, 10, including Windows targets such as WPF |
+
+- Solutions as `.sln`, `.slnx` or a solution filter `.slnf`.
+- A multi-targeted project is loaded once per target framework; see
+  [Multi-targeting](manual/general/04-how-the-analysis-works.md#45-multi-targeting)
+  for analyzing only the newest one.
+- C# up to and including C# 14.
+- Packages must be restored, with a .NET SDK or Visual Studio that matches the
+  solution's targets.
+
+Projects in the classic, non-SDK project format, still common in older .NET Framework
+applications, are not supported. If a solution contains such projects, analyze the
+rest through a solution filter (`.slnf`) that leaves them out.
+
 ## 3. Install
 
 **Pick one per machine.** On Windows with the desktop app, install only the desktop
