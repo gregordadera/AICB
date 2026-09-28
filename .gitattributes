@@ -1,1 +1,5 @@
 * text=auto eol=lf
+
+# This repository carries no source code. Without this line GitHub's language bar
+# reads "Dockerfile 100%", which misdescribes a C#/.NET product.
+Dockerfile linguist-detectable=false
