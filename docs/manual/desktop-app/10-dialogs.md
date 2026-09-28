@@ -311,7 +311,7 @@ Content:
 | 3 | `Expansion Strategy` | `Inherit = the strategy active in the run template, or the global default.` | When this node is expanded while the tree is walked. |
 | 4 | `Tag Schema Overrides (per SchemaType)` | `Per-SchemaType Tag Schema Override (power-user feature). Inherit = active Tag Schema resolution from the MdProfile slot applies.` | The tag schema used for one section type on this node. The pane shows one row per relevant schema type - in the shipped configuration `Class`, `Method`, `Interface`, `Enum`, `MethodGraph` and `FileIndex` - each with its own list. |
 
-- The first entry of every list is `(Inherit)`, meaning "no override here - the normal resolution applies". 
+- The first entry of every list is `(Inherit)`, meaning "no override here - the normal resolution applies".
 - When the editor opens, the current values are preselected. If a referenced preset no longer exists (for example because it was deleted), that slot falls back to `(Inherit)` instead of showing a broken selection.
 - Buttons: `Cancel` (tooltip `Close the editor without saving changes to the NodeOverrides.`) and `Save` (default; tooltip `Save the NodeOverrides for this node. All three slots set to Inherit at once = the Override set is deleted entirely from the DB.`). The focus starts on the detail preset list.
 

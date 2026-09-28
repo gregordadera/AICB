@@ -178,7 +178,7 @@ This glossary explains the terms this manual uses. UI labels, tool names, parame
 
 **Quality profile** - Switches the insight producers on and off - it decides which kinds of finding are produced at all, together with their thresholds, whether findings are dismissable, and which action mode the `Apply` button uses (`DirectApply` or `ConfirmDialog`). Not to be confused with severity: the profile decides **whether** a check runs, the severity how heavy its result weighs.
 
-**Reasoning** - The panel that shows what happened in a run: what the model answered, what it thought, which tools it called, which `Findings` were parsed out of the answer, and the evaluation. 
+**Reasoning** - The panel that shows what happened in a run: what the model answered, what it thought, which tools it called, which `Findings` were parsed out of the answer, and the evaluation.
 
 **Run** - A pass in which aicb sends an assembled context to a language model and collects the answer. Labels such as `Run Templates`, `Active Run` and the layout mode `Run` keep the word. Not to be confused with the traversal depth of the tree expansion.
 
