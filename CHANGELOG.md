@@ -4,6 +4,17 @@ Versions follow `Major.Minor.Series.Build`. The build number rises by one for ev
 change that lands, so gaps between published versions are normal - not every build is
 released.
 
+## Unreleased
+
+### Security
+
+- **The bundled SQLite library moves from 3.41.2 to 3.53.3**, which fixes CVE-2025-6965
+  (GHSA-2m69-gcr7-jv3q, severity high). aicb uses SQLite only for its own local database and runs
+  only its own SQL, so the practical exposure was low - but the vulnerable native library shipped in
+  the NuGet tool package, the installer and the portable ZIP, where a vulnerability scanner reports
+  it. Existing databases open unchanged; no re-analysis is needed. `THIRD-PARTY-NOTICES.txt` lists
+  the updated `SQLitePCLRaw` 2.1.13 packages. First included in build 0.5.464.66.
+
 ## 0.5.464.56 (2026-09-26) - the license that ships is the license that is published, and six answers stop hiding what they left out
 
 **Who is affected.** Everyone: the shipped license text moves from EULA v0.3 to v0.5. Beyond that, this
