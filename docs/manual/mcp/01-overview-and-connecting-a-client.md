@@ -1,4 +1,4 @@
-[AICB – MCP Server](README.md) &middot; chapter 1 of 12
+[AICB - MCP Server](README.md) &middot; chapter 1 of 12
 
 # 1 Overview and connecting a client
 
@@ -12,7 +12,7 @@ This chapter covers what the server is, how to start it, what a client has to be
 - **One server process per client, stdio transport.** The server speaks JSON-RPC on standard input/output. A client starts it as a child process and talks to it over that channel. When the client disconnects (stdin closes) or the process is cancelled, the server shuts down cleanly with exit code `0`.
 - **Session-bound.** The server keeps an analysis of your solution warm. Most tools take a `sessionId`; every tool that takes one also accepts the absolute path of a `.sln`, `.slnx` or `.slnf` file directly and analyzes it on first use, so calling `analyze_solution` first is optional. Answers come from that cached analysis graph; after you edit `.cs` files, `refresh_session` rebuilds it and `get_diagnostics` is the fast pre-build check.
 - **A curated tool pool.** The server registers its whole tool surface but exposes a curated pool. Without further configuration that is the built-in `Default` profile with **54 tools** covering all nine task facets. The built-in `Full Select` profile serves the unnarrowed **72**: start the server with `--mcp-profile mcp-profile/full` for it. The environment variable `AICB_MCP_TOOLS` overrides the pool for the process (`all`, `lean`, or a comma-separated list of tool class names) and wins over the active profile.
-- **Read-only with respect to your code.** Nothing any tool writes is anything Roslyn reads, so every answer is about the tree you wrote. Tools that persist something outside the analysis — `apply_solution_config`, `export_markdown`, `install_agent_hooks`, `save_session`, `remember_codebase`, `refresh_remembered`, `import_constellation` and `diff_review` with `recordRegressions: true` — say so in their own descriptions.
+- **Read-only with respect to your code.** Nothing any tool writes is anything Roslyn reads, so every answer is about the tree you wrote. Tools that persist something outside the analysis - `apply_solution_config`, `export_markdown`, `install_agent_hooks`, `save_session`, `remember_codebase`, `refresh_remembered`, `import_constellation` and `diff_review` with `recordRegressions: true` - say so in their own descriptions.
 - **Nothing leaves your machine.** The server has no outbound network capability at all.
 
 ## 1.2 Starting the server: `aicb mcp`
@@ -21,16 +21,16 @@ The verb describes itself as:
 
 > `Start the MCP server (Model Context Protocol, stdio JSON-RPC) - for Claude Code / Cursor / Cline. With --db-path profile-aware (render slots + tool set + skill from the active MCP profile); --mcp-profile pins which profile that is, for this process only.`
 
-You normally do not start it yourself — your MCP client starts it from its configuration. The command has exactly two options:
+You normally do not start it yourself - your MCP client starts it from its configuration. The command has exactly two options:
 
 | Option | Effect | Default |
 |---|---|---|
-| `--db-path <file>` | Binds the server to a specific `aicb` configuration database and makes it profile-aware: `export_markdown` renders through the active MCP profile, the exposed tool set follows that profile, and its working style shapes the server instructions. The database also supplies the per-solution configuration (layer, exclusions, test detection). | none — the **standard configuration database is resolved automatically** |
-| `--mcp-profile <id>` | Pins the active MCP profile for **this process**. The pin is process-local: it writes nothing back, so a second server or the GUI keeps its own active profile. An unknown id aborts the start. | none — the profile marked active in the configuration database applies |
+| `--db-path <file>` | Binds the server to a specific `aicb` configuration database and makes it profile-aware: `export_markdown` renders through the active MCP profile, the exposed tool set follows that profile, and its working style shapes the server instructions. The database also supplies the per-solution configuration (layer, exclusions, test detection). | none - the **standard configuration database is resolved automatically** |
+| `--mcp-profile <id>` | Pins the active MCP profile for **this process**. The pin is process-local: it writes nothing back, so a second server or the GUI keeps its own active profile. An unknown id aborts the start. | none - the profile marked active in the configuration database applies |
 
 ### `--db-path` and the standard configuration database
 
-"Without `--db-path`" does **not** mean "without a database". When you omit the option, the server resolves the standard configuration database — the same one the GUI uses, on Windows `%APPDATA%\AIContextBuilder\user-data\aicb.acb` — and announces the path on stderr:
+"Without `--db-path`" does **not** mean "without a database". When you omit the option, the server resolves the standard configuration database - the same one the GUI uses, on Windows `%APPDATA%\AIContextBuilder\user-data\aicb.acb` - and announces the path on stderr:
 
 ```text
 No --db-path given; using the standard config DB (same as the GUI): <path>
@@ -57,7 +57,7 @@ warning: --db-path schema migration failed (<reason>); starting without a profil
 With a usable database the server prints the profile it actually serves, for example:
 
 ```text
-Active MCP profile: 'Default' (mcp-profile/default); tool set: methods:server_info,analyze_solution,…; skill: (none).
+Active MCP profile: 'Default' (mcp-profile/default); tool set: methods:server_info,analyze_solution,...; skill: (none).
 ```
 
 The line is extended with `[pinned via --mcp-profile; not persisted]` when you pinned a profile.
@@ -74,7 +74,7 @@ Pinning the MCP profile to '<id>' for this process (--mcp-profile); the profile 
 
 Pinning at start also keeps `tools/list` stable for the lifetime of the process, which the newer protocol revision asks for. There is no runtime switch: changing the profile means restarting the server with a different id.
 
-A pin that cannot be applied is the one case in which the server refuses to start instead of degrading to the default profile. That covers every way it can fail — no configuration database, missing file, failed migration, unknown id, hidden profile:
+A pin that cannot be applied is the one case in which the server refuses to start instead of degrading to the default profile. That covers every way it can fail - no configuration database, missing file, failed migration, unknown id, hidden profile:
 
 ```text
 error: unknown MCP profile '<id>' (--mcp-profile). Available: <ids>.
@@ -101,14 +101,14 @@ Exit codes of the verb:
 
 ## 1.3 The stdio channel
 
-stdout **is** the JSON-RPC channel. A single stray line written to stdout — by product code, by a library, or by MSBuild or Roslyn during an analysis — puts a non-JSON line into the protocol stream. A strict client treats that as a protocol violation and tears the connection down: the server process keeps running, but every client on it is left with `Connection closed` and no way back. This is the one failure mode a stdio server cannot survive, so the server protects the channel in two layers:
+stdout **is** the JSON-RPC channel. A single stray line written to stdout - by product code, by a library, or by MSBuild or Roslyn during an analysis - puts a non-JSON line into the protocol stream. A strict client treats that as a protocol violation and tears the connection down: the server process keeps running, but every client on it is left with `Connection closed` and no way back. This is the one failure mode a stdio server cannot survive, so the server protects the channel in two layers:
 
 - **Logging is redirected to stderr.** Every log record the server and its libraries produce goes to stderr, at every level.
-- **Every other writer is redirected too.** `Console.Out` is pointed at stderr before anything else can write, so no code path in the process — including one written later — can put a byte into the protocol channel. The transport itself is unaffected: it holds its own handle on standard output. Redirecting to stderr rather than discarding is deliberate: a stray write is a defect you want to see.
+- **Every other writer is redirected too.** `Console.Out` is pointed at stderr before anything else can write, so no code path in the process - including one written later - can put a byte into the protocol channel. The transport itself is unaffected: it holds its own handle on standard output. Redirecting to stderr rather than discarding is deliberate: a stray write is a defect you want to see.
 
 Fatal background failures are reported on stderr as well, before the process goes: an unhandled exception (`FATAL: unhandled exception - the aicb MCP server is terminating: <error>`) and an unobserved task exception (`WARNING: unobserved task exception in the aicb MCP server: <error>`). The server cannot prevent such a termination, but it turns a silent death into a named one.
 
-Note: `Connection closed` is a channel problem, not a tool crash. Ordinary tool failures do not close the connection — they come back to the client as clean error responses.
+Note: `Connection closed` is a channel problem, not a tool crash. Ordinary tool failures do not close the connection - they come back to the client as clean error responses.
 
 ## 1.4 Connecting a client
 
@@ -119,11 +119,11 @@ Run `aicb init` in your project directory. It writes the entry your client needs
 | Option | Effect | Default |
 |---|---|---|
 | `--path <dir>` | Project directory to wire up. | the current directory |
-| `--force` | Overwrite artefacts that are already there. Without it, an existing `aicb` entry or skill file is left untouched. | off |
+| `--force` | Overwrite artifacts that are already there. Without it, an existing `aicb` entry or skill file is left untouched. | off |
 | `--skills context\|all` | `context` writes the `aicb-csharp-context` skill; `all` adds the `aicb-code-review` / `aicb-code-simplifier` review pair and `aicb-usage-check`. | `context` |
 | `--hooks auto\|none\|all\|claude-code\|codex\|opencode` | Which agent harnesses to install the symbol guard for: the ones already used in this project, none, all, or one by name. | `auto` |
 
-The run reports each artefact with one of four labels — `created`, `updated`, `kept`, `refused` — and ends with:
+The run reports each artifact with one of four labels - `created`, `updated`, `kept`, `refused` - and ends with:
 
 ```text
 Restart or reconnect your MCP client, then call server_info to confirm it took.
@@ -131,7 +131,7 @@ Restart or reconnect your MCP client, then call server_info to confirm it took.
 
 That last line is the step `init` cannot do for you: a client reads its server list at startup. If you only want the server wiring and no guard, pass `--hooks none`. That writes no enforcement; it does not remove an installation that is already there.
 
-Two client-specific limits are named in the output rather than reported as a clean success: the agent skill is written to `.claude/skills/` only (where other harnesses look for skills has not been measured, and `init` does not guess, because a guessed path writes a file nothing loads), and **OpenCode** discovers MCP servers only through its own `opencode.json`, not through the shared `.mcp.json` — add the `aicb` entry there by hand.
+Two client-specific limits are named in the output rather than reported as a clean success: the agent skill is written to `.claude/skills/` only (where other harnesses look for skills has not been measured, and `init` does not guess, because a guessed path writes a file nothing loads), and **OpenCode** discovers MCP servers only through its own `opencode.json`, not through the shared `.mcp.json` - add the `aicb` entry there by hand.
 
 ### Writing the client entry by hand
 
@@ -188,7 +188,7 @@ Note: do not confuse `.mcp.json` (a client's server list, in your project) with 
 | An `aicb` entry existed and `--force` replaced it | `existing aicb entry replaced (--force)` |
 | The file is not usable as a server list | `left untouched - not valid JSON, or a duplicate key, or the top level is not an object, or 'mcpServers' is not an object; fix or remove it and re-run` |
 
-The last row is the load-bearing rule: when the existing document does not parse, contains a duplicate key, or is not a JSON object, the command writes **nothing**. Overwriting a configuration you own is unreachable rather than merely unlikely. Parsing is strict — comments and trailing commas are not accepted — because a tolerant read followed by a write would silently delete whatever the tolerance swallowed. Without `--force`, an existing `aicb` entry is left exactly as it is; you may have pointed it at a different binary, a wrapper script or a debug build.
+The last row is the load-bearing rule: when the existing document does not parse, contains a duplicate key, or is not a JSON object, the command writes **nothing**. Overwriting a configuration you own is unreachable rather than merely unlikely. Parsing is strict - comments and trailing commas are not accepted - because a tolerant read followed by a write would silently delete whatever the tolerance swallowed. Without `--force`, an existing `aicb` entry is left exactly as it is; you may have pointed it at a different binary, a wrapper script or a debug build.
 
 ### After connecting
 
@@ -202,7 +202,7 @@ The server serves both current MCP protocol revisions over stdio, from the same 
 
 | Revision | Entry point |
 |---|---|
-| `2026-07-28` | `server/discover` — stateless; every request carries its own metadata |
+| `2026-07-28` | `server/discover` - stateless; every request carries its own metadata |
 | `2025-11-25` | `initialize` handshake |
 
 This matters because MCP has no fall-forward: a client that speaks only the older revision has no way to reach a server that speaks only the newer one. Serving both means the client picks whichever revision it knows. Older revisions are accepted as well, because the MCP SDK the server is built on keeps its backward compatibility; the server itself does not branch on the revision at any point. Observed against a running server:
@@ -231,9 +231,9 @@ The server introduces itself to every client as:
 
 | Field | Value |
 |---|---|
-| Server name | `aicb` — deliberately the CLI tool name, not the internal assembly name. This is the name clients and directories display. |
+| Server name | `aicb` - deliberately the CLI tool name, not the internal assembly name. This is the name clients and directories display. |
 | Server version | The version of the installed binary, the same number `aicb --version` prints. It is protocol- and telemetry-bearing: it travels in the handshake and is recorded with every tool call. |
-| Instructions | The fixed text plus the active profile's working style — see below. |
+| Instructions | The fixed text plus the active profile's working style - see below. |
 | Capabilities | `logging`, `resources` and `tools`; both `resources` and `tools` declare `listChanged` (the server sends neither list-changed notification). |
 
 The git commit the binary was built from is **not** part of the handshake. `server_info` reports it separately when the assembly's informational version carries one. Public installer, ZIP and dotnet-tool release builds deliberately omit it; development builds can include it. When present, it distinguishes binaries that share a version number; when absent, `server_info` does not guess.
@@ -264,10 +264,10 @@ What each rule tells the agent:
 
 | Rule | Purpose |
 |---|---|
-| Identity | What the server is. One sentence — an agent that reads nothing else still knows what it is connected to. |
+| Identity | What the server is. One sentence - an agent that reads nothing else still knows what it is connected to. |
 | Symbol questions | For C# symbol questions use aicb tools, never grep or a file read. Names five examples; explains that text search misses overloads, aliases, partial types and interface dispatch. |
 | Symbol-or-text self-test | How to decide in the moment: a symbol is a C# type, method, interface or member; literals, comments and configuration keys are plain text. |
-| Pre-edit gate | Before any edit that changes a symbol other code names — a rename included — the first call is `impact_of_change`. The trigger is the symbol's reach, not the kind of edit. |
+| Pre-edit gate | Before any edit that changes a symbol other code names - a rename included - the first call is `impact_of_change`. The trigger is the symbol's reach, not the kind of edit. |
 | Self-init | Every session-taking tool accepts a `.sln`, `.slnx` or `.slnf` path directly. |
 | Refresh after edit | `analyze_solution` is optional; after editing `.cs` files call `refresh_session` first, then `get_diagnostics` as the fast pre-build check. |
 | Solution configuration | On a new solution, check `solution_config_status`; initialize an uninitialized axis (layer, exclusions, test) with `init_solution_config` and `apply_solution_config`. |
@@ -279,14 +279,14 @@ What each rule tells the agent:
 
 ### Delivery budgets
 
-The server **never truncates** the instructions — it sends the complete composed text. Two client-side budgets shaped the order of the text:
+The server **never truncates** the instructions - it sends the complete composed text. Two client-side budgets shaped the order of the text:
 
 | Boundary | Value | Meaning |
 |---|---|---|
 | Codex discovery surface | first **512 characters** | Codex documents the first 512 characters as the surface available before deferred tool loading. This is a placement requirement, not a claim that Codex truncates there: the identity line and the discovery rules are placed so that this prefix is self-contained. |
 | Claude Code prompt prefix | first **2,048 characters** | The largest prefix of the instructions known to be delivered by a client, measured against Claude Code. |
 
-Both values are **characters**, not bytes, and both protocol revisions use the same budget — the newer revision does not deliver more. The 2,048-character figure is a measurement, not a preference, and it is not a maximum length for the text: a client with a larger budget receives all of it. That is why the fixed text is ordered by delivery priority rather than narrative flow, and why the profile's working style is placed before the reference material instead of appended at the end.
+Both values are **characters**, not bytes, and both protocol revisions use the same budget - the newer revision does not deliver more. The 2,048-character figure is a measurement, not a preference, and it is not a maximum length for the text: a client with a larger budget receives all of it. That is why the fixed text is ordered by delivery priority rather than narrative flow, and why the profile's working style is placed before the reference material instead of appended at the end.
 
 The MCP profile editor in the GUI previews the composed text under the label `Exactly what the MCP server sends for this profile, shown in two client-specific availability boundaries.` and draws a cut mark at the measured budget, so you can see whether a working style lands above or below the line.
 
@@ -297,17 +297,17 @@ A rule that names tools is an invitation to call them, and a call the server the
 - The identity line and the discovery rules are never omitted.
 - A rule is dropped only when **all** of the tools it names are unavailable; a rule that still names one reachable tool keeps its text, including the names it cannot reach.
 - The block about the DB-entity tools is never omitted either, because its subject is precisely tools outside the pool; it keeps the phrase `outside the default profile's pool` **before** every name it mentions, so a client that cuts the text cannot receive a name without the reason not to call it.
-- The same exposed set drives listing, callability and the instructions, so "listed", "callable" and "named in the handshake" cannot drift apart — including under the `AICB_MCP_TOOLS` override.
+- The same exposed set drives listing, callability and the instructions, so "listed", "callable" and "named in the handshake" cannot drift apart - including under the `AICB_MCP_TOOLS` override.
 
 ### The working style
 
-The active MCP profile's working style is spliced into the middle of the fixed text, after the behavior rules and before the reference material, under the heading `Working style:`. It is spliced rather than appended because an appended style would stand behind the whole fixed text — well past the measured budget, so no client would ever receive one.
+The active MCP profile's working style is spliced into the middle of the fixed text, after the behavior rules and before the reference material, under the heading `Working style:`. It is spliced rather than appended because an appended style would stand behind the whole fixed text - well past the measured budget, so no client would ever receive one.
 
 The guarantee is one number: a profile with exactly **one** guidance block is delivered whole. From the second block on the style may be cut by a client with the measured budget; that is deliberate, and the profile editor discloses it instead of promising it away (`Part of this profile's working style falls below the line and is dropped by such a client. Exactly one guidance switch is guaranteed to arrive whole; beyond that it depends on their combined length, which the cut mark above shows.`).
 
 ### When the instructions change
 
-Instructions are read **once**, at the handshake; the protocol has no instructions-changed notification. A profile edit therefore reaches the text at the next server start. In between, the `server_info` tool reports the change as CONFIG DRIFT — its signal that the running server serves a different configuration than the database now holds, and that a restart is due.
+Instructions are read **once**, at the handshake; the protocol has no instructions-changed notification. A profile edit therefore reaches the text at the next server start. In between, the `server_info` tool reports the change as CONFIG DRIFT - its signal that the running server serves a different configuration than the database now holds, and that a restart is due.
 
 ## 1.8 Unknown arguments are disclosed, not rejected
 
@@ -321,7 +321,7 @@ Every successful response that had argument names dropped carries an extra conte
 <!-- ignored-arguments: <names> are not parameters of <tool> and had NO effect on this answer - it was computed as if they had not been sent. <tool> takes: <parameter list>. -->
 ```
 
-The block is a remark about the request, appended next to the answer rather than spliced into it, so it cannot corrupt the payload. At most eight dropped names are spelled out; the rest are summarized as `(+N more)`. A name is reduced to the identifier characters a real parameter name could contain, and becomes `(unprintable)` when nothing is left. The server stays silent when it cannot speak with authority — for an unknown tool, or a tool whose parameter list it cannot read, no note is emitted, because a half-known inventory would accuse you of sending something invalid on the strength of a failed lookup.
+The block is a remark about the request, appended next to the answer rather than spliced into it, so it cannot corrupt the payload. At most eight dropped names are spelled out; the rest are summarized as `(+N more)`. A name is reduced to the identifier characters a real parameter name could contain, and becomes `(unprintable)` when nothing is left. The server stays silent when it cannot speak with authority - for an unknown tool, or a tool whose parameter list it cannot read, no note is emitted, because a half-known inventory would accuse you of sending something invalid on the strength of a failed lookup.
 
 The disclosure is not a refusal. The answer is correct for the call **as bound**, and refusing would turn a working call into a hard failure over what may be a stray field. What the note gives you is the visibility to fix the call. One concrete case worth remembering: the parameter for namespace filtering is named `scope`.
 
@@ -333,7 +333,7 @@ A mistyped required parameter fails before the tool is entered. The error then n
 <ExceptionType>: <cause> - This is an ARGUMENT-BINDING failure: the call never reached the tool, so retrying it unchanged fails identically. <tool> takes: <parameter list, required ones marked (required)>. You sent: <names>. Not a parameter of this tool: <names>.
 ```
 
-The message states which arguments the tool takes, which were passed, and which of those are not recognized — so the fix does not require comparing your call against the input schema again. Retrying the same call unchanged is called out explicitly, because it fails identically every time.
+The message states which arguments the tool takes, which were passed, and which of those are not recognized - so the fix does not require comparing your call against the input schema again. Retrying the same call unchanged is called out explicitly, because it fails identically every time.
 
 ---
 

@@ -1,12 +1,12 @@
-[AICB – General Documentation](README.md) &middot; chapter 3 of 12
+[AICB - General Documentation](README.md) &middot; chapter 3 of 12
 
 # 3 Core concepts
 
-This chapter defines the vocabulary the rest of the manual uses. The same words appear in the graphical interface, on the command line and in the answers of the MCP server, so a term you read here is a term you can search for on screen or in a tool answer. Read this chapter first — every other chapter builds on it.
+This chapter defines the vocabulary the rest of the manual uses. The same words appear in the graphical interface, on the command line and in the answers of the MCP server, so a term you read here is a term you can search for on screen or in a tool answer. Read this chapter first - every other chapter builds on it.
 
 ## 3.1 Solution
 
-A **solution** is a Visual Studio solution: the `.sln` file plus all the projects it contains. It is the unit the tool analyzes — without a solution, nothing happens.
+A **solution** is a Visual Studio solution: the `.sln` file plus all the projects it contains. It is the unit the tool analyzes - without a solution, nothing happens.
 
 You meet the solution in several places:
 
@@ -27,11 +27,11 @@ You meet projects as the second level of the `Solution Tree`, in the `PROJECT` s
 
 ## 3.3 Namespace, type and member
 
-**Namespace** — the C# namespace a type is declared in. It is part of a type's full name, and it is the axis by which you filter and scope: `Exclude Namespaces` in the settings, a namespace prefix as a tool `scope`, or a namespace pattern in a layer profile.
+**Namespace** - the C# namespace a type is declared in. It is part of a type's full name, and it is the axis by which you filter and scope: `Exclude Namespaces` in the settings, a namespace prefix as a tool `scope`, or a namespace pattern in a layer profile.
 
-**Type** — a class, a struct, an interface, a record or an enum.
+**Type** - a class, a struct, an interface, a record or an enum.
 
-**Member** — a constituent of a type: a method, a property, a field, an event or a constructor.
+**Member** - a constituent of a type: a method, a property, a field, an event or a constructor.
 
 The `Solution Tree` shows the physical side of this: the solution, its projects, their folders and their files. Under each C# file the analysis adds the file's types, and under each type its methods, so you can select at any level. The checkbox `Public methods only` hides non-public methods in the tree.
 
@@ -39,10 +39,10 @@ The `Solution Tree` shows the physical side of this: the solution, its projects,
 
 A **unit** is everything that has an executable body and can therefore be analyzed. That is more than a declared method:
 
-- **Methods** — ordinary method declarations.
-- **Accessor units** — every property, indexer or event accessor with a body (`get { … }`, `set => …`, `init`, `add`, `remove`), plus the getter of an expression-bodied property such as `public int Total => _a + _b;`. An auto-property accessor (`get;` / `set;`) has no body and produces no unit.
-- **Constructor units** — one per constructor that executes something: a declared constructor is analyzed as a whole declaration, so calls inside `: base(...)` / `: this(...)` arguments are captured, together with the member initializers it runs. For a constructor that is declared elsewhere — the implicit parameterless constructor, a C# 12 primary constructor, a constructor in another partial file, or the implicit static constructor — only the initializers are analyzed. A struct's default constructor runs no initializer, and a record's copy constructor copies instead.
-- **Top-level statements** and **Razor components** — analyzed by their own passes. Their calls and type references are recorded with a `... (top-level)` or `... (razor)` source label, so they appear as callers in fan-in answers.
+- **Methods** - ordinary method declarations.
+- **Accessor units** - every property, indexer or event accessor with a body (`get { … }`, `set => ...`, `init`, `add`, `remove`), plus the getter of an expression-bodied property such as `public int Total => _a + _b;`. An auto-property accessor (`get;` / `set;`) has no body and produces no unit.
+- **Constructor units** - one per constructor that executes something: a declared constructor is analyzed as a whole declaration, so calls inside `: base(...)` / `: this(...)` arguments are captured, together with the member initializers it runs. For a constructor that is declared elsewhere - the implicit parameterless constructor, a C# 12 primary constructor, a constructor in another partial file, or the implicit static constructor - only the initializers are analyzed. A struct's default constructor runs no initializer, and a record's copy constructor copies instead.
+- **Top-level statements** and **Razor components** - analyzed by their own passes. Their calls and type references are recorded with a `... (top-level)` or `... (razor)` source label, so they appear as callers in fan-in answers.
 
 The distinction is not cosmetic: a private method called only from a property setter would have no caller at all if setters were not units, and the dead-code and fan-in answers would be wrong on live code.
 
@@ -87,14 +87,14 @@ A **fact** is a measured property of a symbol, derived deterministically from th
 |---|---|
 | Cyclomatic complexity | McCabe complexity. `0` = not computed because no symbol could be resolved (or from an older snapshot), `1` = linear, higher = more paths. Abstract and extern members without bodies are measured as `1`. |
 | Cognitive complexity | How hard the body is to understand (nesting, `else`/`catch`, runs of boolean operators). `0` = linear or without a body and is a valid score, not a sentinel. |
-| Lines of code | The lines of the declaration that carry at least one token — signature, attributes and body. Blank lines and comment-only lines are not counted; a line with code and a trailing comment is; a token that spans several lines counts each of them. This is deliberately not the raw line span, because that number grows with every comment and the best-documented method would read as the longest one. `0` = not computed. |
+| Lines of code | The lines of the declaration that carry at least one token - signature, attributes and body. Blank lines and comment-only lines are not counted; a line with code and a trailing comment is; a token that spans several lines counts each of them. This is deliberately not the raw line span, because that number grows with every comment and the best-documented method would read as the longest one. `0` = not computed. |
 | Side effects | The outside-world contact of the body; see below. |
 | Called project methods | The solution methods the body invokes. |
 | Used types | The types the body names. |
 | Injected dependencies used | Which constructor-injected dependencies the body actually uses. |
 | Created types | The types the body instantiates with `new` (including target-typed `new`). |
 | External calls and reads | Which BCL and third-party members the body calls, and which external state it reads (for example `System.DateTime.UtcNow`). |
-| Leaked disposables | Disposables created with `new` whose ownership is neither transferred nor disposed — a resource-leak smell. |
+| Leaked disposables | Disposables created with `new` whose ownership is neither transferred nor disposed - a resource-leak smell. |
 
 Every unit is registered under a stable, fully-qualified lookup key built from namespace, containing type, method name and parameter types. Edges are registered under that key, so overloads, namespaces and generic substitutions stay apart; answers that return callers or callees use these keys.
 
@@ -111,15 +111,15 @@ The vocabulary of side effects is closed and has eight values:
 | `logging` | Logger calls (for example `Microsoft.Extensions.Logging`, Serilog, NLog, log4net). |
 | `cache` | Calls into an external cache API (for example `Microsoft.Extensions.Caching`, StackExchange.Redis, FusionCache). A cache a type holds in memory is not an outside-world effect and is never classified here. |
 | `messaging` | Message-bus and queue clients (for example MassTransit, RabbitMQ, Azure Service Bus, Kafka, NATS, MediatR, Amazon SQS/SNS). |
-| `unknown` | An external call that no classification rule matched — an unanalyzable third-party member, reported so the gap is visible instead of reading as pure. |
+| `unknown` | An external call that no classification rule matched - an unanalyzable third-party member, reported so the gap is visible instead of reading as pure. |
 
-Effects include the transitive ones: a method that calls a project method which hits the database is a database method itself. The classification judges by **contact, not by topic** — `Path` and `MemoryStream` carry no `io` effect, `File` and `FileStream` do.
+Effects include the transitive ones: a method that calls a project method which hits the database is a database method itself. The classification judges by **contact, not by topic** - `Path` and `MemoryStream` carry no `io` effect, `File` and `FileStream` do.
 
 You meet the resolved side-effect classification in `find_by_side_effects` (which can also list only pure methods with `purity: pure` or only impure ones with `purity: impure`) and in the quality-profile option `Side-effect concentration (methods mixing 3+ effect categories)`. A context document does not render that resolved classification in `SEMANTICS`: an explicit `<ai>` annotation can appear as `SideEffects` in `AI_TAGS`, and a provenance line can state `verified-absent: sideEffects`.
 
 ## 3.8 Semantic axes and provenance
 
-**Semantic axes** are derived values on a type or a method — what a symbol is for, where it belongs, how it behaves. Unlike facts they are not measured; they are *resolved*, and every resolved value carries its origin.
+**Semantic axes** are derived values on a type or a method - what a symbol is for, where it belongs, how it behaves. Unlike facts they are not measured; they are *resolved*, and every resolved value carries its origin.
 
 A type carries up to 16 axes, a method up to 8:
 
@@ -130,10 +130,10 @@ A type carries up to 16 axes, a method up to 8:
 
 Each axis is resolved through a fixed priority chain:
 
-1. **Fact** — a deterministic value derived from the source. A fact is never overridden by an annotation.
-2. **Explicit absence** — the developer declared the axis as none (see the `<ai>` annotation below). The value stays empty and is reported as verified absent.
-3. **Explicit value** — a value the developer asserted in an `<ai>` annotation.
-4. **Inference** — a heuristic guess, used only when none of the above applies.
+1. **Fact** - a deterministic value derived from the source. A fact is never overridden by an annotation.
+2. **Explicit absence** - the developer declared the axis as none (see the `<ai>` annotation below). The value stays empty and is reported as verified absent.
+3. **Explicit value** - a value the developer asserted in an `<ai>` annotation.
+4. **Inference** - a heuristic guess, used only when none of the above applies.
 
 **Provenance** is written into the output, so a reader can tell a measured value from an assertion and from a guess. In a full `<SEMANTICS>` block the last line is a `Source:` line:
 
@@ -169,7 +169,7 @@ Three shapes are recognized: the element form `<ai> … </ai>`, a self-closing b
 
 - Where it can stand: on a method declaration, and on the declaration of a class, struct, interface, record or enum.
 - Keys: the axis names listed above (`role`, `layer`, `domain`, `context`, `priority`, `complexity`, `sideEffects`, `stability`, and for types also `responsibility`, `pattern`, `dependencyType`, `determinism`, `dataAccess`, `interaction`, `validation`, `errorHandling`). Keys are matched case-insensitively; an unknown key is ignored.
-- Sentinel values: `none`, `null` or `empty` (any capitalization) suppress the inference for that field. The value is never written out as text — the field stays empty and is reported as `verified-absent`.
+- Sentinel values: `none`, `null` or `empty` (any capitalization) suppress the inference for that field. The value is never written out as text - the field stays empty and is reported as `verified-absent`.
 - `importance` is accepted as a backward-compatible alias for `priority`. The legacy values `important`, `less important` and `nice to have` resolve to `high`, `medium` and `low`.
 
 A second example, in colon syntax, with one axis deliberately switched off:
@@ -209,7 +209,7 @@ Note: the type dependency list is built from short type names, so two types with
 
 ## 3.11 Fan-in and impact
 
-**Fan-in** is the set of places that name a symbol — the answer to "who calls this?" It is the opposite direction of the call graph.
+**Fan-in** is the set of places that name a symbol - the answer to "who calls this?" It is the opposite direction of the call graph.
 
 **Impact** is the transitive closure of the fan-in: everything that would be affected indirectly by a change to the symbol, including consumers that a compiler does not check.
 
@@ -221,7 +221,7 @@ Note: the `risk` level measures the fan-in, not the semantics of your concrete c
 
 **Dead code** is a symbol that nothing in the analyzed scope names. The scope is what matters: reflection, dependency injection resolved from strings and callers outside the solution are invisible to a static analysis, so a missing fan-in is a place to look, not a proof. The tools report their candidates with that caveat and name what they cannot see.
 
-**Cycle** — a chain of types or namespaces that leads back to itself. The compiler forbids cycles between projects, but it allows cycles between namespaces; `detect_circular_dependencies` reports groups of namespaces that depend on each other and shows an example edge for each link so you can see why the cycle exists.
+**Cycle** - a chain of types or namespaces that leads back to itself. The compiler forbids cycles between projects, but it allows cycles between namespaces; `detect_circular_dependencies` reports groups of namespaces that depend on each other and shows an example edge for each link so you can see why the cycle exists.
 
 ## 3.13 Layers
 
@@ -231,16 +231,16 @@ You meet layers in the `Layer Profiles` page of the settings, in the `Layer Prof
 
 ## 3.14 The context document
 
-The **context document** is the product of an export: a Markdown document written for a language model to read, in the **AI-Builder-MD** format. It contains the selected part of the analysis — projects, files, types and methods with their facts and semantic values — organized in named sections such as `SPEC`, `META`, `DOMAIN`, `LAYER_MAP`, `CLASS`, `INTERFACE`, `ENUM` or `QUALITY_FINDINGS`. A `<METHOD>` is a block inside a type section (and becomes an entry under `methods:` in YAML), not a top-level section. A `Source:` line inside a `<SEMANTICS>` block tells the reader where each semantic value came from, and `COMPRESSION_LEGEND` and `PATH_LEGEND` explain the notation of the document itself.
+The **context document** is the product of an export: a Markdown document written for a language model to read, in the **AI-Builder-MD** format. It contains the selected part of the analysis - projects, files, types and methods with their facts and semantic values - organized in named sections such as `SPEC`, `META`, `DOMAIN`, `LAYER_MAP`, `CLASS`, `INTERFACE`, `ENUM` or `QUALITY_FINDINGS`. A `<METHOD>` is a block inside a type section (and becomes an entry under `methods:` in YAML), not a top-level section. A `Source:` line inside a `<SEMANTICS>` block tells the reader where each semantic value came from, and `COMPRESSION_LEGEND` and `PATH_LEGEND` explain the notation of the document itself.
 
 The same content can be written in two notations:
 
-- `Tag` — the established tag markdown, with elements such as `<CLASS>…</CLASS>`.
-- `Yaml` — the same information as idiomatic YAML, a lossless re-notation rather than a different selection of content.
+- `Tag` - the established tag markdown, with elements such as `<CLASS>...</CLASS>`.
+- `Yaml` - the same information as idiomatic YAML, a lossless re-notation rather than a different selection of content.
 
 `Yaml` is the default. You can change the notation per document: `Document Notation` in the export panel of the GUI, `--format tag|yaml` on the command line, or the `format` parameter of the MCP tool `export_markdown`. The slice tools `get_context`, `explain_symbol`, `pack_for_task` and `prepare_task` do not expose a notation switch. The file always keeps its `.md` name.
 
-You produce a context document with the export in the GUI, with `aicb analyze --output`, with `aicb export`, and with the render tools of the MCP server — `export_markdown` for the whole solution, or a bounded slice such as `get_context`, `explain_symbol` or `pack_for_task` for one symbol's neighborhood.
+You produce a context document with the export in the GUI, with `aicb analyze --output`, with `aicb export`, and with the render tools of the MCP server - `export_markdown` for the whole solution, or a bounded slice such as `get_context`, `explain_symbol` or `pack_for_task` for one symbol's neighborhood.
 
 ## 3.15 Sessions and snapshots
 
@@ -248,7 +248,7 @@ You produce a context document with the export in the GUI, with `aicb analyze --
 
 A **session** is a named, saved working state of a solution: the selection in the `Solution Tree`, the per-node detail-level overrides, the prompt text and the frozen template. You open it later and continue where you left off. Sessions live in the `Sessions` sub-tab of the `Workspace` area; `Save Session` creates one.
 
-Note: this is not the **MCP session** — the analysis result an MCP server keeps in its process, addressed by a `session_id`. It has no name and no database row, and it is gone when the process ends. Where both could be meant, this manual writes `MCP session`; see "Sessions and staleness".
+Note: this is not the **MCP session** - the analysis result an MCP server keeps in its process, addressed by a `session_id`. It has no name and no database row, and it is gone when the process ends. Where both could be meant, this manual writes `MCP session`; see "Sessions and staleness".
 
 ### Snapshots
 
@@ -264,13 +264,13 @@ Note: the `Snapshots` sub-tab of the `MCP Usage` page shows imported usage repor
 
 ## 3.16 Insights and severity
 
-An **Insight** is a finding of the built-in code-quality analysis: a place where the tool found something worth mentioning, with a severity, a producer group and locations. You meet insights in the `Insights` tab — its header shows `Insights (N)` while findings are unseen — in the `list_insights` and `get_insight` tools, and in the `QUALITY_FINDINGS` section of a context document.
+An **Insight** is a finding of the built-in code-quality analysis: a place where the tool found something worth mentioning, with a severity, a producer group and locations. You meet insights in the `Insights` tab - its header shows `Insights (N)` while findings are unseen - in the `list_insights` and `get_insight` tools, and in the `QUALITY_FINDINGS` section of a context document.
 
 Note: `Findings` names something else. It is the region of the `Reasoning` panel that shows findings parsed from the language model's answer, not the results of the product's own analysis.
 
 **Severity** has four levels: `Info`, `Ok`, `Warning` and `Critical`. The ordinal value is not a weight; for sorting and scoring the product uses `Critical` = 10, `Warning` = 3, `Info` = 0.5 and `Ok` = 0. On the wire the levels are lowercase tokens: `info`, `ok`, `warning`, `critical`.
 
-**False positive** — a finding that is reported but is not real. The product carries its own taxonomy of them and does not claim that none occur: the analysis tools state their blind spots (see the fan-in, dead-code and markup notes above) rather than presenting every result as complete.
+**False positive** - a finding that is reported but is not real. The product carries its own taxonomy of them and does not claim that none occur: the analysis tools state their blind spots (see the fan-in, dead-code and markup notes above) rather than presenting every result as complete.
 
 ---
 

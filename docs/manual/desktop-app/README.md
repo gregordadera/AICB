@@ -1,4 +1,4 @@
-# AICB – Desktop Application
+# AICB - Desktop Application
 
 The complete reference, one file per chapter. Describes AICB V0.5.464.43.
 
@@ -45,9 +45,9 @@ The same text as one printable document: [AICB-Desktop-App.pdf](AICB-Desktop-App
 5. [The Context Builder: document, runs and results](05-the-context-builder-document-runs-and-results.md)
     - [5.1 Finding your way](05-the-context-builder-document-runs-and-results.md#51-finding-your-way)
     - [5.2 The run template and the run actions](05-the-context-builder-document-runs-and-results.md#52-the-run-template-and-the-run-actions)
-    - [5.3 The `MD Input` tab — the generated document](05-the-context-builder-document-runs-and-results.md#53-the-md-input-tab--the-generated-document)
-    - [5.4 The `Reasoning` tab — what the model did](05-the-context-builder-document-runs-and-results.md#54-the-reasoning-tab--what-the-model-did)
-    - [5.5 The `Active Run` tab — progress while a run is running](05-the-context-builder-document-runs-and-results.md#55-the-active-run-tab--progress-while-a-run-is-running)
+    - [5.3 The `MD Input` tab - the generated document](05-the-context-builder-document-runs-and-results.md#53-the-md-input-tab---the-generated-document)
+    - [5.4 The `Reasoning` tab - what the model did](05-the-context-builder-document-runs-and-results.md#54-the-reasoning-tab---what-the-model-did)
+    - [5.5 The `Active Run` tab - progress while a run is running](05-the-context-builder-document-runs-and-results.md#55-the-active-run-tab---progress-while-a-run-is-running)
     - [5.6 Token, cost and progress displays](05-the-context-builder-document-runs-and-results.md#56-token-cost-and-progress-displays)
     - [5.7 From solution to context document, step by step](05-the-context-builder-document-runs-and-results.md#57-from-solution-to-context-document-step-by-step)
     - [5.8 Run types: what is released](05-the-context-builder-document-runs-and-results.md#58-run-types-what-is-released)

@@ -1,4 +1,4 @@
-[AICB – MCP Server](README.md) &middot; chapter 3 of 12
+[AICB - MCP Server](README.md) &middot; chapter 3 of 12
 
 # 3 Sessions and staleness
 
@@ -23,8 +23,8 @@ If a session reference does not resolve, the error names the cause it actually h
 
 | What you passed | Message |
 |---|---|
-| Something with no solution extension | `'…' is neither a known session_id nor an absolute .sln/.slnx/.slnf path.` - if you meant a session ID, it is unknown or expired; call `analyze_solution` first. |
-| A solution extension, but no file at that path | `No solution file at '…'.` - the path must be **absolute**. The message states explicitly that this is **not** an expired session. |
+| Something with no solution extension | `'...' is neither a known session_id nor an absolute .sln/.slnx/.slnf path.` - if you meant a session ID, it is unknown or expired; call `analyze_solution` first. |
+| A solution extension, but no file at that path | `No solution file at '...'.` - the path must be **absolute**. The message states explicitly that this is **not** an expired session. |
 | An existing solution file | This host cannot self-initialize from a path; call `analyze_solution` and pass the returned ID. |
 
 ## 3.2 The session cache
@@ -129,7 +129,7 @@ Only `Stale` produces text, and the response is otherwise left byte for byte unc
 The disclosure has two grammars, one per response shape:
 
 - **JSON responses** get a `staleness` member spliced into the object. A response that is structured but not a JSON object (a top-level array) is left untouched.
-- **Markdown responses** get a leading `<!-- staleness: … -->` comment, so the caveat is visible before the document rather than after it.
+- **Markdown responses** get a leading `<!-- staleness: ... -->` comment, so the caveat is visible before the document rather than after it.
 
 A plain stale disclosure looks like this:
 

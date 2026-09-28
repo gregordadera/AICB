@@ -1,4 +1,4 @@
-# AICB – General Documentation
+# AICB - General Documentation
 
 The complete reference, one file per chapter. Describes AICB V0.5.464.43.
 
@@ -136,14 +136,14 @@ The same text as one printable document: [AICB-General.pdf](AICB-General.pdf).
     - [11.5 Diagnostic means](11-troubleshooting.md#115-diagnostic-means)
     - [11.6 Support](11-troubleshooting.md#116-support)
 12. [Glossary](12-glossary.md)
-    - [12.1 A – B](12-glossary.md#121-a--b)
+    - [12.1 A - B](12-glossary.md#121-a---b)
     - [12.2 C](12-glossary.md#122-c)
-    - [12.3 D – G](12-glossary.md#123-d--g)
-    - [12.4 H – L](12-glossary.md#124-h--l)
-    - [12.5 M – N](12-glossary.md#125-m--n)
-    - [12.6 O – R](12-glossary.md#126-o--r)
+    - [12.3 D - G](12-glossary.md#123-d---g)
+    - [12.4 H - L](12-glossary.md#124-h---l)
+    - [12.5 M - N](12-glossary.md#125-m---n)
+    - [12.6 O - R](12-glossary.md#126-o---r)
     - [12.7 S](12-glossary.md#127-s)
-    - [12.8 T – Z](12-glossary.md#128-t--z)
+    - [12.8 T - Z](12-glossary.md#128-t---z)
     - [12.9 Terms that are easy to confuse](12-glossary.md#129-terms-that-are-easy-to-confuse)
 
 ---

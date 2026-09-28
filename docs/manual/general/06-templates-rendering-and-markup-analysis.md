@@ -1,4 +1,4 @@
-[AICB – General Documentation](README.md) &middot; chapter 6 of 12
+[AICB - General Documentation](README.md) &middot; chapter 6 of 12
 
 # 6 Templates, rendering and markup analysis
 

@@ -1,4 +1,4 @@
-[AICB – General Documentation](README.md) &middot; chapter 5 of 12
+[AICB - General Documentation](README.md) &middot; chapter 5 of 12
 
 # 5 The context document (AI-Builder-MD)
 

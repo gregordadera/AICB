@@ -1,4 +1,4 @@
-[AICB – MCP Server](README.md) &middot; chapter 12 of 12
+[AICB - MCP Server](README.md) &middot; chapter 12 of 12
 
 # 12 Troubleshooting the MCP server
 
@@ -6,7 +6,7 @@ This chapter is for the person who runs `aicb` as an MCP server and reads what a
 
 Two rules make the rest of this chapter easier to use:
 
-- **Do not judge freshness from the tool you called.** Every session-bound answer that may be out of date carries its own note (a `staleness` JSON member or a `<!-- staleness: … -->` comment). Read the note, not the clock.
+- **Do not judge freshness from the tool you called.** Every session-bound answer that may be out of date carries its own note (a `staleness` JSON member or a `<!-- staleness: ... -->` comment). Read the note, not the clock.
 - **Read the leading note before the list.** Several tools put a caveat about the analysis run, or about an empty scope, ahead of their data. That caveat is often the actual answer to "why does this look wrong?".
 
 ## 12.1 The client does not list any `aicb` tools
@@ -35,7 +35,7 @@ Two rules make the rest of this chapter easier to use:
 Check the setup step by step:
 
 1. Open a **new** terminal and run `aicb --version`. If the command is not found, use the full path to `aicb.exe` in the `.mcp.json` entry instead.
-2. In your project directory, run `aicb init`. It writes the `.mcp.json` entry and the agent skill, and reports per file what it did. It never overwrites an existing artefact (`aicb init --force` does).
+2. In your project directory, run `aicb init`. It writes the `.mcp.json` entry and the agent skill, and reports per file what it did. It never overwrites an existing artifact (`aicb init --force` does).
 3. Restart or reconnect your MCP client. A client reads its server list at startup; a running client will not see a new entry. Consoles, editors and agents that were already open also see a changed `PATH` only after a restart.
 4. Ask the agent to call `server_info`. If that answers, the connection works.
 
@@ -49,7 +49,7 @@ The server speaks both current MCP protocol revisions over stdio from the same t
 
 | Revision | Entry point |
 |---|---|
-| `2026-07-28` | `server/discover` — stateless, every request carries its own metadata |
+| `2026-07-28` | `server/discover` - stateless, every request carries its own metadata |
 | `2025-11-25` | `initialize` handshake |
 
 This matters because MCP has no fall-forward: a client that speaks only an older revision cannot reach a server that speaks only a newer one. `aicb` answers both entry points, and it also serves older revision handshakes (for example `2025-06-18`, which some clients still negotiate), so you do not have to configure or match a revision.
@@ -77,7 +77,7 @@ Tool '<name>' is not in the active profile - call list_mcp_profiles to see the p
 2. Restart the server with the profile you want, for example `aicb mcp --mcp-profile mcp-profile/full`. The pin is process-local: it does not change the profile stored in the config DB. The same ids are visible in the GUI under `MCP Profiles`.
 3. There is **no runtime switch**. The active profile is fixed when the server starts, because the tool list must not depend on a previous tool call. Changing it always means a restart.
 
-**`AICB_MCP_TOOLS` — the operator override.** The environment variable `AICB_MCP_TOOLS` takes precedence over the active profile. `all` exposes every registered tool, literal `lean` exposes the 72-tool lean core, and a comma-separated list narrows the set to those tool classes. Empty or unset means no environment override, so the config file and active profile decide. A list prefixed with `methods:` names individual tools instead of classes.
+**`AICB_MCP_TOOLS` - the operator override.** The environment variable `AICB_MCP_TOOLS` takes precedence over the active profile. `all` exposes every registered tool, literal `lean` exposes the 72-tool lean core, and a comma-separated list narrows the set to those tool classes. Empty or unset means no environment override, so the config file and active profile decide. A list prefixed with `methods:` names individual tools instead of classes.
 
 **`list_mcp_profiles` needs a config DB.** On a server that started without one it answers:
 
@@ -97,10 +97,10 @@ MCP profiles require a config DB. Start the server with: aicb mcp --db-path <db>
 
 This is the most dangerous MCP error class, because one of its two forms produces no error at all. An MCP client binds the arguments it recognizes and drops the rest without a word.
 
-**Form A — the wrong name belongs to a required parameter.** The call fails, and the server makes the failure diagnosable:
+**Form A - the wrong name belongs to a required parameter.** The call fails, and the server makes the failure diagnosable:
 
 ```
-<ExceptionType>: <cause> - This is an ARGUMENT-BINDING failure: the call never reached the tool, so retrying it unchanged fails identically. <tool> takes: <parameters, required marked>. You sent: <…>. Not a parameter of this tool: <…>.
+<ExceptionType>: <cause> - This is an ARGUMENT-BINDING failure: the call never reached the tool, so retrying it unchanged fails identically. <tool> takes: <parameters, required marked>. You sent: <...>. Not a parameter of this tool: <...>.
 ```
 
 If the parameter inventory cannot be read, the middle part falls back to:
@@ -109,7 +109,7 @@ If the parameter inventory cannot be read, the middle part falls back to:
 Compare your arguments against this tool's input schema in tools/list - argument names are NOT uniform across the tool surface.
 ```
 
-**Form B — the wrong name belongs to an optional parameter.** The call succeeds and answers a **different question** than the one asked. The server therefore appends a disclosure to every successful answer that contains an argument it does not declare:
+**Form B - the wrong name belongs to an optional parameter.** The call succeeds and answers a **different question** than the one asked. The server therefore appends a disclosure to every successful answer that contains an argument it does not declare:
 
 ```
 <!-- ignored-arguments: <names> are not parameters of <tool> and had NO effect on this answer - it was computed as if they had not been sent. <tool> takes: <parameters>. -->
@@ -121,15 +121,15 @@ Read that comment literally: the answer is correct **for the call as it was boun
 
 **What to do.** Compare the parameter names you (or your agent) sent with the ones the tool publishes. The exact inventory is in the failure message, in the `ignored-arguments` comment, or in `tools/list`. The server also accepts `symbol` as an alias for several symbol-shaped parameters, including `interfaceName`, `typeName`, `query`, `interface`, `methodName` and `method`, and rewrites it silently; `usage_report` counts those rewrites as `aliasApplied`.
 
-**Limits of the disclosure.** Up to 8 dropped names are listed, each reduced to identifier characters and capped at 64 characters. The disclosure stays silent for a tool that is unknown or publishes no arguments — a half-known inventory would accuse the caller on the strength of a failed lookup. The failure message caps the echoed cause and the parameter inventory at 400 characters each.
+**Limits of the disclosure.** Up to 8 dropped names are listed, each reduced to identifier characters and capped at 64 characters. The disclosure stays silent for a tool that is unknown or publishes no arguments - a half-known inventory would accuse the caller on the strength of a failed lookup. The failure message caps the echoed cause and the parameter inventory at 400 characters each.
 
 ## 12.5 `MCP error -32000: Connection closed`
 
 **Symptom.** A tool call answers `MCP error -32000: Connection closed`, and the server is unreachable for the rest of the MCP session.
 
-**What it is not.** The obvious diagnosis — "a tool exception ended the stdio loop" — is wrong. It was tested against a real server process with seven failure shapes (an unknown session, a deliberate `McpException`, an unbindable argument type, an unknown argument name, and more): every one came back as a clean error response, and the server answered a liveness probe afterwards.
+**What it is not.** The obvious diagnosis - "a tool exception ended the stdio loop" - is wrong. It was tested against a real server process with seven failure shapes (an unknown session, a deliberate `McpException`, an unbindable argument type, an unknown argument name, and more): every one came back as a clean error response, and the server answered a liveness probe afterwards.
 
-**What it is.** The **channel**. stdout is the JSON-RPC transport, and a single stray write to stdout — from the product, from a dependency, from MSBuild or Roslyn during an analysis — puts a non-JSON line into the protocol stream. A strict client treats that as a protocol violation and tears the connection down. The process itself stays alive and healthy, which is why looking for a crash finds nothing.
+**What it is.** The **channel**. stdout is the JSON-RPC transport, and a single stray write to stdout - from the product, from a dependency, from MSBuild or Roslyn during an analysis - puts a non-JSON line into the protocol stream. A strict client treats that as a protocol violation and tears the connection down. The process itself stays alive and healthy, which is why looking for a crash finds nothing.
 
 **What the product does.** Two guards protect the channel: `Console.Out` is redirected to stderr, so no code path can put a byte into the JSON-RPC stream, and exceptions that no filter can see (thread-pool callbacks, timers, background tasks) are reported on stderr before the process ends:
 
@@ -142,7 +142,7 @@ Read that comment literally: the answer is correct **for the call as it was boun
 
 ## 12.6 Answers describe the code as it was before your edit (staleness)
 
-**Symptom.** The agent reports something that does not match the code you just wrote: a type is `not_found` although it is in the editor, or a fan-in count does not know a call site you just inserted. The answer carries a note — either a JSON member named `staleness` or a Markdown comment `<!-- staleness: … -->` at the top of the answer.
+**Symptom.** The agent reports something that does not match the code you just wrote: a type is `not_found` although it is in the editor, or a fan-in count does not know a call site you just inserted. The answer carries a note - either a JSON member named `staleness` or a Markdown comment `<!-- staleness: ... -->` at the top of the answer.
 
 **The four texts.** Read the one you got; they differ in cause and remedy:
 
@@ -153,11 +153,11 @@ Read that comment literally: the answer is correct **for the call as it was boun
 | No automatic re-analysis, live session | `source files changed since <this session> was analyzed, so this answer comes from the pre-edit graph - call refresh_session for a current one` |
 | No automatic re-analysis, recalled session | `source files changed since <this session> was remembered, so this answer describes the code as it was - call refresh_remembered for a live re-analysis` |
 
-A `(last checked <timestamp>)` suffix names when the check last looked. The JSON member additionally carries `stale`, and, when an automatic refresh acted, `autoRefreshed` with `mode` (`incremental` or `full-reload`) or `autoRefreshFailed` with the failure type. A successful refresh means the answer is current — the note tells you what happened, not that something is wrong.
+A `(last checked <timestamp>)` suffix names when the check last looked. The JSON member additionally carries `stale`, and, when an automatic refresh acted, `autoRefreshed` with `mode` (`incremental` or `full-reload`) or `autoRefreshFailed` with the failure type. A successful refresh means the answer is current - the note tells you what happened, not that something is wrong.
 
 **The auto-refresh mode.** There are three modes, and they answer "who pays for the re-analysis":
 
-| Mode | Behaviour |
+| Mode | Behavior |
 |---|---|
 | `off` | Drift is disclosed and left alone. |
 | `reactive` | The server re-analyzes **before** answering, when source files have moved. This is the default. |
@@ -174,8 +174,8 @@ The mode is set when the server starts and cannot be changed while it runs. It c
 
 **Two different staleness axes.** Distinguish them, because the remedies differ:
 
-- **Source staleness** — `not_found` on a type you just wrote. The graph is behind your files. `refresh_session` fixes it; under `reactive` the server already did it.
-- **Reference incompleteness** — a plausible but **too short** fan-in list, disclosed through `incompleteProjects`. The graph was built from source that could not resolve its references. Only this axis needs a build first, then `refresh_session(force: true)`.
+- **Source staleness** - `not_found` on a type you just wrote. The graph is behind your files. `refresh_session` fixes it; under `reactive` the server already did it.
+- **Reference incompleteness** - a plausible but **too short** fan-in list, disclosed through `incompleteProjects`. The graph was built from source that could not resolve its references. Only this axis needs a build first, then `refresh_session(force: true)`.
 
 `refresh_session` returns `{ changed, reason, session, mode }`. `mode` names the path taken: `incremental` means document texts were replayed into the warm snapshot without an MSBuild reload, otherwise `full-reload`. It is absent when nothing was re-analyzed.
 
@@ -187,7 +187,7 @@ The mode is set when the server starts and cannot be changed while it runs. It c
 THIS ANALYSIS RUN WAS INCOMPLETE: <n> of <m> scanned projects could not resolve their references (<up to 5 names>[, and <k> more]). <family-specific consequence> Restore/build the solution, then refresh_session and re-run this query.
 ```
 
-**Cause.** Some projects could not resolve their references, usually because the solution has not been restored or built. Unresolved code still parses, so facts were produced — but the semantic edges into and out of it are missing.
+**Cause.** Some projects could not resolve their references, usually because the solution has not been restored or built. Unresolved code still parses, so facts were produced - but the semantic edges into and out of it are missing.
 
 **Why it matters.** The alarm rides on healthy-looking, non-empty lists as well, and that is the point: a plausible answer from an incomplete run is more dangerous than an empty one. Each query family gets its own consequence sentence, because the loss is different on each axis:
 
@@ -204,7 +204,7 @@ THIS ANALYSIS RUN WAS INCOMPLETE: <n> of <m> scanned projects could not resolve 
 
 At most 5 project names are spelled out; the rest is summarized as `and <k> more`.
 
-**A different zero: nothing was scanned.** This is not a run alarm — the run may be fine, the scope was empty:
+**A different zero: nothing was scanned.** This is not a run alarm - the run may be fine, the scope was empty:
 
 ```
 Nothing was scanned - the scope matched no unit: a mistyped or too-deep namespace prefix, or a scope holding only test projects while includeTests is false. This zero is not a finding about any code.
@@ -237,11 +237,11 @@ Two further messages tell you the session exists but has no live workspace:
 Gave up waiting for the solution registry after <N>s: the registry is <loading|reloading|applying edits to> '<path>', started <M>s ago. This call never started - it was queued behind that operation, so retrying now would queue again. Wait for the running load to finish, or analyze a smaller solution/filter (.slnf).
 ```
 
-When a `.sln` path is passed to a tool directly (self-initialization), the equivalent message reads `Gave up waiting for the solution analysis after …`.
+When a `.sln` path is passed to a tool directly (self-initialization), the equivalent message reads `Gave up waiting for the solution analysis after ...`.
 
 **Cause.** There is one gate per solution path. A second caller waits instead of starting a second analysis. The message exists because a caller sees one pending answer and cannot tell a running load from a hung server.
 
-**What to do.** Wait — do not retry, that only queues again. For very large solutions, analyze a `.slnf` filter file instead.
+**What to do.** Wait - do not retry, that only queues again. For very large solutions, analyze a `.slnf` filter file instead.
 
 **The wait is adjustable.** The bound is 45 seconds by default and can be changed with the environment variable `AICB_MCP_LOAD_WAIT_MS` (milliseconds). A zero or negative value is refused and the built-in default applies. The GUI and the CLI wait without a bound, which is intended there; only the MCP server uses this limit.
 
@@ -254,11 +254,11 @@ dbPath is required (<purpose>).
 dbPath is a directory, expected a file: <dbPath>
 ```
 
-The `purpose` clause names which database is missing, for example `the memory DB to persist into / recall from`, `the aicb DB to save into / compare against` or `the aicb config/master DB to read/write the per-solution config`. The file **need not exist** — it is created and migrated on first use. Only an empty path and a path that names a directory are rejected.
+The `purpose` clause names which database is missing, for example `the memory DB to persist into / recall from`, `the aicb DB to save into / compare against` or `the aicb config/master DB to read/write the per-solution config`. The file **need not exist** - it is created and migrated on first use. Only an empty path and a path that names a directory are rejected.
 
 ## 12.11 Self-diagnosis
 
-### `server_info` — reachability, build commit and three drift signals
+### `server_info` - reachability, build commit and three drift signals
 
 `server_info` answers in one call what the version number alone cannot. Its first line always carries the server name and version; non-release/development builds can additionally carry the **build commit**:
 
@@ -274,7 +274,7 @@ If a config DB is in use, the answer continues with its schema version:
 Config DB schema: user_version=<n> (<path>).
 ```
 
-Then come up to three drift signals. They are deliberately **disjoint** — each compares a different thing and is blind to what the others see:
+Then come up to three drift signals. They are deliberately **disjoint** - each compares a different thing and is blind to what the others see:
 
 | Signal | Compares | Blind to |
 |---|---|---|
@@ -284,13 +284,13 @@ Then come up to three drift signals. They are deliberately **disjoint** — each
 
 Work through them in this order when an agent reports something implausible.
 
-**`CONFIG DRIFT`.** The active MCP profile changed since this server started — a GUI edit in the `MCP Profiles` panel, or another process writing the config DB:
+**`CONFIG DRIFT`.** The active MCP profile changed since this server started - a GUI edit in the `MCP Profiles` panel, or another process writing the config DB:
 
 ```
 ⚠️ CONFIG DRIFT: the active MCP profile changed since this server started - restart/reconnect the aicb MCP server to load the current configuration (tools, instructions, session auto-refresh mode). In-session the skill-derived instructions never refresh, the auto-refresh mode is fixed at start, and a GUI edit does not update the tool list until restart.
 ```
 
-The same sentence appears once as a breadcrumb on stderr (`warning: aicb MCP config drift - …`), because `server_info` is a rare call. **Solution:** restart or reconnect the server.
+The same sentence appears once as a breadcrumb on stderr (`warning: aicb MCP config drift - ...`), because `server_info` is a rare call. **Solution:** restart or reconnect the server.
 
 **`VERSION DRIFT`.** This binary and the config DB disagree. Two schema variants and one tool-pool variant exist:
 
@@ -303,10 +303,10 @@ The same sentence appears once as a breadcrumb on stderr (`warning: aicb MCP con
 ```
 
 ```
-⚠️ TOOL POOL DRIFT: the active profile persists <k> tool name(s) this binary does not register ('<a>', '<b>', …). Two causes look identical here and the fixes are opposite: either the DB profile was written by a NEWER build (then rebuild/reinstall the standalone tool), or the tool was RETIRED and the profile still names it (then re-save the profile in the GUI's 'MCP Profiles' panel, which rewrites the selection without it - a rebuild would only repeat this message). The entry is inert either way: an unknown name is ignored when the tool set is resolved.
+⚠️ TOOL POOL DRIFT: the active profile persists <k> tool name(s) this binary does not register ('<a>', '<b>', ...). Two causes look identical here and the fixes are opposite: either the DB profile was written by a NEWER build (then rebuild/reinstall the standalone tool), or the tool was RETIRED and the profile still names it (then re-save the profile in the GUI's 'MCP Profiles' panel, which rewrites the selection without it - a rebuild would only repeat this message). The entry is inert either way: an unknown name is ignored when the tool set is resolved.
 ```
 
-The tool-pool check works on **tool names**; a new parameter on an existing tool is invisible to it — the build commit is the finer-grained signal. Up to 10 names are listed.
+The tool-pool check works on **tool names**; a new parameter on an existing tool is invisible to it - the build commit is the finer-grained signal. Up to 10 names are listed.
 
 **`ANALYZER DRIFT`.** The signal the other two cannot see: the build commit of this binary against the HEAD of the repository holding the analyzed solution.
 
@@ -322,20 +322,20 @@ There are three further outcomes, and only one of them is a warning:
 
 The analyzer drift line is silent without an analyzed session, on a repository that does not know this commit (any foreign solution), and whenever the binary has no commit id. It therefore stays silent in the public release builds that deliberately omit the commit.
 
-### `get_diagnostics` — the fast pre-build check
+### `get_diagnostics` - the fast pre-build check
 
-`get_diagnostics` reports the compiler errors, warnings and info messages of the session's solution — the real Roslyn build output, in seconds instead of a full `dotnet build`. It is the tool to run after `refresh_session` when you want to know whether an edit broke the build.
+`get_diagnostics` reports the compiler errors, warnings and info messages of the session's solution - the real Roslyn build output, in seconds instead of a full `dotnet build`. It is the tool to run after `refresh_session` when you want to know whether an edit broke the build.
 
-- **Call `refresh_session` first.** The diagnostics are compiled from the session's snapshot, not from the files on disk. Under the shipped `reactive` mode the tool is refreshed for you before it answers, so the explicit call is redundant rather than wrong — and it is the only spelling that is correct in every mode. An answer computed from a graph known to be behind the disk leads with `verdict: 'stale'` and a `verdictReason` before any count.
+- **Call `refresh_session` first.** The diagnostics are compiled from the session's snapshot, not from the files on disk. Under the shipped `reactive` mode the tool is refreshed for you before it answers, so the explicit call is redundant rather than wrong - and it is the only spelling that is correct in every mode. An answer computed from a graph known to be behind the disk leads with `verdict: 'stale'` and a `verdictReason` before any count.
 - **Parameters.** `sessionId`, `severityFloor` (`error`, `warning` (default), `info`, `hidden`), and `scope` (`solution` by default, or a file-path substring). An unknown `severityFloor` is rejected with the valid values. `scope` filters the result, not the work: every project is compiled either way.
-- **`incompleteProjects`.** A project whose compilation cannot resolve its core references is not listed in the diagnostics; it is disclosed separately, with the number of diagnostics it took with it. A freshly created, never-built worktree reports every project there — that is the honest unrestored state, not a defect. `verdict: 'inconclusive'` and `reliable: false` say so, and one `dotnet restore` or `dotnet build` makes the tool work for the rest of the session. This verdict is deliberately rare: it fires only when a strict majority of projects are incomplete.
-- **Read the counts with their rules.** `incompleteRatio` and `suppressedDiagnosticsTotal` appear whenever even one project is incomplete. `suppressedDiagnosticsTotal` spans every severity and is not deduplicated, while `errorCount` counts errors only and is deduplicated across target frameworks — a total that dwarfs the visible counts means this measured a fraction of the solution.
+- **`incompleteProjects`.** A project whose compilation cannot resolve its core references is not listed in the diagnostics; it is disclosed separately, with the number of diagnostics it took with it. A freshly created, never-built worktree reports every project there - that is the honest unrestored state, not a defect. `verdict: 'inconclusive'` and `reliable: false` say so, and one `dotnet restore` or `dotnet build` makes the tool work for the rest of the session. This verdict is deliberately rare: it fires only when a strict majority of projects are incomplete.
+- **Read the counts with their rules.** `incompleteRatio` and `suppressedDiagnosticsTotal` appear whenever even one project is incomplete. `suppressedDiagnosticsTotal` spans every severity and is not deduplicated, while `errorCount` counts errors only and is deduplicated across target frameworks - a total that dwarfs the visible counts means this measured a fraction of the solution.
 - **Cascade diagnostics.** A project that resolves its own references but depends on an incomplete project can list `CS0012`, `CS0234`, `CS0246` or `CS0518` although it compiles fine on a real build. Such entries stay listed but are marked `cascadeFromIncomplete: true`, the response counts them as `cascadeClassifiedCount`, and each incomplete project names its `affectedDependents`. Do not read `errorCount` as "N real errors" without this.
 - **Reference-binding advisories.** `CS1701`/`CS1702` ("assuming assembly reference X v1 matches X v2") are filtered out on core-resolved projects and disclosed as `referenceBindingAdvisoriesSuppressed`.
 - **Live only.** Diagnostics are not persisted, so this needs a live session. A recalled session is rejected; use `refresh_remembered` for a live one. The list is capped at 200; the counts reflect the full set.
 - **Compiler diagnostics only.** Third-party Roslyn analyzer diagnostics are out of scope.
 
-### `usage_report` — what the server actually did
+### `usage_report` - what the server actually did
 
 `usage_report` reads the server-side tool-call telemetry: every `tools/call` invocation recorded in the config DB's `tool_calls` table. It is cross-client, not a transcript of one chat.
 
@@ -352,12 +352,12 @@ The analyzer drift line is silent without an analyzed session, on a repository t
 
 Several fields answer specific questions:
 
-- `errorClasses` — the exception-type histogram behind a tool's errors. `McpException` is a **guided** failure the tool raised on purpose (an expired session, an unknown policy token); any other type is a defect suspicion worth chasing.
-- `argumentBindingErrors` — how often a caller named an argument the tool does not have, so the call never reached the tool. This is neither a defect nor a refusal; it shows where a tool's argument surface confuses callers.
-- `aliasApplied` — how often a tool was called with an accepted alias instead of the real parameter name.
-- `protocolVersions` and `clientEras` — the share of calls per protocol revision, and an (era × client) cross-tab. A null protocol version means the row predates this instrumentation (also reported as `preInstrumentationCalls`) and belongs in the denominator; a null client name means the client did not identify itself. `clientEras` is capped at 50 groups.
-- `facets` — how often each task facet was addressed. It is omitted until a call has addressed one.
-- `poolCoverage` — `poolSize`, `poolToolsFired`, `poolToolsNeverCalled`, `outOfPoolCallsIncluded` and `outOfPoolTools`. Read coverage here, **not** from `distinctTools`: that figure counts every tool ever called, including tools outside the current pool and tools from earlier pools, so holding it against the pool size overstates coverage. And a name in `poolToolsNeverCalled` was never called **top-level**, which is not the same as never called.
+- `errorClasses` - the exception-type histogram behind a tool's errors. `McpException` is a **guided** failure the tool raised on purpose (an expired session, an unknown policy token); any other type is a defect suspicion worth chasing.
+- `argumentBindingErrors` - how often a caller named an argument the tool does not have, so the call never reached the tool. This is neither a defect nor a refusal; it shows where a tool's argument surface confuses callers.
+- `aliasApplied` - how often a tool was called with an accepted alias instead of the real parameter name.
+- `protocolVersions` and `clientEras` - the share of calls per protocol revision, and an (era × client) cross-tab. A null protocol version means the row predates this instrumentation (also reported as `preInstrumentationCalls`) and belongs in the denominator; a null client name means the client did not identify itself. `clientEras` is capped at 50 groups.
+- `facets` - how often each task facet was addressed. It is omitted until a call has addressed one.
+- `poolCoverage` - `poolSize`, `poolToolsFired`, `poolToolsNeverCalled`, `outOfPoolCallsIncluded` and `outOfPoolTools`. Read coverage here, **not** from `distinctTools`: that figure counts every tool ever called, including tools outside the current pool and tools from earlier pools, so holding it against the pool size overstates coverage. And a name in `poolToolsNeverCalled` was never called **top-level**, which is not the same as never called.
 
 **When telemetry is unavailable**, the answer is `available=false` with the note:
 
@@ -372,7 +372,7 @@ No telemetry available - the server is running DB-free, or the tool_calls table 
 - `list_skills` is the capability map: every tool appears once in the pool groups (`inPool` or `outOfPool`). `uncatalogued` is a separate name-based section, not a third pool group; its tools can still be in either pool under an override. No profile menu names them, so only `AICB_MCP_TOOLS` can expose them.
 - `list_mcp_profiles` lists the profiles, their ids, their tool selections and which one is active. It needs a config DB (see above).
 - `docs()` is the server's built-in operating manual, with pages for installation, first context, tool navigation, solution configuration and the glossary.
-- `aicb call <tool>` invokes one MCP tool once from a terminal, without a client — useful to reproduce what an agent reported. Example: `aicb call server_info`. It writes nothing to the usage telemetry. Long analyses print progress to stderr as `progress: …`, so stdout stays clean for the result.
+- `aicb call <tool>` invokes one MCP tool once from a terminal, without a client - useful to reproduce what an agent reported. Example: `aicb call server_info`. It writes nothing to the usage telemetry. Long analyses print progress to stderr as `progress: ...`, so stdout stays clean for the result.
 
 ## 12.12 What the server writes to stderr at startup
 
@@ -392,7 +392,7 @@ These lines land in your MCP client's stderr log. The server also prints a tool-
 | `Pinning the MCP profile to '<id>' for this process (--mcp-profile); the profile persisted in the config DB is left unchanged.` | Confirmation, not a warning. |
 | `Active MCP profile: '<name>' (<id>)[ pinned via --mcp-profile; not persisted]; tool set: <spec or (lean)>; skill: <set or (none)>.` | Confirmation of what this process serves. |
 
-**Rule of thumb.** The MCP server almost always starts — it prefers to degrade and say so. The one exception is an explicitly pinned, unknown profile.
+**Rule of thumb.** The MCP server almost always starts - it prefers to degrade and say so. The one exception is an explicitly pinned, unknown profile.
 
 ## 12.13 Server-side guards and limits at a glance
 
@@ -427,7 +427,7 @@ Numeric limits you may meet in practice:
 | Registry load-gate wait | 45 seconds |
 | `tools/list` cache lifetime | 15 minutes |
 
-The three timing values have environment-variable overrides: `AICB_MCP_STALENESS_WINDOW_MS`, `AICB_MCP_DEBOUNCE_MS` and `AICB_MCP_LOAD_WAIT_MS`. Each takes milliseconds; a zero, a negative or an unparseable value falls back to the built-in default rather than switching the behaviour off.
+The three timing values have environment-variable overrides: `AICB_MCP_STALENESS_WINDOW_MS`, `AICB_MCP_DEBOUNCE_MS` and `AICB_MCP_LOAD_WAIT_MS`. Each takes milliseconds; a zero, a negative or an unparseable value falls back to the built-in default rather than switching the behavior off.
 
 ---
 

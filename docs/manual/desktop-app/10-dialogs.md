@@ -1,4 +1,4 @@
-[AICB – Desktop Application](README.md) &middot; chapter 10 of 11
+[AICB - Desktop Application](README.md) &middot; chapter 10 of 11
 
 # 10 Dialogs
 
@@ -159,7 +159,7 @@ Fields:
 Buttons:
 
 - `Cancel` - tooltip `Cancel the relocate operation - the Solution stays in the DB with the old (missing) path.`
-- `Relocate` - default button, tooltip `Update the Solution path in the DB - all Sessions/Snapshots are preserved.` It stays disabled until the path is non-empty **and** the file actually exists on disk. Note: no message explains why it is disabled - it simply stays greyed out until the file is found.
+- `Relocate` - default button, tooltip `Update the Solution path in the DB - all Sessions/Snapshots are preserved.` It stays disabled until the path is non-empty **and** the file actually exists on disk. Note: no message explains why it is disabled - it simply stays grayed out until the file is found.
 
 What happens with your answer:
 

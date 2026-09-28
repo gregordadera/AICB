@@ -1,4 +1,4 @@
-[AICB – Desktop Application](README.md) &middot; chapter 4 of 11
+[AICB - Desktop Application](README.md) &middot; chapter 4 of 11
 
 # 4 The Context Builder: configuration panels and code editor
 
@@ -253,7 +253,7 @@ The `Details` tab is the built-in code workspace, and it is the one place in the
 
 The editor is editable, shows line numbers, does not wrap long lines, uses a monospace font at the body size (12 px) and colors C# syntax. Freshly typed characters are re-colored after a short pause - the full re-coloring pass is debounced by 250 ms so typing stays smooth.
 
-The safeguard that makes a writing editor bearable: the editor is set to read-only **first** and becomes editable **only** when the file loads cleanly from disk. A file that is missing or cannot be read receives a comment placeholder - `// File not available on disk: …` or `// Could not open file: …` - and stays read-only, so the placeholder can never be saved over the real file.
+The safeguard that makes a writing editor bearable: the editor is set to read-only **first** and becomes editable **only** when the file loads cleanly from disk. A file that is missing or cannot be read receives a comment placeholder - `// File not available on disk: ...` or `// Could not open file: ...` - and stays read-only, so the placeholder can never be saved over the real file.
 
 ### The toolbar
 
@@ -300,7 +300,7 @@ The inspector sits on the right of the editor. Its toggle is in the toolbar, it 
 ### Unsaved changes when closing
 
 - Closing a single tab with unsaved edits asks `"{Title}" has unsaved edits.` / `Discard them and close the file?` (title `Close File`). The tab closes only on `Yes`.
-- Loading a different solution closes **all** open file tabs. If any of them have unsaved edits, one combined prompt appears first. It names up to five files and adds `… and {n} more` beyond that: `"{n} open file(s) have unsaved edits:"` … `The loaded solution changed. Discard these edits and close the files?` (title `Discard Unsaved Files`). Declining keeps the tabs open. Note that the solution context has already changed at that point, so the choice is "lose the edits" or "keep them and save them", not "undo the load" - a kept tab still saves to its own absolute path.
+- Loading a different solution closes **all** open file tabs. If any of them have unsaved edits, one combined prompt appears first. It names up to five files and adds `... and {n} more` beyond that: `"{n} open file(s) have unsaved edits:"` ... `The loaded solution changed. Discard these edits and close the files?` (title `Discard Unsaved Files`). Declining keeps the tabs open. Note that the solution context has already changed at that point, so the choice is "lose the edits" or "keep them and save them", not "undo the load" - a kept tab still saves to its own absolute path.
 
 ![The code editor with syntax highlighting and the Save button](img/aicb-gui-editor.png)
 

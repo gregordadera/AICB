@@ -1,4 +1,4 @@
-[AICB – Desktop Application](README.md) &middot; chapter 8 of 11
+[AICB - Desktop Application](README.md) &middot; chapter 8 of 11
 
 # 8 Settings
 
@@ -701,7 +701,7 @@ Below the buttons, the last file used by an import or export is shown (`Last fil
 
 The workflow is: `Import...` and choose a file → read the preview → `Apply`. The status line starts with "Click 'Import...' and choose a Constellation JSON file."
 
-The preview names the bundle (name, description, minimum app version, export date), its origin and a trust label, then lists each section with its counts of new, conflicting, unchanged and skipped built-in entries, plus the application settings keys the file carries. A community-sourced file is labelled "Low trust - third-party source, inspect first!".
+The preview names the bundle (name, description, minimum app version, export date), its origin and a trust label, then lists each section with its counts of new, conflicting, unchanged and skipped built-in entries, plus the application settings keys the file carries. A community-sourced file is labeled "Low trust - third-party source, inspect first!".
 
 After `Apply`, the page reports `Applied: {n} Items.`, `Skipped: {n} Items.` and `AppSettings keys: {n} applied.`; when there are problems, a `Notes:` list is appended and an error dialog appears.
 

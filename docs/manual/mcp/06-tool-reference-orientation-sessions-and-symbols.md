@@ -1,14 +1,14 @@
-[AICB – MCP Server](README.md) &middot; chapter 6 of 12
+[AICB - MCP Server](README.md) &middot; chapter 6 of 12
 
 # 6 Tool reference: orientation, sessions and symbols
 
 This chapter documents the MCP tools that orient you on a solution, manage the analysis session, and find individual symbols. It covers three groups:
 
-- **Orientation, operating manual and server introspection** — `docs`, `list_skills`, `server_info`, `list_mcp_profiles`, `usage_report`, `architecture_overview`, `describe_api_surface`
-- **Sessions and analysis** — `analyze_solution`, `refresh_session`, `get_diagnostics`, `inspect_session`, `list_sessions`
-- **Finding symbols, signatures and single-symbol context** — `find_symbol`, `symbol_signature`, `get_context`, `explain_symbol`
+- **Orientation, operating manual and server introspection** - `docs`, `list_skills`, `server_info`, `list_mcp_profiles`, `usage_report`, `architecture_overview`, `describe_api_surface`
+- **Sessions and analysis** - `analyze_solution`, `refresh_session`, `get_diagnostics`, `inspect_session`, `list_sessions`
+- **Finding symbols, signatures and single-symbol context** - `find_symbol`, `symbol_signature`, `get_context`, `explain_symbol`
 
-The fan-in and impact tools (`find_usages`, `impact_of_change`, …), the quality, testing and markup tools, and the multi-query meta-tools `batch` and `measure` are documented in the other tool-reference chapters.
+The fan-in and impact tools (`find_usages`, `impact_of_change`, ...), the quality, testing and markup tools, and the multi-query meta-tools `batch` and `measure` are documented in the other tool-reference chapters.
 
 ## 6.1 About this chapter
 
@@ -22,7 +22,7 @@ The fan-in and impact tools (`find_usages`, `impact_of_change`, …), the qualit
 
 **`nearest`.** When a name resolves to nothing, several tools return the closest declared name instead of a bare empty list, so a typo is distinguishable from a symbol that genuinely has no matches.
 
-**Leading `note`.** A leading `note` field qualifies an answer that would otherwise be misread — above all a zero: the zero gets a denominator (how much was examined at all) and an explanation of which constructs the detector structurally cannot see.
+**Leading `note`.** A leading `note` field qualifies an answer that would otherwise be misread - above all a zero: the zero gets a denominator (how much was examined at all) and an explanation of which constructs the detector structurally cannot see.
 
 **Writes.** All tools in this chapter are read-only, with two exceptions: `analyze_solution` and `refresh_session` change the in-memory session state. Neither writes files or a database.
 
@@ -49,7 +49,7 @@ The fan-in and impact tools (`find_usages`, `impact_of_change`, …), the qualit
 
 ### `docs`
 
-**Purpose.** The aicb operating manual — how to *use* the server, as opposed to what it can tell you about your code. The content is served by the same server that needs explaining. No session and no solution are needed.
+**Purpose.** The aicb operating manual - how to *use* the server, as opposed to what it can tell you about your code. The content is served by the same server that needs explaining. No session and no solution are needed.
 
 **When to use.** Call it when you are new to aicb, when you want to know how a feature is meant to be driven, or when you need the vocabulary used in other answers.
 
@@ -64,32 +64,32 @@ The fan-in and impact tools (`find_usages`, `impact_of_change`, …), the qualit
 | Id | Content |
 |---|---|
 | `overview` | What aicb is (and is not): the two products, the four things it deliberately does not do, and the three ways to run it. |
-| `install` | Installing aicb and wiring it into a client: the dotnet tool, `aicb init`, and what it writes — the client's `.mcp.json` entry, the agent skill a tool install cannot deliver, and the blocking symbol guard. |
-| `first-context` | From a `.sln` to your first context: self-init, then choosing between an overview, a symbol slice and the full export — and why the full export is rarely right. |
+| `install` | Installing aicb and wiring it into a client: the dotnet tool, `aicb init`, and what it writes - the client's `.mcp.json` entry, the agent skill a tool install cannot deliver, and the blocking symbol guard. |
+| `first-context` | From a `.sln` to your first context: self-init, then choosing between an overview, a symbol slice and the full export - and why the full export is rarely right. |
 | `navigation` | Asking questions about the code: the question-to-tool table, the blast-radius call to make before editing shared code, and where plain text search is still right. |
 | `solution-config` | Configuring a solution: layers, exclusions and test detection, the three setup calls, and why to commit the `.aicb.json` sidecar. |
 | `glossary` | Glossary: session, facet, MCP profile, snapshot, insight, AI-Builder Markdown, tool pool. |
-| `init` (route) | Every page, in reading order — the whole first run. |
+| `init` (route) | Every page, in reading order - the whole first run. |
 
 **Response.** Markdown. Without `topics` you get the directory: one line per page and per route, each with an estimated size in tokens so you can budget before pulling. The estimate is a real tokenizer count, not a characters-divided-by-four rule of thumb; when no counter is available the size column is simply left out. If a requested id matches nothing, the answer names it and appends the directory.
 
 **Notes and limits**
 
 - If a rendered page suggests a tool that the active tool profile does not expose, a trailing note names those tools and both ways to widen the pool: an MCP profile (see `list_mcp_profiles`) or the `AICB_MCP_TOOLS` environment variable. The rest of the page applies unchanged.
-- The same content is available as MCP resources — `acb://docs` for the directory, `acb://docs/{topic}` for a page or route — for clients that prefer attaching context over calling a tool.
+- The same content is available as MCP resources - `acb://docs` for the directory, `acb://docs/{topic}` for a page or route - for clients that prefer attaching context over calling a tool.
 - Not dispatchable through `batch`/`measure`.
 
 ### `list_skills`
 
-**Purpose.** The server's capability map: a tool index naming *every* tool this server has, each exactly once, grouped by pool state — plus the sections that group tools by name: the always-on navigation core, the task facets (id, guidance, template slot and the facet's tool menu), the cross-cutting guidance styles, and the legacy functional bundles.
+**Purpose.** The server's capability map: a tool index naming *every* tool this server has, each exactly once, grouped by pool state - plus the sections that group tools by name: the always-on navigation core, the task facets (id, guidance, template slot and the facet's tool menu), the cross-cutting guidance styles, and the legacy functional bundles.
 
-**When to use.** To discover specialized long-tail tools beyond the navigation core, and — the one question no other tool answers — to check whether a tool you want is merely outside the active pool rather than nonexistent.
+**When to use.** To discover specialized long-tail tools beyond the navigation core, and - the one question no other tool answers - to check whether a tool you want is merely outside the active pool rather than nonexistent.
 
 **Parameters**
 
 | Parameter | Type | Required | Default | Meaning |
 |---|---|---|---|---|
-| `detail` | `string` | no | `null` (equals `"lean"`) | `"lean"` — bare names in their pool groups; `"full"` — additionally each tool's one-line description. Case-insensitive. |
+| `detail` | `string` | no | `null` (equals `"lean"`) | `"lean"` - bare names in their pool groups; `"full"` - additionally each tool's one-line description. Case-insensitive. |
 
 **Response.** JSON with these fields:
 
@@ -109,13 +109,13 @@ In the lean projection each index entry is a bare name; with `detail: "full"` ea
 
 **Notes and limits**
 
-- A name in `outOfPool` is proof the tool is real, not a denial. It becomes reachable through an MCP profile whose facet menu or bundle names it, or through the `AICB_MCP_TOOLS` override — except an uncatalogued tool, which no menu names, so only the override applies.
+- A name in `outOfPool` is proof the tool is real, not a denial. It becomes reachable through an MCP profile whose facet menu or bundle names it, or through the `AICB_MCP_TOOLS` override - except an uncatalogued tool, which no menu names, so only the override applies.
 - An unknown `detail` value is rejected with the two valid values, rather than silently answered as the default.
 - No session needed. Not dispatchable through `batch`/`measure`.
 
 ### `server_info`
 
-**Purpose.** Name, version and build commit of the server — a quick reachability check — plus the config DB's schema version. The commit answers the question a version number cannot: *is the binary I am talking to built from the code I just landed?*
+**Purpose.** Name, version and build commit of the server - a quick reachability check - plus the config DB's schema version. The commit answers the question a version number cannot: *is the binary I am talking to built from the code I just landed?*
 
 **When to use.** To confirm the server is reachable and current, and to diagnose a stale server after a rebuild, an update or a profile change.
 
@@ -124,22 +124,22 @@ In the lean projection each index entry is a bare name; with `detail: "full"` ea
 **Response.** Plain text, built from up to five parts:
 
 1. The identity line: `aicb MCP server (AIContextBuilder) v<version> [(commit <sha>)] - Roslyn-based .NET context generator.` followed by the license notice (`(c) Gregor Dadera - free for private, hobby and educational use and qualifying organizations; see LICENSE.txt.`). A development build can include the full SHA; public release builds deliberately omit it.
-2. `Config DB schema: user_version=<n> (<path>).` — a read-only read of the resolved config DB (the same one the DB-bound tools default to), so a post-migration check can read the schema version directly. Omitted when the server is DB-free or the DB is unreadable.
-3. **Analyzer drift** — this binary's build commit against the HEAD of the repository holding the analyzed solution. It reports in-sync and ahead too, not only drift. Silent without an analyzed session, and on a repository that does not know this commit (any foreign solution).
-4. **Version drift** — this binary against the config DB. It distinguishes a DB newer than this binary from a DB with pending migrations. For tool-pool drift it also distinguishes a profile produced by a newer build (rebuild/reinstall the standalone tool) from retired tool names still stored in the profile (open and save the profile in the GUI). The check is at tool-*name* level; a new parameter on an existing tool is not detected.
-5. **Config drift** — the active MCP profile changed since this server started (a GUI edit in the "MCP Profiles" panel, or another process writing the config DB). Remedy: restart or reconnect to load the current skill pool (tools and instructions).
+2. `Config DB schema: user_version=<n> (<path>).` - a read-only read of the resolved config DB (the same one the DB-bound tools default to), so a post-migration check can read the schema version directly. Omitted when the server is DB-free or the DB is unreadable.
+3. **Analyzer drift** - this binary's build commit against the HEAD of the repository holding the analyzed solution. It reports in-sync and ahead too, not only drift. Silent without an analyzed session, and on a repository that does not know this commit (any foreign solution).
+4. **Version drift** - this binary against the config DB. It distinguishes a DB newer than this binary from a DB with pending migrations. For tool-pool drift it also distinguishes a profile produced by a newer build (rebuild/reinstall the standalone tool) from retired tool names still stored in the profile (open and save the profile in the GUI). The check is at tool-*name* level; a new parameter on an existing tool is not detected.
+5. **Config drift** - the active MCP profile changed since this server started (a GUI edit in the "MCP Profiles" panel, or another process writing the config DB). Remedy: restart or reconnect to load the current skill pool (tools and instructions).
 
 **Notes and limits**
 
 - When a development build reports a commit, compare it against `git rev-parse HEAD`. A version number can be identical across *different* builds; public release builds provide no commit-level comparison.
-- Parts 3–5 are omitted when there is nothing to report; the config-DB line is omitted on a DB-free server.
+- Parts 3-5 are omitted when there is nothing to report; the config-DB line is omitted on a DB-free server.
 - Not dispatchable through `batch`/`measure`.
 
 ### `list_mcp_profiles`
 
 **Purpose.** List the MCP profiles in the server's config DB.
 
-**When to use.** To see which profiles exist, which one is active, and how each one narrows the tool set and shapes the rendered output — for example before deciding which profile to pin at server start.
+**When to use.** To see which profiles exist, which one is active, and how each one narrows the tool set and shapes the rendered output - for example before deciding which profile to pin at server start.
 
 **Parameters.** None.
 
@@ -169,7 +169,7 @@ In the lean projection each index entry is a bare name; with `detail: "full"` ea
 
 ### `usage_report`
 
-**Purpose.** The server-side tool-call telemetry: every `tools/call` invocation the server has recorded into the config DB's `tool_calls` table — cross-client (corpus runs, foreign adopters), not this client's transcript.
+**Purpose.** The server-side tool-call telemetry: every `tools/call` invocation the server has recorded into the config DB's `tool_calls` table - cross-client (corpus runs, foreign adopters), not this client's transcript.
 
 **When to use.** To see how heavily each tool is actually used, how expensive and reliable it is, which clients and protocol eras are in play, and how much of the active tool pool the recorded traffic covers.
 
@@ -177,10 +177,10 @@ In the lean projection each index entry is a bare name; with `detail: "full"` ea
 
 | Parameter | Type | Required | Default | Meaning |
 |---|---|---|---|---|
-| `topTools` | `int` | no | `30` | Cap on the per-tool breakdown, ranked by call count; clamped to 1–200. |
-| `sinceDays` | `int` | no | `null` | Only count calls from the last N days (omit for the whole log); clamped to 1–3650. Narrows every figure (counts, percentiles, error classes, facets). The applied cutoff comes back as `windowSinceIso`, so an empty window is never mistaken for an empty table. |
+| `topTools` | `int` | no | `30` | Cap on the per-tool breakdown, ranked by call count; clamped to 1-200. |
+| `sinceDays` | `int` | no | `null` | Only count calls from the last N days (omit for the whole log); clamped to 1-3650. Narrows every figure (counts, percentiles, error classes, facets). The applied cutoff comes back as `windowSinceIso`, so an empty window is never mistaken for an empty table. |
 
-**Read the scope first.** The telemetry filter sits on the `tools/call` pipeline only. A sub-query inside `batch` or `measure` records the parent call and no child row of its own — except that a recent-enough parent row carries a per-tool tally of what it dispatched, reported under `subQueries` (see below). A one-shot `aicb call` invocation records nothing at all. Every count here is therefore a **lower bound**, and a tool at 0 was not called *through this door* rather than not called. The response repeats this scope in `recordedVia`.
+**Read the scope first.** The telemetry filter sits on the `tools/call` pipeline only. A sub-query inside `batch` or `measure` records the parent call and no child row of its own - except that a recent-enough parent row carries a per-tool tally of what it dispatched, reported under `subQueries` (see below). A one-shot `aicb call` invocation records nothing at all. Every count here is therefore a **lower bound**, and a tool at 0 was not called *through this door* rather than not called. The response repeats this scope in `recordedVia`.
 
 **Response.** JSON:
 
@@ -194,7 +194,7 @@ In the lean projection each index entry is a bare name; with `detail: "full"` ea
 | `aliasApplied` | How often a tool was called with a parameter's accepted alias instead of its real name, i.e. how often callers were silently corrected. Omitted when that never happened. |
 | `protocolVersions` | The share of calls per protocol revision. |
 | `clientEras` | The (era × client) cross-tab from the client's own protocol-level identification, capped at 50 groups with `clientEraGroupsTotal` and `clientErasTruncated` disclosing the rest. |
-| `preInstrumentationCalls` | Calls recorded before this instrumentation existed. A null protocol version in `protocolVersions` means exactly that — not an unknown client — and belongs in the denominator. |
+| `preInstrumentationCalls` | Calls recorded before this instrumentation existed. A null protocol version in `protocolVersions` means exactly that - not an unknown client - and belongs in the denominator. |
 | `facets` | How often each facet (the task axis of `prepare_task` / `pack_for_task` / `export_markdown`) was addressed. Omitted until a call has addressed one. |
 | `poolCoverage` | How much of the *active* tool pool this door's traffic covers: `poolSize`, `poolToolsFired`, `poolToolsNeverCalled`, `neverCalledNote`, `outOfPoolCallsIncluded`, `outOfPoolTools`. |
 | `subQueries` | The per-tool tally of sub-queries dispatched through `batch` (uncapped, unlike `tools`). A `measure` sub-query is left out (it runs the tool fully, but the caller consumes the size of the answer, not the answer), and a sub-query naming a tool the dispatch registry does not know is counted under the single literal `(unknown)`. Omitted while nothing has been dispatched. |
@@ -202,7 +202,7 @@ In the lean projection each index entry is a bare name; with `detail: "full"` ea
 
 **Notes and limits**
 
-- Read coverage from `poolCoverage`, not from `distinctTools`: that figure counts every tool called, including ones outside the pool, so holding it against the pool size overstates coverage. A name in `poolToolsNeverCalled` was never called *top-level*, which is not the same as never called — hence `neverCalledNote`.
+- Read coverage from `poolCoverage`, not from `distinctTools`: that figure counts every tool called, including ones outside the pool, so holding it against the pool size overstates coverage. A name in `poolToolsNeverCalled` was never called *top-level*, which is not the same as never called - hence `neverCalledNote`.
 - The percentiles are the honest read for the right-skewed latency distribution: one warm-up call drags the average.
 - This report is **not sufficient on its own for a prune decision**: a tool dispatchable through `batch`/`measure`, or reached by `aicb call`, can be in real use and still read 0 here.
 - Shapes only: no code content, no argument values, no exception *messages* (the type name only), and the session reference is hashed.
@@ -211,7 +211,7 @@ In the lean projection each index entry is a bare name; with `detail: "full"` ea
 
 ### `architecture_overview`
 
-**Purpose.** Orient on a whole solution *without* the firewall of full source. Renders a structural-only AI-Builder-Markdown overview: the macro/architecture graphs (layer map, service and class dependency graphs, role graph, entry points and entry-point flow, architecture flow, interface relations), a domain summary and a quality-hotspots section (the most complex methods and the most-coupled types) — but no per-type or per-file source-code blocks, so it stays bounded where `export_markdown` renders the entire solution.
+**Purpose.** Orient on a whole solution *without* the firewall of full source. Renders a structural-only AI-Builder-Markdown overview: the macro/architecture graphs (layer map, service and class dependency graphs, role graph, entry points and entry-point flow, architecture flow, interface relations), a domain summary and a quality-hotspots section (the most complex methods and the most-coupled types) - but no per-type or per-file source-code blocks, so it stays bounded where `export_markdown` renders the entire solution.
 
 **When to use.** First contact with an unfamiliar codebase; before a structural change; whenever you need the shape of the solution rather than one symbol. Afterwards, drill in with `get_context` or `explain_symbol`.
 
@@ -219,7 +219,7 @@ In the lean projection each index entry is a bare name; with `detail: "full"` ea
 
 | Parameter | Type | Required | Default | Meaning |
 |---|---|---|---|---|
-| `sessionId` | `string` | yes | — | Session id or absolute solution path. |
+| `sessionId` | `string` | yes | - | Session id or absolute solution path. |
 | `lean` | `bool` | no | `true` | Drop the `<AI_CONTEXT_SPEC>` / `<AI_CONTEXT_META>` format-rules preamble and any empty graph sections. `false` renders the full AI-Builder-Markdown document contract. |
 | `includeTests` | `bool` | no | `false` | Include test projects. |
 | `summaryOnly` | `bool` | no | `false` | Collapse ordinary macro sections to a count plus top-N entries instead of up to 80. The layer map becomes an aggregate with the total and one count per layer. |
@@ -230,14 +230,14 @@ In the lean projection each index entry is a bare name; with `detail: "full"` ea
 
 - **Production-focused.** Test projects are excluded by default, because an architecture overview is otherwise flooded by every test method listed as an entry point plus its flow trace, which is not part of the production architecture. Set `includeTests: true` to include `*.Tests` / `*.Spec` projects in the graphs.
 - Use `summaryOnly: true` on extreme solutions (200+ projects, heavy generics) where even the bounded overview would exceed the token cap and would otherwise return nothing.
-- Multi-TFM solutions are deduplicated to one logical project per name, keeping the newest target framework's instance — otherwise every hotspot and edge would appear once per target framework.
+- Multi-TFM solutions are deduplicated to one logical project per name, keeping the newest target framework's instance - otherwise every hotspot and edge would appear once per target framework.
 - Recall-safe: works on live *and* recalled sessions. On a recalled session the quality-hotspot line counts are unavailable; complexity is still shown.
-- Note: if every project in the solution classifies as a test project and `includeTests` is `false`, the production-focused view has no projects left, so every section derived from types (the macro graphs, entry points, quality hotspots, domain components) is empty by construction — not because the codebase has no architecture. A leading note says so and points to `includeTests: true`. If that classification is wrong, `solution_config_status` reports the test axis, and on a live session `init_solution_config` and `apply_solution_config` set it.
+- Note: if every project in the solution classifies as a test project and `includeTests` is `false`, the production-focused view has no projects left, so every section derived from types (the macro graphs, entry points, quality hotspots, domain components) is empty by construction - not because the codebase has no architecture. A leading note says so and points to `includeTests: true`. If that classification is wrong, `solution_config_status` reports the test axis, and on a live session `init_solution_config` and `apply_solution_config` set it.
 - Dispatchable through `batch`/`measure`.
 
 ### `describe_api_surface`
 
-**Purpose.** List the public API surface of a solution or namespace — every externally visible type with its externally visible members (constructors, properties, fields, methods, user-defined operators), each as a compact declaration signature. The "header"/contract view: what a consumer of this assembly can actually reference, without the source bodies.
+**Purpose.** List the public API surface of a solution or namespace - every externally visible type with its externally visible members (constructors, properties, fields, methods, user-defined operators), each as a compact declaration signature. The "header"/contract view: what a consumer of this assembly can actually reference, without the source bodies.
 
 **When to use.** To review a public contract before changing it, to see what an assembly really exposes, or as the baseline for a contract comparison (save a snapshot with `save_session` and compare later with `compare_with_previous`; the dedicated contract-diff tools are outside the default pool).
 
@@ -245,7 +245,7 @@ In the lean projection each index entry is a bare name; with `detail: "full"` ea
 
 | Parameter | Type | Required | Default | Meaning |
 |---|---|---|---|---|
-| `sessionId` | `string` | yes | — | Session id or absolute solution path. |
+| `sessionId` | `string` | yes | - | Session id or absolute solution path. |
 | `scope` | `string` | no | `"solution"` | `"solution"` covers everything; a namespace prefix (e.g. `MyApp.Contracts`) narrows the surface. |
 | `includeInternal` | `bool` | no | `false` | Additionally surface the internal family (`internal` / `private protected`) types and members. |
 | `includeTests` | `bool` | no | `false` | Include test projects. |
@@ -254,10 +254,10 @@ In the lean projection each index entry is a bare name; with `detail: "full"` ea
 
 **Notes and limits**
 
-- A type is included when its *own* declared accessibility is externally visible — `public` or the protected family (reachable by a subclass in another assembly); its members likewise.
+- A type is included when its *own* declared accessibility is externally visible - `public` or the protected family (reachable by a subclass in another assembly); its members likewise.
 - A property renders only the accessors that are themselves visible (`{ get; private set; }` shows as `{ get; }`); a `const` carries its value; an enum is listed as a type (its values are not in the model).
 - A `partial` type is folded into one entry: members and interfaces of its declaration fragments are unioned, and a partial method's defining and implementing declarations count once. A multi-targeted type is listed once.
-- Two documented simplifications: accessibility is the type's own declared modifier — the effective accessibility through the nesting chain is not computed, so a public member of a type nested in an internal type is still listed; and a type declared with no access modifier is stored as private, so a modifier-omitted (compiler-internal) top-level type is not surfaced even with `includeInternal: true`.
+- Two documented simplifications: accessibility is the type's own declared modifier - the effective accessibility through the nesting chain is not computed, so a public member of a type nested in an internal type is still listed; and a type declared with no access modifier is stored as private, so a modifier-omitted (compiler-internal) top-level type is not surfaced even with `includeInternal: true`.
 - Production-focused: test projects are excluded by default, because a shipped API surface is production code.
 - Recall-safe: reads persisted accessibility and signature facts, so it works on live and recalled sessions.
 - Dispatchable through `batch`/`measure`.
@@ -274,17 +274,17 @@ In the lean projection each index entry is a bare name; with `detail: "full"` ea
 
 | Parameter | Type | Required | Default | Meaning |
 |---|---|---|---|---|
-| `solutionPath` | `string` | yes | — | Absolute path to the solution file to analyze (e.g. `C:\src\MyApp\MyApp.sln`). |
+| `solutionPath` | `string` | yes | - | Absolute path to the solution file to analyze (e.g. `C:\src\MyApp\MyApp.sln`). |
 | `layerProfile` | `string` | no | `null` | Absolute path to a layer-mapping profile JSON. |
 | `dbPath` | `string` | no | `null` | Absolute path to a config/master DB. |
 
-**`layerProfile`.** Omit it to use the config DB's active layer profile (per-solution over app-global) when a config DB is resolved, else the `.aicb.json` sidecar's profile, else role-based heuristics. If the file you pass parses but contains no layer-mapping profile at all (no rules, no id, no name — the fingerprint of a schema-foreign file such as the `.aicb.json` sidecar passed by mistake), the call fails with an actionable error instead of silently degrading to heuristics. If you meant the sidecar, omit `layerProfile` — its layer profile is resolved automatically. Precedence: explicit profile > DB > sidecar > heuristics.
+**`layerProfile`.** Omit it to use the config DB's active layer profile (per-solution over app-global) when a config DB is resolved, else the `.aicb.json` sidecar's profile, else role-based heuristics. If the file you pass parses but contains no layer-mapping profile at all (no rules, no id, no name - the fingerprint of a schema-foreign file such as the `.aicb.json` sidecar passed by mistake), the call fails with an actionable error instead of silently degrading to heuristics. If you meant the sidecar, omit `layerProfile` - its layer profile is resolved automatically. Precedence: explicit profile > DB > sidecar > heuristics.
 
 **`dbPath`.** When given:
 
 - the DB's active namespace-exclusion list is applied during analysis (the same as the GUI and CLI);
 - the DB's active test-detection profile (per-solution > global > default) is resolved for the session, so the test-aware tools honor it;
-- and — unless an explicit `layerProfile` is given — the DB's active layer-mapping profile drives the analysis (dependency-graph layers and the layer map), matching the insights/metrics/CLI-gate path.
+- and - unless an explicit `layerProfile` is given - the DB's active layer-mapping profile drives the analysis (dependency-graph layers and the layer map), matching the insights/metrics/CLI-gate path.
 
 The layer and test profiles travel with the session, so downstream tools do not need `dbPath` again. Namespace exclusions travel only when they came from the DB-free sidecar path; exclusions supplied by a database affect the initial analysis but are not retained for a later full refresh. Omit `dbPath` to use the server's default config DB (the same one the GUI uses), if the server resolved one. On a DB-free server the defaults apply: no exclusions, the default test heuristic, role-based layers.
 
@@ -304,17 +304,17 @@ The layer and test profiles travel with the session, so downstream tools do not 
 | `configInit` | Present when a configuration axis (layer / exclusions / test) has not yet been initialized through the guided setup. |
 | `agentWiring` | Present only when there is something to say about the calling agent's symbol-guard installation. |
 
-**`configInit`** carries `layerProfileNeedsInit`, `exclusionListNeedsInit`, `testProfileNeedsInit`, `anyUninitialized`, `hint`, the per-axis `autoInitLayer` / `autoInitExclusions` / `autoInitTest` flags (omitted while `false`), and a `directive` when at least one axis is both opted into auto-initialization and still uninitialized. Note the polarity: these flags mean *needs init*, while `solution_config_status` reports the same three axes as *initialized* — the opposite sense. The hint points to `solution_config_status`, then `init_solution_config` and `apply_solution_config`; the result is persisted to the DB and to the `.aicb.json` sidecar next to the `.sln`.
+**`configInit`** carries `layerProfileNeedsInit`, `exclusionListNeedsInit`, `testProfileNeedsInit`, `anyUninitialized`, `hint`, the per-axis `autoInitLayer` / `autoInitExclusions` / `autoInitTest` flags (omitted while `false`), and a `directive` when at least one axis is both opted into auto-initialization and still uninitialized. Note the polarity: these flags mean *needs init*, while `solution_config_status` reports the same three axes as *initialized* - the opposite sense. The hint points to `solution_config_status`, then `init_solution_config` and `apply_solution_config`; the result is persisted to the DB and to the `.aicb.json` sidecar next to the `.sln`.
 
 **Notes and limits**
 
 - **Progress.** A client that sends a progress token receives progress notifications during a long analysis. The progress channel is bound by the protocol, not a parameter you pass.
 - A load failure is translated into an actionable message rather than a generic invocation error. The most common cause is a project that targets a newer SDK/TFM or a platform SDK (Windows SDK, Windows App SDK, Aspire) that the analyzer's build host cannot load.
-- Writes session state only — no files, no database. Not dispatchable through `batch`/`measure`.
+- Writes session state only - no files, no database. Not dispatchable through `batch`/`measure`.
 
 ### `refresh_session`
 
-**Purpose.** Re-analyze the session's solution after *your* code edits. Without it, tools such as `find_usages`, `impact_of_change`, `list_insights` or `get_context` may keep answering from the stale pre-edit graph — a silent source of wrong results.
+**Purpose.** Re-analyze the session's solution after *your* code edits. Without it, tools such as `find_usages`, `impact_of_change`, `list_insights` or `get_context` may keep answering from the stale pre-edit graph - a silent source of wrong results.
 
 **When to use.**
 
@@ -328,7 +328,7 @@ Also call it with `force: true` after a restore or build that was meant to repai
 
 | Parameter | Type | Required | Default | Meaning |
 |---|---|---|---|---|
-| `sessionId` | `string` | yes | — | Session id or absolute solution path. |
+| `sessionId` | `string` | yes | - | Session id or absolute solution path. |
 | `force` | `bool` | no | `false` | Re-analyze even when no source file has changed. |
 
 **Response.** JSON: `changed`, `reason`, `session` (the same session metadata block `analyze_solution` returns) and `mode`. `mode` names the path the re-analysis took: `"incremental"` (document texts replayed into the warm snapshot, no MSBuild reload) or `"full-reload"`. It is absent when nothing was re-analyzed.
@@ -340,7 +340,7 @@ Also call it with `force: true` after a restore or build that was meant to repai
 - `mode` is the only indicator when the incremental path stops engaging: answers stay correct, calls just get slow again.
 - Note: when nothing was re-analyzed but the session's last analysis was incomplete, the answer carries a note explaining that a restore/build repairs that without touching a source file, and telling you to call again with `force: true`.
 - Reuses the warm workspace. A recalled session has no live workspace and is rejected with a message pointing to `refresh_remembered` or `analyze_solution`.
-- Writes session state only — no files, no database. Not dispatchable through `batch`/`measure`.
+- Writes session state only - no files, no database. Not dispatchable through `batch`/`measure`.
 
 ### `get_diagnostics`
 
@@ -352,11 +352,11 @@ Also call it with `force: true` after a restore or build that was meant to repai
 
 | Parameter | Type | Required | Default | Meaning |
 |---|---|---|---|---|
-| `sessionId` | `string` | yes | — | Session id or absolute solution path. |
+| `sessionId` | `string` | yes | - | Session id or absolute solution path. |
 | `severityFloor` | `string` | no | `"warning"` | Minimum severity to include: `"error"`, `"warning"`, `"info"` or `"hidden"`. |
 | `scope` | `string` | no | `"solution"` | `"solution"` or a file-path substring (e.g. `MyApp.Core` or `Services/`) that filters the result. |
 
-**Order matters.** The diagnostics are compiled from the *session's* document snapshot, not from the files on disk. Under auto-refresh mode `off` they describe the pre-edit source — a freshly written error can answer `errorCount: 0`. Under the shipped `reactive` mode this tool is refreshed for you before it answers, so the explicit `refresh_session` call is redundant rather than wrong; calling it is the spelling that is correct in *every* mode. An answer computed from a graph known to be behind the disk leads with `verdict: "stale"` and `verdictReason` before any count, so reading the pre-edit state deliberately stays possible — it just cannot be mistaken for a clean bill.
+**Order matters.** The diagnostics are compiled from the *session's* document snapshot, not from the files on disk. Under auto-refresh mode `off` they describe the pre-edit source - a freshly written error can answer `errorCount: 0`. Under the shipped `reactive` mode this tool is refreshed for you before it answers, so the explicit `refresh_session` call is redundant rather than wrong; calling it is the spelling that is correct in *every* mode. An answer computed from a graph known to be behind the disk leads with `verdict: "stale"` and `verdictReason` before any count, so reading the pre-edit state deliberately stays possible - it just cannot be mistaken for a clean bill.
 
 **Response.** JSON with these fields:
 
@@ -377,15 +377,15 @@ Also call it with `force: true` after a restore or build that was meant to repai
 **Notes and limits**
 
 - **Suppressed diagnostics are excluded** (`#pragma`, `[SuppressMessage]`), and a multi-targeted project that compiles the same source under several target frameworks reports each diagnostic once (deduplicated by id + location + message), not once per framework.
-- **Incomplete projects are disclosed, not listed.** A project whose compilation cannot resolve its core references (`System.Object` missing — a targeting pack not installed for that TFM, or an unrestored project) would otherwise flood with thousands of bogus cascade errors. It is not listed as findings but appears under `incompleteProjects`. A freshly created, never-built worktree reports *every* project there until it is built once — that is the unrestored state, not a defect, and one `dotnet restore` / `dotnet build` makes the fast gate work for the rest of the session.
-- The `inconclusive` verdict is deliberately rare: it fires only when a strict majority of projects are incomplete, because a judgement that triggers on every partly-restored solution is one you learn to ignore. The *disclosure* is not rationed the same way: whenever even one project is incomplete, the answer carries `incompleteRatio` and `suppressedDiagnosticsTotal` next to the counts.
+- **Incomplete projects are disclosed, not listed.** A project whose compilation cannot resolve its core references (`System.Object` missing - a targeting pack not installed for that TFM, or an unrestored project) would otherwise flood with thousands of bogus cascade errors. It is not listed as findings but appears under `incompleteProjects`. A freshly created, never-built worktree reports *every* project there until it is built once - that is the unrestored state, not a defect, and one `dotnet restore` / `dotnet build` makes the fast gate work for the rest of the session.
+- The `inconclusive` verdict is deliberately rare: it fires only when a strict majority of projects are incomplete, because a judgment that triggers on every partly-restored solution is one you learn to ignore. The *disclosure* is not rationed the same way: whenever even one project is incomplete, the answer carries `incompleteRatio` and `suppressedDiagnosticsTotal` next to the counts.
 - **Read `suppressedDiagnosticsTotal` as a magnitude, not as one half of a ratio with `errorCount`.** The two are counted under different rules: the total spans every severity from the floor up and is *not* deduplicated (a multi-targeted incomplete project contributes once per target framework), while `errorCount` counts errors only and *is* deduplicated across target frameworks. A total that dwarfs `errorCount + warningCount + infoCount` means this measured a fraction of the solution, even when no verdict is present.
 - A core-resolved project whose dependency chain includes an incomplete project inherits the broken references and can list cascade ids although it compiles fine on a real build. Those diagnostics are never hidden: they stay listed, marked `cascadeFromIncomplete: true`, and counted in `cascadeClassifiedCount`, so `errorCount` is not read as "N real errors".
 - Assembly-reference version-float advisories (`CS1701`/`CS1702`, which carry no source location) are binding-redirect noise from the analysis host's reference resolution and are never actionable from source; on core-resolved projects they are filtered out and their count disclosed.
-- `scope` is a **post-filter, not a narrowing**: every project is still compiled and `projectsScanned` reports all of them, so latency is the same as a solution-wide call. Use `scope` to save response tokens, never to save time — for one quick check after an edit, one solution-wide call is as cheap as a scoped one.
+- `scope` is a **post-filter, not a narrowing**: every project is still compiled and `projectsScanned` reports all of them, so latency is the same as a solution-wide call. Use `scope` to save response tokens, never to save time - for one quick check after an edit, one solution-wide call is as cheap as a scoped one.
 - An unknown `severityFloor` is rejected with the list of valid values.
 - **Live-only:** diagnostics are not persisted, so this tool needs a live `analyze_solution` session; a recalled session is rejected (use `refresh_remembered` for a live one).
-- Compiler diagnostics only — third-party Roslyn *analyzer* diagnostics are out of scope.
+- Compiler diagnostics only - third-party Roslyn *analyzer* diagnostics are out of scope.
 - Dispatchable through `batch`/`measure`.
 
 ### `inspect_session`
@@ -396,7 +396,7 @@ Also call it with `force: true` after a restore or build that was meant to repai
 
 | Parameter | Type | Required | Default | Meaning |
 |---|---|---|---|---|
-| `sessionId` | `string` | yes | — | Session id or absolute solution path. |
+| `sessionId` | `string` | yes | - | Session id or absolute solution path. |
 
 **Response.** The same session metadata block `analyze_solution` returns: session id, solution path and name, project count, file-set hash, layer profile, last access, origin (`Live`/`Recalled`) and line-number availability.
 
@@ -434,27 +434,27 @@ Also call it with `force: true` after a restore or build that was meant to repai
 
 | Parameter | Type | Required | Default | Meaning |
 |---|---|---|---|---|
-| `sessionId` | `string` | yes | — | Session id or absolute solution path. |
-| `query` | `string` | yes | — | A substring of the symbol name to search for (type, method, property, field, event, enum member or operator). |
+| `sessionId` | `string` | yes | - | Session id or absolute solution path. |
+| `query` | `string` | yes | - | A substring of the symbol name to search for (type, method, property, field, event, enum member or operator). |
 
 **Aliases.** The tool schema advertises `query`, but `symbol` and `name` are accepted as stand-ins and are rewritten to `query` (a recorded caller confusion, kept as a tolerance). An explicit `query` always wins over an alias if you pass both.
 
-**Response.** JSON: `items`, `count`, `totalFound`, `truncated` and — only on a zero-hit result — `nearest`. Capped at 100. Each item carries `kind` (`type`, `method`, `property`, `field`, `event`, `enum_member` or `operator`), `name`, `declaringType`, `namespace` and `signature`.
+**Response.** JSON: `items`, `count`, `totalFound`, `truncated` and - only on a zero-hit result - `nearest`. Capped at 100. Each item carries `kind` (`type`, `method`, `property`, `field`, `event`, `enum_member` or `operator`), `name`, `declaringType`, `namespace` and `signature`.
 
-**Result order.** Results are ranked by match quality first — exact name, then case-insensitive exact, then prefix, then substring — and only within one rank by kind order. An exact match is therefore never hidden by the cap behind weaker substring hits. If the result is truncated, the exact and prefix matches are the ones you got; narrow the query (a longer substring) to see the weaker rest.
+**Result order.** Results are ranked by match quality first - exact name, then case-insensitive exact, then prefix, then substring - and only within one rank by kind order. An exact match is therefore never hidden by the cap behind weaker substring hits. If the result is truncated, the exact and prefix matches are the ones you got; narrow the query (a longer substring) to see the weaker rest.
 
-**Kind order.** Types are listed first, then methods, then properties (handwritten and source-generated; a generated property carries a `// source-generated` note in its signature), then fields, events and enum members, then user-defined operators and conversions. An enum member's signature is its qualified `Enum.Member` form — the string the fan-in tools take.
+**Kind order.** Types are listed first, then methods, then properties (handwritten and source-generated; a generated property carries a `// source-generated` note in its signature), then fields, events and enum members, then user-defined operators and conversions. An enum member's signature is its qualified `Enum.Member` form - the string the fan-in tools take.
 
 **Notes and limits**
 
 - A user-defined operator is found by its *metadata* name: query `op_Equality`, `op_Addition` or `op_Implicit`, and `op_` lists them all. Note that an operator carries no fan-in: `a == b` is no invocation the call index records.
 - Not indexed, so an empty answer is expected for them: local variables, parameters, labels and namespaces.
-- When the query matches nothing, `nearest` names the closest declared symbol — a likely typo or case mismatch. A matched symbol never carries it.
+- When the query matches nothing, `nearest` names the closest declared symbol - a likely typo or case mismatch. A matched symbol never carries it.
 - Dispatchable through `batch`/`measure`.
 
 ### `symbol_signature`
 
-**Purpose.** Return a symbol's signature(s) *without* the body — the type declaration, the method or operator signature, or a member's declaration (property, field, event, enum member, the last as its qualified `Enum.Member` form) — plus its XML `<summary>` documentation and its declaring file and start line.
+**Purpose.** Return a symbol's signature(s) *without* the body - the type declaration, the method or operator signature, or a member's declaration (property, field, event, enum member, the last as its qualified `Enum.Member` form) - plus its XML `<summary>` documentation and its declaring file and start line.
 
 **When to use.** Understand an API without reading the whole file or body, and navigate straight to the declaration.
 
@@ -462,14 +462,14 @@ Also call it with `force: true` after a restore or build that was meant to repai
 
 | Parameter | Type | Required | Default | Meaning |
 |---|---|---|---|---|
-| `sessionId` | `string` | yes | — | Session id or absolute solution path. |
-| `symbol` | `string` | yes | — | The exact (case-sensitive) type, method, property, field, event, enum-member or operator name. A user-defined operator matches by its metadata name (e.g. `op_Equality`). |
+| `sessionId` | `string` | yes | - | Session id or absolute solution path. |
+| `symbol` | `string` | yes | - | The exact (case-sensitive) type, method, property, field, event, enum-member or operator name. A user-defined operator matches by its metadata name (e.g. `op_Equality`). |
 
 **Response.** A capped envelope (`items`, `count`, `totalFound`, `truncated`), capped at 50, plus `nearest` when nothing matched. Each item carries `kind`, `name`, `declaringType`, `namespace`, `signature`, `summary`, `line` and `file`.
 
 **Notes and limits**
 
-- `file` is the fragment's *own* file: for a partial type, a method points at the file the method lives in, not at the first type fragment. It is omitted only when the snapshot carries no path, and a member's `line` is `null` — no line fact is modeled for members.
+- `file` is the fragment's *own* file: for a partial type, a method points at the file the method lives in, not at the first type fragment. It is omitted only when the snapshot carries no path, and a member's `line` is `null` - no line fact is modeled for members.
 - Matching is exact, so a typo or case mismatch returns an empty list rather than an error; the `nearest` suggestion distinguishes "you spelled it differently" from "this symbol genuinely has no signature". Multiple results are returned for overloads or name collisions.
 - Leaner than `get_context`, which returns the full source.
 - Dispatchable through `batch`/`measure`.
@@ -484,13 +484,13 @@ Also call it with `force: true` after a restore or build that was meant to repai
 
 | Parameter | Type | Required | Default | Meaning |
 |---|---|---|---|---|
-| `sessionId` | `string` | yes | — | Session id or absolute solution path. |
-| `symbol` | `string` | yes | — | The type or method simple name to center the slice on. Use `find_symbol` first to disambiguate. |
+| `sessionId` | `string` | yes | - | Session id or absolute solution path. |
+| `symbol` | `string` | yes | - | The type or method simple name to center the slice on. Use `find_symbol` first to disambiguate. |
 | `budget` | `int` | no | `null` | Token budget, floored at 8000. |
-| `includeQualityMetrics` | `bool` | no | `false` | Also emit the `<QUALITY_HOTSPOTS>` section plus `complexity="…"` / `ce="…"` tag attributes. |
+| `includeQualityMetrics` | `bool` | no | `false` | Also emit the `<QUALITY_HOTSPOTS>` section plus `complexity="..."` / `ce="..."` tag attributes. |
 | `lean` | `bool` | no | `true` | Drop the `<AI_CONTEXT_SPEC>` format-rules preamble, the `<AI_CONTEXT_META>` block and empty graph sections. |
 
-**`budget`.** Caps the slice in two ways: it compacts or drops method bodies, and — when the expanded neighborhood still overflows — it drops the least-relevant non-seed types entirely, ranked by closeness to the seed and in-slice fan-in. The seed symbol itself is never dropped: it renders with its full source when that fits the budget, otherwise as *structure* (identity, members, every method signature) with a leading note naming the measured size of the full-code render and the budget that would hold it. Without a value the slice still renders against a ceiling — the active MCP profile's token budget, else a default of about 10,000 tokens — that bounds the neighborhood. Pass a value for a tighter slice.
+**`budget`.** Caps the slice in two ways: it compacts or drops method bodies, and - when the expanded neighborhood still overflows - it drops the least-relevant non-seed types entirely, ranked by closeness to the seed and in-slice fan-in. The seed symbol itself is never dropped: it renders with its full source when that fits the budget, otherwise as *structure* (identity, members, every method signature) with a leading note naming the measured size of the full-code render and the budget that would hold it. Without a value the slice still renders against a ceiling - the active MCP profile's token budget, else a default of about 10,000 tokens - that bounds the neighborhood. Pass a value for a tighter slice.
 
 **`includeQualityMetrics`.** Set it when reviewing code quality or picking refactor targets: the slice additionally carries cyclomatic complexity and efferent coupling, as a `<QUALITY_HOTSPOTS>` section and as tag attributes on the sliced symbols.
 
@@ -500,12 +500,12 @@ Also call it with `force: true` after a restore or build that was meant to repai
 
 **Notes and limits**
 
-- Multi-TFM solutions are deduplicated to one logical project per name, keeping the newest target framework's instance — the same view `find_symbol` lists. `export_markdown` deliberately keeps the unfiltered per-target-framework render.
+- Multi-TFM solutions are deduplicated to one logical project per name, keeping the newest target framework's instance - the same view `find_symbol` lists. `export_markdown` deliberately keeps the unfiltered per-target-framework render.
 - Dispatchable through `batch`/`measure`.
 
 ### `explain_symbol`
 
-**Purpose.** Explain a symbol: its source *plus* a chosen environment, as one dense AI-Builder-Markdown slice — the cold read in a single call instead of four to six (a context slice plus the fan-in, implementation and test queries).
+**Purpose.** Explain a symbol: its source *plus* a chosen environment, as one dense AI-Builder-Markdown slice - the cold read in a single call instead of four to six (a context slice plus the fan-in, implementation and test queries).
 
 **When to use.** When you need to understand one symbol and its neighborhood at once: who calls it, what it calls, who implements it, which tests cover it.
 
@@ -513,31 +513,31 @@ Also call it with `force: true` after a restore or build that was meant to repai
 
 | Parameter | Type | Required | Default | Meaning |
 |---|---|---|---|---|
-| `sessionId` | `string` | yes | — | Session id or absolute solution path. |
-| `symbol` | `string` | yes | — | The type or method simple name, or the qualified `Type.Member` form. |
+| `sessionId` | `string` | yes | - | Session id or absolute solution path. |
+| `symbol` | `string` | yes | - | The type or method simple name, or the qualified `Type.Member` form. |
 | `include` | `string[]` | no | `null` | The environment axes to include; any combination. |
 | `budget` | `int` | no | `null` | Token budget, floored at 8000; behaves as in `get_context`. |
 | `lean` | `bool` | no | `true` | As in `get_context`. |
 
-**`symbol`.** A bare name that matches several declarations seeds them *all*; the manifest says so and names the qualified form to use instead. The qualified `Type.Member` form focuses one declaration of a shared method name — the same string `find_usages`, `find_tests_for` and `impact_of_change` resolve.
+**`symbol`.** A bare name that matches several declarations seeds them *all*; the manifest says so and names the qualified form to use instead. The qualified `Type.Member` form focuses one declaration of a shared method name - the same string `find_usages`, `find_tests_for` and `impact_of_change` resolve.
 
 **`include` axes** (case-insensitive):
 
 | Axis | What it adds |
 |---|---|
-| `callers` | The members that reference the symbol, with their bodies, and their owner types as structure — not the calling types whole. |
+| `callers` | The members that reference the symbol, with their bodies, and their owner types as structure - not the calling types whole. |
 | `callees` | What the symbol calls or depends on, depth 1. This is the widest slice this server produces. |
 | `implementations` | The types implementing it, if it is an interface. |
 | `tests` | Its covering test cases. |
 | `siblings` | Naming and file-convention kin. |
 | `quality` | Complexity and efferent-coupling hotspot metrics. |
 
-**Response.** Markdown with a leading *manifest* comment that discloses what each requested merge axis actually found — so `(none)` is an honest negative (no implementation, no caller, no test), not "not asked". A partial type renders as one block (its declaration fragments are folded; a leading comment says which files) instead of one identical block per file.
+**Response.** Markdown with a leading *manifest* comment that discloses what each requested merge axis actually found - so `(none)` is an honest negative (no implementation, no caller, no test), not "not asked". A partial type renders as one block (its declaration fragments are folded; a leading comment says which files) instead of one identical block per file.
 
 **Notes and limits**
 
 - An empty `include` returns just the symbol's source; the manifest then names the axes you could have asked for, so that answer is a stated choice rather than a silent default. An `include` token that names no axis is reported as dropped, whether or not a sibling token was valid.
-- `budget` behaves as in `get_context`: the center symbol is always kept — with its full source when that fits, otherwise as structure plus a leading note naming the measured size of the full-code render and the budget that would hold it. The bundled environment (callers, tests, siblings, implementations) is budget-bound and dropped to fit under a tight budget; a leading comment names the drops so you can ask for one by name. Without a value, the slice renders against the same ceiling as `get_context`.
+- `budget` behaves as in `get_context`: the center symbol is always kept - with its full source when that fits, otherwise as structure plus a leading note naming the measured size of the full-code render and the budget that would hold it. The bundled environment (callers, tests, siblings, implementations) is budget-bound and dropped to fit under a tight budget; a leading comment names the drops so you can ask for one by name. Without a value, the slice renders against the same ceiling as `get_context`.
 - Recall-safe: reads persisted facts, so it works on recalled sessions. Prefer it over `export_markdown` for one symbol's world.
 - Multi-TFM solutions are deduplicated to one logical project per name, keeping the newest target framework's instance (matching `find_symbol`'s view).
 - Dispatchable through `batch`/`measure`.

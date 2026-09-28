@@ -1,4 +1,4 @@
-[AICB – General Documentation](README.md) &middot; chapter 7 of 12
+[AICB - General Documentation](README.md) &middot; chapter 7 of 12
 
 # 7 Profiles, master data and solution configuration
 
@@ -58,7 +58,7 @@ Most libraries live on the `Settings` page, in the left sub-navigation. The 18 e
 | `General`, `Storage`, `About` | Plain settings and information pages, not libraries. `General` holds the app-wide preferences and the global defaults; `Storage` holds the database location and backup settings. |
 | `Templates` | **Context templates**: the configuration root of an export. A context template binds a prompt, an MD profile, the four detail-preset slots, the four expansion-strategy slots, an optional test description and the profile overrides. The editor sections are `Prompt & MD profile`, `Selection engine (per detail level)`, `Export content` and `Profile overrides`. |
 | `Run Templates` | **Run templates**: the configuration of a run. A run template selects a context template and adds the per-run-type configuration. Three run types are available in the editor (`Manual`, `Iteration`, `Preselection`); the `Pipeline` run type is planned and not yet released, so it is not offered. |
-| `MCP Profiles` | Which tools an MCP client sees, plus the render notation, the token budget and the automatic-refresh behaviour. Exactly one MCP profile is active; it drives the MCP server. |
+| `MCP Profiles` | Which tools an MCP client sees, plus the render notation, the token budget and the automatic-refresh behavior. Exactly one MCP profile is active; it drives the MCP server. |
 
 Note: `Templates` and `Run Templates` are two different things with similar names. A context template is the configuration root of an export; a run template is the configuration of a run and merely **selects** a context template. On screen the labels are `Templates` and `Run Templates`.
 
@@ -86,7 +86,7 @@ The precedence for each axis is:
 
 ### First-time setup on load
 
-Each picker carries a checkbox: `Auto-initialize via LLM on next load` for the layer profile and the exclusion list, `Auto-initialize on next load` for the test profile. A freshly registered solution starts with all three flags enabled. They are evaluated the next time you open that solution in the Context Builder — the loading happens there, not in the `Workspace` tab.
+Each picker carries a checkbox: `Auto-initialize via LLM on next load` for the layer profile and the exclusion list, `Auto-initialize on next load` for the test profile. A freshly registered solution starts with all three flags enabled. They are evaluated the next time you open that solution in the Context Builder - the loading happens there, not in the `Workspace` tab.
 
 When such a solution is loaded and an armed axis is still unconfigured, AICB offers to set it up:
 
@@ -96,7 +96,7 @@ When such a solution is loaded and an armed axis is still unconfigured, AICB off
 
 Successful first-load setup creates and activates per-solution entries in the local configuration database. It does **not** write the sidecar. Use `Workspace > Profiles > Export Config` afterwards if the configuration should travel with the repository.
 
-`Initialize Now` in each picker applies a stored configuration immediately, without waiting for a load and without any analysis: it restores the axis from the sidecar. If there is nothing to restore — the axis is already configured, or the sidecar does not cover it — a dialog says so.
+`Initialize Now` in each picker applies a stored configuration immediately, without waiting for a load and without any analysis: it restores the axis from the sidecar. If there is nothing to restore - the axis is already configured, or the sidecar does not cover it - a dialog says so.
 
 ### Guided setup through an agent
 
@@ -118,7 +118,7 @@ A finding you decide is by design becomes a **suppression**. In the Insights pan
 
 The sidecar is a configuration file next to your solution file, named after it: `<SolutionName>.aicb.json`. For `MyApp.sln` the file is `MyApp.aicb.json` in the same folder. It is meant to be committed to your repository, so the solution configuration is versioned with the code. Headless hosts consume the supported fallback axes directly; the desktop app can restore its profile content into the local database.
 
-The file carries the **content** of a configuration — patterns, names, rules — and no database identifiers. That is what makes it portable: it is not tied to the database of one machine.
+The file carries the **content** of a configuration - patterns, names, rules - and no database identifiers. That is what makes it portable: it is not tied to the database of one machine.
 
 ### The complete schema
 
@@ -168,7 +168,7 @@ Note: `layeringPolicy` belongs to the layer axis, and `testProjectRules` plus `t
 
 A multi-targeted project (`<TargetFrameworks>net8.0;netstandard2.0</TargetFrameworks>`) is loaded once per target framework, so every source file is analyzed N times. With this key set, AICB analyzes only the newest target framework's instance of each project, and the export contains one copy of each project instead of N.
 
-The symbol inventory is unchanged — every symbol a query can name is still there. Two things do change: a fan-in edge whose only source is a non-preferred instance is lost, so `find_usages`, `impact_of_change` and `call_graph` can report a smaller blast radius; and transitive side-effect facts shift. The default is off, and on a solution without multi-targeting the setting does nothing at all.
+The symbol inventory is unchanged - every symbol a query can name is still there. Two things do change: a fan-in edge whose only source is a non-preferred instance is lost, so `find_usages`, `impact_of_change` and `call_graph` can report a smaller blast radius; and transitive side-effect facts shift. The default is off, and on a solution without multi-targeting the setting does nothing at all.
 
 ### Creating and updating the file
 
@@ -177,11 +177,11 @@ The symbol inventory is unchanged — every symbol a query can name is still the
 - `apply_solution_config` writes the configuration database and the sidecar together and returns the path.
 - You can edit the file by hand; it is designed for that.
 
-Note: `aicb init` does not write the sidecar, and neither does `init_solution_config` — the latter only gathers proposal material. The file is written by `Export Config`, by `apply_solution_config`, or by you.
+Note: `aicb init` does not write the sidecar, and neither does `init_solution_config` - the latter only gathers proposal material. The file is written by `Export Config`, by `apply_solution_config`, or by you.
 
 ### Reading and writing rules
 
-- Reading is all-or-nothing. A missing, unreadable or malformed file counts as "no sidecar file" — never as a partial configuration. A file whose `layerRules` is a string is a broken file, not "the layer axis is unset".
+- Reading is all-or-nothing. A missing, unreadable or malformed file counts as "no sidecar file" - never as a partial configuration. A file whose `layerRules` is a string is a broken file, not "the layer axis is unset".
 - The one deliberate exception is `suppressions`: it is read entry by entry, and a malformed entry costs only that entry. A suppression optimizes what a reader has to look at, while a broken layer or exclusion rule would silently change what the analysis reports, so those still fail the whole file.
 - Comments and trailing commas are accepted, as are differently-cased key names and enum names. Numeric enum values are rejected, so `"layeringPolicy": "7"` does not silently become something.
 - There are no key aliases. `layer_rules` is not `layerRules`: an unknown key configures no axis, and a file with no axis at all is not treated as a sidecar.
@@ -190,13 +190,13 @@ Note: `aicb init` does not write the sidecar, and neither does `init_solution_co
 
 ### Which axis wins
 
-The sidecar does not outrank everything — the precedence differs per axis:
+The sidecar does not outrank everything - the precedence differs per axis:
 
 | Axis | What wins in the graphical interface | What wins in `aicb analyze` |
 |---|---|---|
 | Layer profile | explicit/per-solution database choice > global default > role-based heuristic. Sidecar rules participate only after they are restored into the database | `--layer-profile` > database (per solution > global default) > sidecar > role-based heuristic |
 | Namespace exclusions | per-solution database choice > global default > built-in `BCL default`. Sidecar rules participate only after they are restored into the database | database (as soon as any database is available) > sidecar > none |
-| Test profile | database (per solution > global) > built-in default | database (per solution > global) > built-in default — the sidecar's test axis is not part of this chain |
+| Test profile | database (per solution > global) > built-in default | database (per solution > global) > built-in default - the sidecar's test axis is not part of this chain |
 | Auto-init flags | database record, mirrored into the sidecar for a fresh clone | not evaluated |
 | Suppressions | database, shared through the sidecar export | not evaluated |
 | Analysis scope | sidecar only | sidecar only |
@@ -213,8 +213,8 @@ Five separate resolution paths exist. They are independent of each other; confus
 
 Application settings come from two sources:
 
-1. `app-settings.json` — it holds only three things: the storage settings (database path, base path, backup configuration), the recent solution paths and the recent database paths.
-2. The configuration database — everything else, stored as key/value entries.
+1. `app-settings.json` - it holds only three things: the storage settings (database path, base path, backup configuration), the recent solution paths and the recent database paths.
+2. The configuration database - everything else, stored as key/value entries.
 
 The split exists because the database path must be known before the database can be opened. The practical consequences:
 
@@ -226,7 +226,7 @@ The split exists because the database path must be known before the database can
 
 ### Which profile is active
 
-For the profile families, the first **resolvable, non-hidden** tier wins. A tier that is set but points at a hidden (soft-deleted) or deleted entry is skipped and the **next** tier applies — not the default. Only the last tier ignores the hidden marker, because it has to return something.
+For the profile families, the first **resolvable, non-hidden** tier wins. A tier that is set but points at a hidden (soft-deleted) or deleted entry is skipped and the **next** tier applies - not the default. Only the last tier ignores the hidden marker, because it has to return something.
 
 | Profile | In the graphical interface | In MCP / headless |
 |---|---|---|
@@ -293,13 +293,13 @@ Two resolution paths exist for a token budget:
 - Template-aware MCP renders (`export_markdown`, `prepare_task`): explicit `budget` parameter > the active MCP profile's token budget > the context template's token budget > the global pipeline profile. No budget is enforced only when none of those sources supplies one and trimming is disabled; a trimming profile such as Aggressive Trimming can still impose its global budget.
 - The slice tools (`get_context`, `explain_symbol`, `pack_for_task` and the other tools with a `budget` parameter): explicit `budget` parameter > the active MCP profile's token budget > a default ceiling of 10,000 tokens.
 
-Both MCP paths floor the value at 8,000 tokens. The active MCP profile's token budget is the only setting both MCP paths honour. The graphical interface instead passes the current `Max MD size` slider value (or no cap when `No limit` is selected). The CLI has no explicit budget option; when rendering through a run template it uses that context template's pipeline-profile override, or the globally active pipeline profile when no override is set.
+Both MCP paths floor the value at 8,000 tokens. The active MCP profile's token budget is the only setting both MCP paths honor. The graphical interface instead passes the current `Max MD size` slider value (or no cap when `No limit` is selected). The CLI has no explicit budget option; when rendering through a run template it uses that context template's pipeline-profile override, or the globally active pipeline profile when no override is set.
 
 ### When a change takes effect
 
 - Most settings take effect as soon as you save them. The library pages and the per-solution pickers stay in sync live.
 - A change to `Base path` under `Settings > Storage` requires an application restart. The same holds for the LLM retry settings under `Settings > General > LLM Retry`.
-- The MCP server reads the active MCP profile and the automatic-refresh mode once at start, so restart the server for a change to apply — the tool list and the server instructions are delivered when a client connects. The `AICB_MCP_AUTO_REFRESH` environment variable overrides the mode for one process. If the active profile changed since the server started, `server_info` reports the pending change. `aicb mcp --mcp-profile <id>` pins which profile a server process uses; the pin is process-local and writes nothing back.
+- The MCP server reads the active MCP profile and the automatic-refresh mode once at start, so restart the server for a change to apply - the tool list and the server instructions are delivered when a client connects. The `AICB_MCP_AUTO_REFRESH` environment variable overrides the mode for one process. If the active profile changed since the server started, `server_info` reports the pending change. `aicb mcp --mcp-profile <id>` pins which profile a server process uses; the pin is process-local and writes nothing back.
 - A session that has already been analyzed keeps the configuration it was analyzed with (see "Sessions and staleness"). `refresh_session` deliberately reuses the session's layer profile, exclusion list and analysis scope instead of re-reading the sidecar, so editing the sidecar does not change a running session. Analyze the solution again, or use `refresh_remembered`, which returns a new session and reads the sidecar again.
 - The run-confirmation threshold under `Settings > General > Run Confirmation` is read at each run, so a change applies immediately. Note: the value `0` means that **every** run asks for confirmation; there is no "never ask" value. Enter a very high number if you want to switch the pre-flight confirmation off.
 

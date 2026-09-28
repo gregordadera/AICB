@@ -8,12 +8,12 @@
 #   docker run --rm -i -v /path/to/your/solution:/src aicb
 #
 # The server speaks MCP over stdio, so `-i` is required and there is no port to
-# publish. Mount the solution you want analysed and pass its path inside the
+# publish. Mount the solution you want analyzed and pass its path inside the
 # container as the `sessionId` of any tool call - every tool accepts the
 # absolute .sln / .slnx / .slnf path directly (self-init), so there is no
 # separate analyze step.
 
-# The SDK image rather than the runtime image is deliberate: analysing a
+# The SDK image rather than the runtime image is deliberate: analyzing a
 # solution needs MSBuild. The server starts and answers tools/list without it,
 # so a runtime image would produce a container that looks healthy and fails at
 # the first real question.
@@ -31,7 +31,7 @@ WORKDIR /src
 # need not exist. Measured against 0.5.464.36: a missing file is NOT created and
 # does NOT abort the start - the server prints
 #   warning: --db-path not found (...); starting without a profile
-# and serves the default tool pool. That is the behaviour this image wants, and
+# and serves the default tool pool. That is the behavior this image wants, and
 # naming the path explicitly is what keeps it deterministic: without the flag
 # the server resolves the desktop app's database location instead, which does
 # not exist in a container and is a path nobody has measured here.

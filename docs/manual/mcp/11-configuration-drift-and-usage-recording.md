@@ -1,4 +1,4 @@
-[AICB – MCP Server](README.md) &middot; chapter 11 of 12
+[AICB - MCP Server](README.md) &middot; chapter 11 of 12
 
 # 11 Configuration, drift and usage recording
 
@@ -66,7 +66,7 @@ Every environment variable the MCP server reads, with its default:
 | `AICB_DESIGN_TIME_BUILD_CACHE` | on at `%LOCALAPPDATA%\AIContextBuilder\design-time-build-cache` | `0`, `off` or `false` disables the persisted design-time-build cache; an absolute path relocates it |
 | `AICB_ANALYZE_PROFILE_PATH` | - | A path arms the opt-in analysis wall-clock profiler and selects its report file |
 | `AICB_ANALYZE_PROFILE_BIND_FIRST` | off | With the profiler armed, `1`, `true`, `yes` or `y` forces full semantic binding before the document loop |
-| `AICB_ANALYZE_PREFETCH_DEPTH` | half the logical processors, clamped to 1–16 | Non-negative number of compilation builds to keep ahead; `0` disables prefetch and values above 16 are capped |
+| `AICB_ANALYZE_PREFETCH_DEPTH` | half the logical processors, clamped to 1-16 | Non-negative number of compilation builds to keep ahead; `0` disables prefetch and values above 16 are capped |
 | `AICB_ANALYZE_NULLABLE_FLOW` | off | `1`, `true`, `yes` or `y` retains nullable-flow analysis in semantic models |
 
 Details that matter in practice:
@@ -325,7 +325,7 @@ The recording is built to be safe even if the database is shared or public:
 | The session reference is hashed | SHA-256 over the UTF-8 value, first six bytes - 12 hexadecimal characters. The raw `.sln` path or session id never reaches the database |
 | The facet is normalized | Stored as a resolved catalog id or the one literal `(unresolved)`, never as the caller's free text |
 | The sub-query keys are bounded | Only names the dispatch registry knows; everything else falls back to `(unknown)` |
-| The error message is the only free-text field | Capped at **500 characters including the truncation marker** `…`, enforced twice - when the row is shaped and again at the write boundary. A whitespace-only message becomes empty, which is deliberately different from an empty string |
+| The error message is the only free-text field | Capped at **500 characters including the truncation marker** `...`, enforced twice - when the row is shaped and again at the write boundary. A whitespace-only message becomes empty, which is deliberately different from an empty string |
 | Only the outermost exception message | Never an inner one; an aggregated chain would blow past any cap and bury the actionable sentence |
 | `AICB_MCP_ERROR_TEXT=off` | Records only the exception **type** - the pre-message contract, intended for a database that is shared rather than local. Case-insensitive, and read per call, so it can be flipped without restarting the server |
 | No sink without a database | A server without a usable configuration database writes nothing |
@@ -394,7 +394,7 @@ Besides the tools, the server registers **resources**: content a client fetches 
 Three properties to know when you build a client or an integration:
 
 - **Resources are not tool-curated.** The active MCP profile narrows `tools/list` and `tools/call`; it does not narrow `resources/*`. Every resource is served regardless of the active pool.
-- **The URIs live in two lists.** The five resources with a fixed URI - `acb://remembered`, `acb://templates`, `acb://schema/constellation-v1.json`, `acb://docs`, `acb://quality-profiles` - appear in `resources/list`. The five templated ones - `acb://snapshots/{hash}`, `acb://docs/{topic}` and the three `acb://sessions/{id}/…` - are readable but do **not** appear in `resources/list`; they are exposed through `resources/templates/list`. All ten are therefore discoverable, but a client that only asks `resources/list` sees five of them. That is why `acb://docs` exists as a static entry beside its own URI template: it is what makes the manual reachable for a client that has not seen the template.
+- **The URIs live in two lists.** The five resources with a fixed URI - `acb://remembered`, `acb://templates`, `acb://schema/constellation-v1.json`, `acb://docs`, `acb://quality-profiles` - appear in `resources/list`. The five templated ones - `acb://snapshots/{hash}`, `acb://docs/{topic}` and the three `acb://sessions/{id}/...` - are readable but do **not** appear in `resources/list`; they are exposed through `resources/templates/list`. All ten are therefore discoverable, but a client that only asks `resources/list` sees five of them. That is why `acb://docs` exists as a static entry beside its own URI template: it is what makes the manual reachable for a client that has not seen the template.
 - **The database-bound resources read the default configuration database** (the same one the DB-bound tools default to) and build a short-lived provider per call. Without a default DB they return an empty array or the built-ins; `acb://snapshots/{hash}` errors instead of guessing. The session-bound resources need a live session id.
 
 A deliberate difference from the tools: the resources carry no tool-reachability note. A resource is fetched once and cached by the client, so content that varies with the live tool pool would freeze a claim that becomes wrong after the next profile change.

@@ -1,4 +1,4 @@
-[AICB – General Documentation](README.md) &middot; chapter 2 of 12
+[AICB - General Documentation](README.md) &middot; chapter 2 of 12
 
 # 2 License, installation and updates
 
@@ -38,7 +38,7 @@ Always free of charge, regardless of the thresholds:
 
 ### When a commercial license is required
 
-If your organization reaches or exceeds one threshold, a **90-day contractual transition period** begins. Use stays free of charge during that period; a written commercial license is required to continue afterwards. Commercial licences start at EUR 25 per licensed developer per month; terms are agreed individually, and price and scope can depend on licensed users, requested support and response scope, and agreed priority or delivery commitments for improvement requests. A commercial agreement may include support with defined response and security-fix targets (for example, answers within two business days and fixes for confirmed vulnerabilities within ten business days), version maintenance, prioritized general product improvements and source-code review under NDA; payment alone creates no unstated SLA or implementation promise. Contact **aicb@dadera.de**.
+If your organization reaches or exceeds one threshold, a **90-day contractual transition period** begins. Use stays free of charge during that period; a written commercial license is required to continue afterwards. Commercial licenses start at EUR 25 per licensed developer per month; terms are agreed individually, and price and scope can depend on licensed users, requested support and response scope, and agreed priority or delivery commitments for improvement requests. A commercial agreement may include support with defined response and security-fix targets (for example, answers within two business days and fixes for confirmed vulnerabilities within ten business days), version maintenance, prioritized general product improvements and source-code review under NDA; payment alone creates no unstated SLA or implementation promise. Contact **aicb@dadera.de**.
 
 The 90 days are contractual text only. The software starts no timer, transmits no threshold or deadline data, blocks no feature and does not technically stop when the period ends. There is no license server, activation token, watermarking or outbound licensing telemetry. The MCP server can record tool calls locally for `usage_report` and the desktop app's MCP Usage view; these data are not used for licensing and never leave the machine. Compliance is your responsibility.
 
@@ -138,8 +138,8 @@ dotnet tool uninstall -g AIContextBuilder
 3. Pick the language (German is preselected, English is available) and, if you want, a different install folder. The default is `C:\Program Files\AIContextBuilder`.
 4. Read and accept the license text to continue.
 5. On the options page:
-   - `Add the "aicb" command-line tool to PATH (required for the MCP connection used by AI agents)` — selected by default. Keep it if an MCP client should be able to start `aicb` by name; clear it if you prefer to leave the `PATH` untouched. The entry is machine-wide, for all users.
-   - An optional desktop icon — not selected by default. A Start menu entry `AI Context Builder` is always created.
+   - `Add the "aicb" command-line tool to PATH (required for the MCP connection used by AI agents)` - selected by default. Keep it if an MCP client should be able to start `aicb` by name; clear it if you prefer to leave the `PATH` untouched. The entry is machine-wide, for all users.
+   - An optional desktop icon - not selected by default. A Start menu entry `AI Context Builder` is always created.
    - If a global .NET tool is already installed, an extra group appears: `AICB is already installed as a .NET tool (NuGet):`, with the option `Remove the .NET tool - the MCP server then comes from this installation and is updated with the desktop app (recommended)`, selected by default. See "One installation per machine" below.
 6. Finish the setup; you can launch the app directly from the last page.
 
@@ -262,32 +262,32 @@ There is no global "delete all my data" button. No CLI verb deletes anything; th
 
 To remove everything AIContextBuilder has written on a machine:
 
-1. **`%APPDATA%\AIContextBuilder\`** — delete the whole folder. It contains:
-   - `user-data\aicb.acb` — the SQLite database: solutions, sessions, snapshots, profiles, and the MCP usage records;
-   - `app-settings.json` — bootstrap settings (storage paths, recent lists);
-   - `aicb.mcp.json` — optional MCP server configuration, if you created one;
-   - `backups\*.zip` — automatic backups, if you enabled them (they are off by default);
-   - `aicb.log` and `aicb.log.1` to `aicb.log.3` — the desktop app's warning and error log;
-   - `load-perf.log` — solution-load timings, if enabled;
+1. **`%APPDATA%\AIContextBuilder\`** - delete the whole folder. It contains:
+   - `user-data\aicb.acb` - the SQLite database: solutions, sessions, snapshots, profiles, and the MCP usage records;
+   - `app-settings.json` - bootstrap settings (storage paths, recent lists);
+   - `aicb.mcp.json` - optional MCP server configuration, if you created one;
+   - `backups\*.zip` - automatic backups, if you enabled them (they are off by default);
+   - `aicb.log` and `aicb.log.1` to `aicb.log.3` - the desktop app's warning and error log;
+   - `load-perf.log` - solution-load timings, if enabled;
    - possibly `templates.json` and `node-overrides.json` from earlier versions; the data they held now lives in the database.
-2. **Windows Credential Manager** — remove every entry whose name starts with `AIContextBuilder.` (your model-profile API keys, for example `AIContextBuilder.ApiKey:<profile>`). These entries live outside the data folder and are not removed by deleting it.
-3. **A storage location you changed yourself** — if you set a different `Base path` or database path in `Settings > Storage`, the database and the backups live there. Note that `app-settings.json` always stays in `%APPDATA%\AIContextBuilder\`, whatever `Base path` says, so a moved storage location means two folders to clean up.
+2. **Windows Credential Manager** - remove every entry whose name starts with `AIContextBuilder.` (your model-profile API keys, for example `AIContextBuilder.ApiKey:<profile>`). These entries live outside the data folder and are not removed by deleting it.
+3. **A storage location you changed yourself** - if you set a different `Base path` or database path in `Settings > Storage`, the database and the backups live there. Note that `app-settings.json` always stays in `%APPDATA%\AIContextBuilder\`, whatever `Base path` says, so a moved storage location means two folders to clean up.
 4. **Per analyzed solution:** `<SolutionName>.aicb.json` next to the `.sln`. It is deliberately committed to your repository and shared with everyone working on that solution, so removing it changes the configuration for the whole team. An interrupted write can leave a `<SolutionName>.aicb.json.tmp` beside it.
-5. **Per project wired by `aicb init` or the `install_agent_hooks` tool** — these entries are merged into files that belong to you, so edit them instead of deleting the files:
+5. **Per project wired by `aicb init` or the `install_agent_hooks` tool** - these entries are merged into files that belong to you, so edit them instead of deleting the files:
    - the `aicb` entry in the project's `.mcp.json`;
    - the skill files under `.claude/skills/` (`aicb-csharp-context`, and with `--skills=all` also `aicb-code-review`, `aicb-code-simplifier` and `aicb-usage-check`);
    - Claude Code: `.claude/hooks/aicb-symbol-guard.mjs` and the aicb entry in `.claude/settings.json`;
    - Codex: `.codex/hooks/aicb-symbol-guard.mjs` and the aicb entry in `.codex/hooks.json`;
    - OpenCode: `.opencode/plugins/aicb-symbol-guard.ts`, `.opencode/plugins/guard-wiring.mjs`, `.opencode/plugins/aicb-symbol-guard.mjs` and the aicb entry in `opencode.json`.
-6. **Files you exported yourself** — context documents written with `aicb analyze`, `aicb export` or `export_markdown`, usage reports as JSON, session exports, run templates and constellations.
-7. **`%TEMP%\acb-*`** — temporary working folders. They are removed when the command that created them ends; after a crash one may remain.
+6. **Files you exported yourself** - context documents written with `aicb analyze`, `aicb export` or `export_markdown`, usage reports as JSON, session exports, run templates and constellations.
+7. **`%TEMP%\acb-*`** - temporary working folders. They are removed when the command that created them ends; after a crash one may remain.
 
 Note: On Linux and macOS the `%APPDATA%` token resolves to the platform's application-data folder rather than to a Windows path.
 
 ### What the logs contain
 
-- `aicb.log` — warnings and errors from the desktop app only, with timestamp, level, category and message. It rotates at 1 MiB and keeps three archives (`aicb.log.1` to `aicb.log.3`); it can be copied while the app is running. The CLI and the MCP server do not write it.
-- `load-perf.log` — solution-load phase timings from the desktop app only: phase names, milliseconds and a context label. It does not rotate and grows with every solution load. You can switch it off in `Settings > General` with `Record solution-load performance timings`.
+- `aicb.log` - warnings and errors from the desktop app only, with timestamp, level, category and message. It rotates at 1 MiB and keeps three archives (`aicb.log.1` to `aicb.log.3`); it can be copied while the app is running. The CLI and the MCP server do not write it.
+- `load-perf.log` - solution-load phase timings from the desktop app only: phase names, milliseconds and a context label. It does not rotate and grows with every solution load. You can switch it off in `Settings > General` with `Record solution-load performance timings`.
 - The CLI and the MCP server write no log file; their diagnostics go to standard error.
 
 Note: The MCP server records one row per tool call in the local database: timestamp, tool name, success, duration, client name and version, and a truncated error text. Nothing is transmitted; the rows stay on your machine and are what the `MCP Usage` page shows and its `Clear` button deletes.
@@ -296,7 +296,7 @@ Note: The MCP server records one row per tool call in the local database: timest
 
 Questions, bug reports and feature requests go to GitHub Issues at https://github.com/gregordadera/AICB/issues. Please include the version (`aicb --version`, or `Settings > About` in the desktop app) and, for MCP problems, the output of the `server_info` tool.
 
-Report security issues privately, not as a public issue: by email to **aicb@dadera.de**, or through GitHub's `Report a vulnerability` on the repository's *Security* tab. You will get an acknowledgement, and a fix or mitigation will be coordinated before any public disclosure. There is no supported-versions table and no response-time commitment.
+Report security issues privately, not as a public issue: by email to **aicb@dadera.de**, or through GitHub's `Report a vulnerability` on the repository's *Security* tab. You will get an acknowledgment, and a fix or mitigation will be coordinated before any public disclosure. There is no supported-versions table and no response-time commitment.
 
 Note: Opening a solution runs its MSBuild build logic, the same thing that happens when you open it in Visual Studio or run `dotnet build`. Only analyze solutions you trust. The full threat model is in `SECURITY.md` in the public repository.
 

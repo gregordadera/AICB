@@ -1,18 +1,18 @@
-[AICB – MCP Server](README.md) &middot; chapter 5 of 12
+[AICB - MCP Server](README.md) &middot; chapter 5 of 12
 
 # 5 Calling tools: conventions, batch and aicb call
 
-Every aicb tool is a request over MCP, but there is more than one way to send it. This chapter covers the four ways a tool can be reached, the two meta-tools `batch` and `measure` that fan out over many read-only queries at once, the one-shot CLI invoker `aicb call`, the parameter aliases the server tolerates, which tools write, and the conventions that hold across the whole catalogue.
+Every aicb tool is a request over MCP, but there is more than one way to send it. This chapter covers the four ways a tool can be reached, the two meta-tools `batch` and `measure` that fan out over many read-only queries at once, the one-shot CLI invoker `aicb call`, the parameter aliases the server tolerates, which tools write, and the conventions that hold across the whole catalog.
 
 ## 5.1 The four call paths
 
-A tool is reachable through up to four different doors. A tool that works through only one of them is a defect, so the doors are described here once for the whole catalogue.
+A tool is reachable through up to four different doors. A tool that works through only one of them is a defect, so the doors are described here once for the whole catalog.
 
 | Path | What it is | What it reaches |
 |---|---|---|
 | 1 · `tools/call` | The normal MCP path a connected client uses. | Exactly the tools of the **active tool pool**. A name outside the pool is refused even though it is registered. |
 | 2 · `batch` / `measure` | The read-only dispatch registry behind the two meta-tools. | The **48 dispatchable tools** (see below). |
-| 3 · `aicb call <tool>` | A one-shot invocation from the command line, **without a running server**. | **All 82 tools**, reading and writing alike — this verb has no curation. |
+| 3 · `aicb call <tool>` | A one-shot invocation from the command line, **without a running server**. | **All 82 tools**, reading and writing alike - this verb has no curation. |
 | 4 · `tools/list` | The parameter surface your client is shown. | The same set as path 1: listing and callability are read from one and the same live source, so they cannot disagree. |
 
 How many tools each path reaches, depending on how the server was started:
@@ -21,7 +21,7 @@ How many tools each path reaches, depending on how the server was started:
 |---|---|---|---|
 | 1 · `tools/call` | **54** | 72 | 82 |
 | 2 · `batch` / `measure` | **33** (48 registry entries minus the 15 outside the default pool) | 48 | 48 |
-| 3 · `aicb call` | **82** — no curation at all | 82 | 82 |
+| 3 · `aicb call` | **82** - no curation at all | 82 | 82 |
 | 4 · `tools/list` | **54** | 72 | 82 |
 
 Two properties of this table are easy to misread:
@@ -40,22 +40,22 @@ You cannot lock yourself out of the pool question: every profile includes the na
 
 ## 5.2 `batch`: many read-only queries in one round-trip
 
-`batch` runs several **read-only** queries in one round-trip, sharing one analysis session. It is the right call when you already know you need several answers about the same subject — for example `find_usages` plus `get_type_hierarchy` plus `find_tests_for` for one symbol, `list_insights` followed by `get_insight`, or the markup fan-in trio next to a symbol query.
+`batch` runs several **read-only** queries in one round-trip, sharing one analysis session. It is the right call when you already know you need several answers about the same subject - for example `find_usages` plus `get_type_hierarchy` plus `find_tests_for` for one symbol, `list_insights` followed by `get_insight`, or the markup fan-in trio next to a symbol query.
 
 | Parameter | Type | Required | Default | Meaning |
 |---|---|---|---|---|
-| `sessionId` | string | yes | — | The session shared by all sub-queries. Accepts the session ID from `analyze_solution` or an absolute `.sln`/`.slnx`/`.slnf` path to self-initialize once. Do **not** repeat it inside the sub-queries. |
-| `queries` | array | yes | — | An array of `{ tool, args }` objects. `tool` is a read-only tool name; `args` is that tool's own argument object **without** `sessionId`. `args` may be omitted when the tool takes no arguments. Maximum **16**. |
+| `sessionId` | string | yes | - | The session shared by all sub-queries. Accepts the session ID from `analyze_solution` or an absolute `.sln`/`.slnx`/`.slnf` path to self-initialize once. Do **not** repeat it inside the sub-queries. |
+| `queries` | array | yes | - | An array of `{ tool, args }` objects. `tool` is a read-only tool name; `args` is that tool's own argument object **without** `sessionId`. `args` may be omitted when the tool takes no arguments. Maximum **16**. |
 
-A query element is exactly `{"tool": "<name>", "args": { … }}`. The `args` object may also be passed as a JSON **string**, which is unwrapped for you.
+A query element is exactly `{"tool": "<name>", "args": { ... }}`. The `args` object may also be passed as a JSON **string**, which is unwrapped for you.
 
 Rules and limits:
 
-- **Maximum 16 sub-queries.** Exceeding the limit fails the **whole** batch with an actionable message rather than silently truncating — a silent cap would read as "all of them ran". Split a larger set into several calls. An empty `queries` array is rejected as well.
+- **Maximum 16 sub-queries.** Exceeding the limit fails the **whole** batch with an actionable message rather than silently truncating - a silent cap would read as "all of them ran". Split a larger set into several calls. An empty `queries` array is rejected as well.
 - **Sub-queries run sequentially**, in the order you list them.
-- **A wrong `sessionId` fails the call once, up front** — not once per sub-query. This is also the only self-initialization point: a `.sln` path you pass is analyzed exactly once for all sub-queries.
+- **A wrong `sessionId` fails the call once, up front** - not once per sub-query. This is also the only self-initialization point: a `.sln` path you pass is analyzed exactly once for all sub-queries.
 - **Each sub-query is isolated.** One that fails reports `ok: false` plus its error while the others still answer normally. A cancelled call aborts as a whole.
-- **The active pool governs the proxy path too.** A read-only tool that your active profile does not expose is refused per entry, with its own message — exactly as a direct call would be.
+- **The active pool governs the proxy path too.** A read-only tool that your active profile does not expose is refused per entry, with its own message - exactly as a direct call would be.
 
 The response has the shape `{ results: [ {tool, ok, result | error} ], count, okCount }`:
 
@@ -67,9 +67,9 @@ The response has the shape `{ results: [ {tool, ok, result | error} ], count, ok
 | `error` | The failure message when `ok` is `false`. |
 | `note` | An optional disclosure, omitted when there is nothing to disclose (see "Silently dropped arguments"). |
 
-**Response budget: 9,000 tokens.** The answers are walked in order; an answer that is larger than the whole budget, or that would push the running total past it, is replaced by `ok: false` with its measured size and a pointer to call that tool directly. Only the **answer** is trimmed — the work was already done, so a dropped result costs latency but never correctness. In practice this only affects the slice tools, whose renders can be tens of thousands of tokens. `measure` has no such budget, because it has nothing large to return.
+**Response budget: 9,000 tokens.** The answers are walked in order; an answer that is larger than the whole budget, or that would push the running total past it, is replaced by `ok: false` with its measured size and a pointer to call that tool directly. Only the **answer** is trimmed - the work was already done, so a dropped result costs latency but never correctness. In practice this only affects the slice tools, whose renders can be tens of thousands of tokens. `measure` has no such budget, because it has nothing large to return.
 
-**Identifying a sub-query in an error or omission.** Because several sub-queries may name the same tool, failure and omission messages carry an echo of the sub-query's identifying arguments (`symbol=OrderService`, the first three scalar arguments) — inside the message text, not as a field of its own.
+**Identifying a sub-query in an error or omission.** Because several sub-queries may name the same tool, failure and omission messages carry an echo of the sub-query's identifying arguments (`symbol=OrderService`, the first three scalar arguments) - inside the message text, not as a field of its own.
 
 ### Why a sub-query was refused
 
@@ -77,16 +77,16 @@ The response has the shape `{ results: [ {tool, ok, result | error} ], count, ok
 
 | # | Reason | Example names in the message |
 |---|---|---|
-| 1 | It **mutates session state or writes** — the read-only boundary. | `analyze_solution`, `refresh_session`, `apply_solution_config`, `save_session`, `remember_codebase`, `export_markdown`, `install_agent_hooks` |
-| 2 | It needs a **second state** — another session or a stored snapshot, which one shared session cannot express. | `semantic_diff`, `diff_review`, `verify_claim`, `compare_with_previous` |
-| 3 | **Recursion** — the meta-tools themselves. | `batch`, `measure` |
+| 1 | It **mutates session state or writes** - the read-only boundary. | `analyze_solution`, `refresh_session`, `apply_solution_config`, `save_session`, `remember_codebase`, `export_markdown`, `install_agent_hooks` |
+| 2 | It needs a **second state** - another session or a stored snapshot, which one shared session cannot express. | `semantic_diff`, `diff_review`, `verify_claim`, `compare_with_previous` |
+| 3 | **Recursion** - the meta-tools themselves. | `batch`, `measure` |
 | 4 | It is **read-only but a poor batch member**: a heavyweight walk, renderer or multi-file payload whose answer would routinely exceed the response budget and be dropped after the work was paid for. | `evaluate_change_set`, `init_solution_config`, `prepare_task`, `review_context` |
 
-Note: the names in each bracket are **examples, not the whole group**. A tool's absence from those lists does not mean it writes anything — it only means the reason does not name it. The message itself says so. In particular, a number of non-dispatchable tools must be called directly (for example `docs`, `list_skills`, `server_info`, `list_mcp_profiles`, `usage_report`, `solution_config_status`, `check_solution_config_drift`). The last two are observational in purpose but can initialize a previously unknown solution row in the configuration database.
+Note: the names in each bracket are **examples, not the whole group**. A tool's absence from those lists does not mean it writes anything - it only means the reason does not name it. The message itself says so. In particular, a number of non-dispatchable tools must be called directly (for example `docs`, `list_skills`, `server_info`, `list_mcp_profiles`, `usage_report`, `solution_config_status`, `check_solution_config_drift`). The last two are observational in purpose but can initialize a previously unknown solution row in the configuration database.
 
 The final `Available:` line of the refusal names **every** dispatchable tool, regardless of your active profile. Since a sub-query outside the active profile is refused per item, take the tools you can actually dispatch from `list_skills` under `inPool`, not from that line.
 
-A sub-query naming a tool the server does not register at all gets a different opening sentence — "is not a tool this server registers at all - check the spelling first" — so a typo and a real tool at the dispatch boundary are distinguishable. An empty tool name is reported as a malformed query object, not as a bad tool name.
+A sub-query naming a tool the server does not register at all gets a different opening sentence - "is not a tool this server registers at all - check the spelling first" - so a typo and a real tool at the dispatch boundary are distinguishable. An empty tool name is reported as a malformed query object, not as a bad tool name.
 
 ### The 48 dispatchable tools
 
@@ -107,7 +107,7 @@ list_insights · pack_for_task · resolve_injection · solution_metrics · symbo
 symbol_signature · trace_flow · type_dependency_path
 ```
 
-Fifteen of them (`check_doc_drift`, `check_pattern_drift`, `confidence_map`, `find_by_code_traits`, `find_by_complexity_and_coverage`, `find_by_concurrency_risk`, `find_by_resource_leak`, `find_by_returns_semantic`, `find_god_objects`, `find_production_dead`, `find_structural_twins`, `lifecycle_of`, `list_insight_producers`, `trace_flow`, `type_dependency_path`) are outside the shipped default pool: they dispatch under "Full Select", `AICB_MCP_TOOLS=all`, or a profile that exposes them, and are refused per item otherwise. The other 34 registered tools are not dispatchable at all — call them directly.
+Fifteen of them (`check_doc_drift`, `check_pattern_drift`, `confidence_map`, `find_by_code_traits`, `find_by_complexity_and_coverage`, `find_by_concurrency_risk`, `find_by_resource_leak`, `find_by_returns_semantic`, `find_god_objects`, `find_production_dead`, `find_structural_twins`, `lifecycle_of`, `list_insight_producers`, `trace_flow`, `type_dependency_path`) are outside the shipped default pool: they dispatch under "Full Select", `AICB_MCP_TOOLS=all`, or a profile that exposes them, and are refused per item otherwise. The other 34 registered tools are not dispatchable at all - call them directly.
 
 ### Counting sub-queries
 
@@ -115,16 +115,16 @@ A `batch` (and `measure`) parent call records **what it dispatched**, so a tool 
 
 - One increment per dispatched sub-query, grouped by tool name, plus a separate error counter. The user-visible form is `subQueries: [{ tool, calls, errors }]`.
 - A sub-query counts as **failed** when it threw **or** was refused by the active pool. A refusal is a statement about your **profile**, not about the tool, so this error count is not comparable with a normal tool row's error rate.
-- An unrecognized tool name collapses into the single literal `(unknown)`, so a typo cannot grow the key space — and the count itself is a signal about guessed tool names.
+- An unrecognized tool name collapses into the single literal `(unknown)`, so a typo cannot grow the key space - and the count itself is a signal about guessed tool names.
 - **Not counted:** duration, result size, error text, and no row per sub-query. Correlation back to the caller is positional and by tool name only.
 - When nothing was dispatched the tally is `null`, which applies to every ordinary (non-fan-out) call. Rows recorded before the tally existed simply omit it.
 - **`measure` sub-queries are excluded from the aggregation.** `measure` rows are written, but every reader filters them out: it runs the tool fully, yet the caller consumes the **size** of the answer rather than the answer.
 
-The tally is reported by `usage_report` under `subQueries` (uncapped, sorted by call count), and in the GUI's **MCP Usage** panel as the `Batch` column. Its tooltip is the exact reading instruction: *"How often the tool was DISPATCHED as a sub-query inside a batch. Those calls record no row of their own, so before this column a tool used only through batch read as never called. Read it as attempts, not runs: a sub-query the active profile refused, or one that failed on its arguments, is counted here too. measure is excluded - it runs the tool fully, but the caller consumes the SIZE of the answer rather than the answer."* The neighbouring `Calls` column counts only direct calls.
+The tally is reported by `usage_report` under `subQueries` (uncapped, sorted by call count), and in the GUI's **MCP Usage** panel as the `Batch` column. Its tooltip is the exact reading instruction: *"How often the tool was DISPATCHED as a sub-query inside a batch. Those calls record no row of their own, so before this column a tool used only through batch read as never called. Read it as attempts, not runs: a sub-query the active profile refused, or one that failed on its arguments, is counted here too. measure is excluded - it runs the tool fully, but the caller consumes the SIZE of the answer rather than the answer."* The neighboring `Calls` column counts only direct calls.
 
 ## 5.3 `measure`: size an answer before you pull it
 
-`measure` answers "how big **would** this answer be" — the exact token count, without returning the answer. Use it to decide before you pull: whether a call is worth making, which `budget` to pass to a slice tool (`get_context`, `explain_symbol`, `pack_for_task`), or whether to narrow `scope` first.
+`measure` answers "how big **would** this answer be" - the exact token count, without returning the answer. Use it to decide before you pull: whether a call is worth making, which `budget` to pass to a slice tool (`get_context`, `explain_symbol`, `pack_for_task`), or whether to narrow `scope` first.
 
 `measure` takes the **same parameters as `batch`** (`sessionId`, `queries`, maximum 16) and dispatches through the same read-only registry, so it accepts exactly the 48 tools above and refuses the same tools for the same four reasons.
 
@@ -143,13 +143,13 @@ The response is `{ measurements: [...], count, okCount, totalTokens }`. Per entr
 
 `totalTokens` is the summed cost of all measured queries, so you can weigh several candidate calls without adding them up yourself.
 
-Note: `measure` does **not** make a query cheaper to run. The server does the full work either way; only inspecting the answer becomes cheap — roughly 50 tokens instead of the answer. Measure to **decide**, then call once; do not measure every call by reflex.
+Note: `measure` does **not** make a query cheaper to run. The server does the full work either way; only inspecting the answer becomes cheap - roughly 50 tokens instead of the answer. Measure to **decide**, then call once; do not measure every call by reflex.
 
-Note: `measure` has exactly one steering deviation. For `export_markdown` — which cannot be dispatched and whose render can be tens of megabytes — the refusal does not say "call it directly" but gives the cheaper advice: give it an `outputPath`, which renders once, writes the file and returns the exact character count.
+Note: `measure` has exactly one steering deviation. For `export_markdown` - which cannot be dispatched and whose render can be tens of megabytes - the refusal does not say "call it directly" but gives the cheaper advice: give it an `outputPath`, which renders once, writes the file and returns the exact character count.
 
 ## 5.4 `aicb call`: one-shot invocation without a server
 
-`aicb call <tool>` invokes one MCP tool from the command line without starting a stdio server. It is meant for validating any tool — including a brand-new or non-default-pool one — in a single process.
+`aicb call <tool>` invokes one MCP tool from the command line without starting a stdio server. It is meant for validating any tool - including a brand-new or non-default-pool one - in a single process.
 
 ```
 aicb call <tool> [--sln <path>] [--arg name=value]... [--db-path <path>]
@@ -175,9 +175,9 @@ aicb call batch --sln C:/repo/App.sln --arg queries='[{"tool":"find_usages","arg
 
 **How a value is converted.** `string`, `bool`, `int`, `long`, `double`, `enum` (case-insensitive) and `string[]` (a JSON array or a comma-separated list) are read directly. Any other type is deserialized from JSON with the same options as `tools/call`, which is how a complex argument such as `batch`'s `queries` can be passed as `--arg queries='[…]'`. Numbers are read with the invariant culture: write `0.6`, not `0,6`. A decimal comma is rejected with a hint naming the cause, because on a German, French or Spanish desktop `0,6` looks perfectly well formed.
 
-**Output and exit codes.** A string result is printed unchanged; anything else is serialized as JSON. The result goes to **stdout**, so it can be piped or inspected. Diagnostics and warnings go to **stderr** — including the progress of `analyze_solution`, which has no client to notify here and therefore reports on stderr. Exit codes: `0` success, `1` user error (unknown tool, missing or invalid argument, the tool's own actionable error), `2` unexpected failure, `3` cancelled.
+**Output and exit codes.** A string result is printed unchanged; anything else is serialized as JSON. The result goes to **stdout**, so it can be piped or inspected. Diagnostics and warnings go to **stderr** - including the progress of `analyze_solution`, which has no client to notify here and therefore reports on stderr. Exit codes: `0` success, `1` user error (unknown tool, missing or invalid argument, the tool's own actionable error), `2` unexpected failure, `3` cancelled.
 
-An unknown tool answers `unknown tool 'X'. Available tools: …` and lists the whole assembly — which is correct here, because this verb has no curation.
+An unknown tool answers `unknown tool 'X'. Available tools: ...` and lists the whole assembly - which is correct here, because this verb has no curation.
 
 Note: `aicb call` reaches **every** tool, including the writing ones, and nothing stops you from invoking `save_session` or `apply_solution_config` through it. Two practical limits apply:
 
@@ -202,15 +202,15 @@ The server accepts a second spelling for some parameters. `tools/list` keeps adv
 | `calls_external` | `pattern` | `apiName` |
 | `export_markdown`, `prepare_task`, `pack_for_task` | `facet` | `slot` |
 
-The real name always wins: if you pass both, the canonical argument binds and the alias is the one that is dropped. Aliases are accepted on all three binding paths — `tools/call`, a `batch`/`measure` sub-query, and `aicb call`.
+The real name always wins: if you pass both, the canonical argument binds and the alias is the one that is dropped. Aliases are accepted on all three binding paths - `tools/call`, a `batch`/`measure` sub-query, and `aicb call`.
 
 Note: `analyze_solution(path)` is deliberately **not** aliased. It takes three path-shaped parameters (`solutionPath`, `layerProfile`, `dbPath`), so a bare `path` does not identify one, and a silently wrong bind would be worse than the honest failure it replaces.
 
 ## 5.6 Silently dropped arguments
 
-The MCP SDK binds the arguments it recognizes and drops the rest without a word. aicb discloses this instead of refusing: a call that named an argument the tool does not declare succeeds, but the answer carries a notice naming the dropped arguments — up to eight of them, then `(+N more)` — and states that the answer was computed as if they had not been sent, followed by the tool's real parameter list. The notice is an HTML comment beginning `<!-- ignored-arguments:` so it is machine-readable.
+The MCP SDK binds the arguments it recognizes and drops the rest without a word. aicb discloses this instead of refusing: a call that named an argument the tool does not declare succeeds, but the answer carries a notice naming the dropped arguments - up to eight of them, then `(+N more)` - and states that the answer was computed as if they had not been sent, followed by the tool's real parameter list. The notice is an HTML comment beginning `<!-- ignored-arguments:` so it is machine-readable.
 
-In `batch` and `measure` this disclosure cannot ride on the call envelope, because the entry point only sees `{sessionId, queries}`. It therefore travels per result entry in the `note` field, and aliases are resolved first — a call that used an accepted alias is not reported as ignored.
+In `batch` and `measure` this disclosure cannot ride on the call envelope, because the entry point only sees `{sessionId, queries}`. It therefore travels per result entry in the `note` field, and aliases are resolved first - a call that used an accepted alias is not reported as ignored.
 
 ## 5.7 Which tools write
 
@@ -220,14 +220,14 @@ Twelve of the 82 tools change something; **70 are read-only**. Of the twelve, tw
 |---|---|---|
 | **Session state only** (in memory) | `analyze_solution`, `refresh_session` | Nothing on disk changes. |
 | **File system, path named by the caller** | `export_markdown` | Writes the rendered Markdown only when `outputPath` is set; without it the render is returned instead. |
-| **File system, inside the project directory** | `apply_solution_config`, `install_agent_hooks` | The only two tools that write into your repository: `apply_solution_config` writes the git-tracked `<SolutionName>.aicb.json` sidecar next to the `.sln` (commit it so the configuration travels with the repo); `install_agent_hooks` writes the guard script plus the harness wiring (`.claude/settings.json`, `.codex/hooks.json` or `opencode.json`) — and only inside the directory of the analyzed solution. |
+| **File system, inside the project directory** | `apply_solution_config`, `install_agent_hooks` | The only two tools that write into your repository: `apply_solution_config` writes the git-tracked `<SolutionName>.aicb.json` sidecar next to the `.sln` (commit it so the configuration travels with the repo); `install_agent_hooks` writes the guard script plus the harness wiring (`.claude/settings.json`, `.codex/hooks.json` or `opencode.json`) - and only inside the directory of the analyzed solution. |
 | **aicb database** | `save_session`, `remember_codebase`, `refresh_remembered`, `import_constellation`, `apply_solution_config`, `solution_config_status`, `check_solution_config_drift`, `diff_review` (with `recordRegressions: true`) | The two status/drift tools ensure a solution record and can insert it when the solution is not known yet; otherwise they only read. See the `dbPath` note below. |
 
 Every writing tool discloses its write in its own `tools/list` description. `diff_review` writes only on explicit opt-in and says so: *"Read-only unless you pass recordRegressions."*
 
-Note: for `save_session`, `apply_solution_config` and `diff_review(recordRegressions: true)`, an omitted `dbPath` resolves to the server's **standard config DB — the same database the GUI uses**. The caller then writes into the application's live data without the call looking like it. Pass an explicit `dbPath` if that is not what you want. The memory tools are the opposite: `remember_codebase`, `refresh_remembered` and `import_constellation` require an explicit `dbPath` and never fall back to the standard config DB. When no DB is configured at all, `diff_review(recordRegressions: true)` writes nothing, still succeeds, and reports the reason in `regressionLog.skippedReason`.
+Note: for `save_session`, `apply_solution_config` and `diff_review(recordRegressions: true)`, an omitted `dbPath` resolves to the server's **standard config DB - the same database the GUI uses**. The caller then writes into the application's live data without the call looking like it. Pass an explicit `dbPath` if that is not what you want. The memory tools are the opposite: `remember_codebase`, `refresh_remembered` and `import_constellation` require an explicit `dbPath` and never fall back to the standard config DB. When no DB is configured at all, `diff_review(recordRegressions: true)` writes nothing, still succeeds, and reports the reason in `regressionLog.skippedReason`.
 
-## 5.8 Recurring conventions across the catalogue
+## 5.8 Recurring conventions across the catalog
 
 So the individual tool reference does not have to repeat them, the cross-cutting rules are collected here.
 
@@ -244,7 +244,7 @@ Almost every fact query takes `scope`, default `"solution"`, or a **namespace pr
 
 ### `includeTests`
 
-The default is `false` almost everywhere — the tools report production code first. Most tools say when the filter actually removed something by returning a dedicated count:
+The default is `false` almost everywhere - the tools report production code first. Most tools say when the filter actually removed something by returning a dedicated count:
 
 | Field | Reported by |
 |---|---|
@@ -254,7 +254,7 @@ The default is `false` almost everywhere — the tools report production code fi
 | `testImplementationsFiltered` | `find_implementations` |
 | `testRegistrationsFiltered` | `resolve_injection` |
 
-`detect_circular_dependencies` is the exception: it excludes test projects when `includeTests` is false but has no filtered-count field, so namespaces or cycles removed with the test graph are undisclosed. Another exception with a different meaning is `prepare_task(includeTests)`, whose default is `true` and which controls whether the **covering tests are bundled into the answer** — not which code is searched.
+`detect_circular_dependencies` is the exception: it excludes test projects when `includeTests` is false but has no filtered-count field, so namespaces or cycles removed with the test graph are undisclosed. Another exception with a different meaning is `prepare_task(includeTests)`, whose default is `true` and which controls whether the **covering tests are bundled into the answer** - not which code is searched.
 
 ### The capped envelope
 
@@ -270,11 +270,11 @@ Many list answers come as `{ items, count, totalFound, truncated }`. `count` is 
 
 ### `nearest`
 
-When a name resolves to nothing, many tools add a `nearest` suggestion — the closest declared name — instead of returning a bare empty list. That distinguishes "you misspelled it" from "this symbol really has no matches". It is present on `find_symbol`, `symbol_signature`, `find_usages`, `impact_of_change`, `symbol_metrics`, `instantiation_sites` and `resolve_injection`, and as a `hint` on `get_type_hierarchy` and `find_implementations`.
+When a name resolves to nothing, many tools add a `nearest` suggestion - the closest declared name - instead of returning a bare empty list. That distinguishes "you misspelled it" from "this symbol really has no matches". It is present on `find_symbol`, `symbol_signature`, `find_usages`, `impact_of_change`, `symbol_metrics`, `instantiation_sites` and `resolve_injection`, and as a `hint` on `get_type_hierarchy` and `find_implementations`.
 
 ### `note`
 
-A leading `note` field qualifies an answer that would otherwise be misread — above all the zero. The recurring pattern: a zero gets a denominator (how much was examined at all) and an explanation of which constructs the detector structurally cannot see.
+A leading `note` field qualifies an answer that would otherwise be misread - above all the zero. The recurring pattern: a zero gets a denominator (how much was examined at all) and an explanation of which constructs the detector structurally cannot see.
 
 ### `incompleteProjects`
 
@@ -282,9 +282,9 @@ If the analysis run could not resolve a project's references, a `note` leads **e
 
 ### Recall safety
 
-Many tools state in their own description that they "work on recalled sessions" — they read persisted Roslyn facts and therefore answer on a session recalled from a database snapshot. The **live-only** tools are marked separately:
+Many tools state in their own description that they "work on recalled sessions" - they read persisted Roslyn facts and therefore answer on a session recalled from a database snapshot. The **live-only** tools are marked separately:
 
-`get_diagnostics`, `check_doc_drift`, `init_solution_config`, `check_solution_config_drift`, `resolve_injection`, `evaluate_change_set`, `diff_review` (both sessions must be live), and `find_unresolved_bindings`, which runs against the live analysis and reports no findings on a recalled snapshot — and says so when the session looks recalled. `refresh_session` likewise rejects a recalled session; use `refresh_remembered` or `analyze_solution` to get a live one.
+`get_diagnostics`, `check_doc_drift`, `init_solution_config`, `check_solution_config_drift`, `resolve_injection`, `evaluate_change_set`, `diff_review` (both sessions must be live), and `find_unresolved_bindings`, which runs against the live analysis and reports no findings on a recalled snapshot - and says so when the session looks recalled. `refresh_session` likewise rejects a recalled session; use `refresh_remembered` or `analyze_solution` to get a live one.
 
 ---
 

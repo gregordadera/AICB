@@ -4,9 +4,9 @@ Versions follow `Major.Minor.Series.Build`. The build number rises by one for ev
 change that lands, so gaps between published versions are normal - not every build is
 released.
 
-## 0.5.464.56 - the licence that ships is the licence that is published, and six answers stop hiding what they left out
+## 0.5.464.56 (2026-09-26) - the license that ships is the license that is published, and six answers stop hiding what they left out
 
-**Who is affected.** Everyone: the shipped licence text moves from EULA v0.3 to v0.5. Beyond that, this
+**Who is affected.** Everyone: the shipped license text moves from EULA v0.3 to v0.5. Beyond that, this
 release is mostly about MCP answers and exported Markdown telling you what they omitted - `find_usages`,
 `find_symbol`, `symbol_signature`, `architecture_overview`, `solution_config_status`,
 `check_solution_config_drift` and `pack_for_task`. No database change, no re-analysis; saved snapshots stay
@@ -16,14 +16,13 @@ valid. If your client caches tool descriptions, reconnect it once.
 
 - **The binding agreement shipped with the product is now EULA v0.5**, the same version published here.
   Installer, portable ZIP and the NuGet package carry it, with `LICENSE.txt` as its plain-language summary
-  beside it. What v0.4 and v0.5 added over v0.3: commercial licences **start at EUR 25 per licensed
+  beside it. What v0.4 and v0.5 added over v0.3: commercial licenses **start at EUR 25 per licensed
   developer per month**, a commercial agreement can include defined response and security-fix targets,
   version maintenance, prioritized general product improvements and source-code review under NDA. The
   free thresholds are unchanged - 100 employees, EUR 10 million annual turnover, 21 developers - and so is
-  everything about enforcement: no licence server, no activation, no timer, no threshold data leaving the
+  everything about enforcement: no license server, no activation, no timer, no threshold data leaving the
   machine. The 90-day transition period remains contractual text only.
-- The nuget.org package page now states the same terms as this repository, and the release check derives the
-  expected agreement version from the shipped file instead of comparing it against a fixed number.
+- The nuget.org package page now states the same terms as this repository.
 
 ### Answers that now disclose what they omitted
 
@@ -52,9 +51,7 @@ valid. If your client caches tool descriptions, reconnect it once.
 
 - **`returnKind` names the return type's family, not its arity.** A plain `Task` was reported as `object`
   while `Task<T>` was `task`, and non-generic `IEnumerable`, `IList`, `ICollection`, plus
-  `IReadOnlyCollection` and `IAsyncEnumerable`, fell out of `collection`. Both the value and the decision to
-  emit it were wrong in the same direction, so a corrected value could previously arrive and still be
-  suppressed.
+  `IReadOnlyCollection` and `IAsyncEnumerable`, fell out of `collection`.
 - **`find_usages` on a bare member name no longer mixes namesakes into the self-reference count.** Where a
   short name matches members on several types, the count is omitted rather than reported wrongly; a
   type-qualified query answers as before.
@@ -63,8 +60,7 @@ valid. If your client caches tool descriptions, reconnect it once.
   whole document while explaining blocks that were not in it.
 - **`pack_for_task` fills the budget it was given, also on slices that had to degrade.** A request whose
   content had to be reduced below the full-code form could settle well under target - measured at about 85 %
-  of a 25 000-token budget where the packer's own target band starts at 92 %; the same request now lands at
-  about 96 %.
+  of a 25 000-token budget, below the 92 % the tool aims for; the same request now lands at about 96 %.
 
 ### Documentation
 
@@ -74,7 +70,7 @@ valid. If your client caches tool descriptions, reconnect it once.
 - The three reference manuals still describe product state 0.5.464.43; their licensing chapter is current
   with EULA v0.5. The changes listed above are described here in the changelog.
 
-## 0.5.464.44 - usage check skill and complete browser-readable manuals
+## 0.5.464.44 (2026-09-25) - usage check skill and complete browser-readable manuals
 
 **Who is affected.** Users who run `aicb init --skills=all`, and anyone reading the public
 documentation. The analysis engine, MCP tool answers, desktop app and saved snapshots are unchanged.
@@ -87,14 +83,11 @@ documentation. The analysis engine, MCP tool answers, desktop app and saved snap
 - **The three reference manuals are now readable as Markdown in the browser and by coding agents,**
   one chapter per file, with the printable PDFs beside them under stable names. The manuals describe
   product state 0.5.464.43; build .44 changes only the guard described next.
-- **The package page can no longer silently omit a shipped skill.** A derived test now checks every
-  name in the actual shipped-skill list against the install page, CLI help and packed README. This
-  closes the gap that briefly left the nuget.org page describing only three skills.
-- **Windows validation is less timing-sensitive under a saturated runner.** Two tests now wait on
-  the state they need or retry the real bounded protocol call instead of racing fixed wall-clock
-  delays. Product behavior is unchanged.
+- **The package page can no longer silently omit a shipped skill.** Every release now checks the
+  install page, the CLI help and the package README against the list of skills that actually ship.
+  This closes the gap that briefly left the nuget.org page describing only three skills.
 
-## 0.5.464.41 - `resolve_injection` says how visible a service is in constructors
+## 0.5.464.41 (2026-09-24) - `resolve_injection` says how visible a service is in constructors
 
 **Who is affected.** The MCP server and the `aicb` CLI. **The desktop app is unchanged.** Saved
 snapshots stay valid; no database change, no re-analysis.
@@ -105,10 +98,9 @@ snapshots stay valid; no database change, no re-analysis.
   answer, because only *optional* constructor parameters were ever reported.
 - **Read it as a description, not a verdict.** It counts constructor parameters and nothing else, so
   a service obtained through `GetService<T>`, built inside a factory lambda, or reached by reflection
-  or XAML counts 0 while being thoroughly alive. The first live reading on our own code makes the
-  point better than any warning: `ICodeAnalyzer`, one of the most used services in the project,
-  reports **2** - because almost everything takes it as a factory delegate. For "is this used at
-  all", `find_usages` remains the tool.
+  or XAML counts 0 while being thoroughly alive. The first live reading makes the point better than
+  any warning: a service that almost everything takes as a factory delegate reports **2**. For "is
+  this used at all", `find_usages` remains the tool.
 - An optional parameter counts here too, and such a consumer still appears on `optionalDependencies`;
   collection consumption keeps its own field and is not counted twice. Consumers declared in test
   projects follow the existing `includeTests` filter.
@@ -116,7 +108,7 @@ snapshots stay valid; no database change, no re-analysis.
 If your client caches tool descriptions, reconnect it once - the text of `resolve_injection` changed
 along with its answer.
 
-## 0.5.464.40 - `resolve_injection` stops giving confident wrong answers
+## 0.5.464.40 (2026-09-24) - `resolve_injection` stops giving confident wrong answers
 
 Four builds (`.37` to `.40`) that all repair the same tool. Every one of them replaces an answer
 that looked definite with one that is either correct or openly says it does not know - which is
@@ -130,8 +122,8 @@ not use this analyzer. Saved snapshots stay valid; there is no database change a
   `GetServices<T>()`). It used to be computed only where it could also downgrade a registration
   conflict, and read `false` everywhere else - so a service registered once, or registered several
   times through factories, always answered `false` no matter how many consumers took the whole set.
-  Measured on this project's own code, two services answered `false` while a constructor took each
-  of them as `IEnumerable<T>`.
+  Measured on a real solution, two services answered `false` while a constructor took each of them
+  as `IEnumerable<T>`.
 - **A factory registration that *returns* its object is now resolved.** `AddSingleton(sp => Foo.Build())`
   and the block form `AddSingleton(sp => { ...; return Foo.Build(); })` used to leave the registration
   with no type name at all - and in this single-argument form the produced type *is* the service, so
@@ -154,26 +146,23 @@ not use this analyzer. Saved snapshots stay valid; there is no database change a
   get the old, solution-wide reading.
 
 If your client caches tool descriptions, reconnect it once - the text of `resolve_injection` changed
-along with its behaviour.
+along with its behavior.
 
-## 0.5.464.36 - internal wiring, nothing you can see
+## 0.5.464.36 (2026-09-23) - internal wiring, nothing you can see
 
 A plumbing release. No tool changes its answer, the CLI and the desktop app behave
 exactly as in 0.5.464.35, and there is no reason to update in a hurry.
 
-- **The MCP server now hands its insights service the queued-work store.** The server
-  builds that service by hand instead of letting the container fill it, and the hand-written
-  argument list had been leaving out one of the three optional stores. Nothing reported
-  anything wrong, because no MCP tool reads the queued-work axis yet - the omission would
-  only have surfaced the day one did, as an empty answer that reads like "nothing is
-  queued" rather than "not connected". The desktop app was never affected: it builds the
-  same service through the container, which had been filling the argument all along.
+- **The MCP server's insights now see the queue of work items**, as the desktop app's
+  already did. No MCP tool reads that queue yet, so no answer changes; the connection
+  keeps a future tool from reporting "nothing is queued" when the queue was simply not
+  connected. The desktop app was never affected.
 - **One consequence worth stating:** in a setup where the MCP server is pointed at a
   database, an insights run now performs one additional indexed read against it - the same
   read the desktop app already does - and currently discards the result. Analysis still
   runs entirely on your machine, and the MCP server still writes nothing.
 
-## 0.5.464.35 - two answers about C# code that were quietly wrong
+## 0.5.464.35 (2026-09-23) - two answers about C# code that were quietly wrong
 
 Analysis-engine changes, so they reach the MCP server, the CLI and the desktop app alike.
 
@@ -198,7 +187,7 @@ Analysis-engine changes, so they reach the MCP server, the CLI and the desktop a
   update takes its usual time.
 - The desktop app is otherwise unchanged since 0.5.464.32.
 
-## 0.5.464.33 - manuals linked from the package page
+## 0.5.464.33 (2026-09-21) - manuals linked from the package page
 
 - Full manuals as PDF (General, MCP server, Desktop app) in
   [`docs/manual/`](https://github.com/gregordadera/AICB/tree/main/docs/manual), linked from the
@@ -206,7 +195,7 @@ Analysis-engine changes, so they reach the MCP server, the CLI and the desktop a
 - No code change: the MCP server and CLI behave exactly like 0.5.464.32. Published on
   nuget.org only; the desktop app stays at 0.5.464.32.
 
-## 0.5.464.32 - one installation per machine
+## 0.5.464.32 (2026-09-21) - one installation per machine
 
 - **The installer removes an existing .NET tool** (option, preselected). The installer
   contains the same MCP server and CLI; with both installed, Windows starts the
@@ -223,7 +212,7 @@ Analysis-engine changes, so they reach the MCP server, the CLI and the desktop a
 - Install guidance in README, Getting started and the `aicb-csharp-context` skill:
   Windows with the desktop app → installer only; everywhere else → the .NET tool.
 
-## 0.5.464.31 - first public release
+## 0.5.464.31 (2026-09-20) - first public release
 
 The first release published outside the author's own machine.
 
@@ -253,9 +242,10 @@ The first release published outside the author's own machine.
   light and dark theme.
 
 **Privacy.** Analysis runs entirely on your machine. The CLI and the MCP server have
-no network capability at all; the desktop app sends a document to a model only when
-you press *Send to API*. No telemetry, no update check, no crash reporting.
+no network capability at all; the desktop app talks only to a model endpoint you
+configured yourself, for example when you press *Send to API*. No telemetry, no update
+check, no crash reporting.
 
 **Known limits.** Analysis needs MSBuild (a .NET SDK or Visual Studio) on the machine.
 The Windows downloads are not code-signed yet, so SmartScreen asks once. C# only;
-third-party analyzers and source generators are not run.
+third-party analyzers are not run.

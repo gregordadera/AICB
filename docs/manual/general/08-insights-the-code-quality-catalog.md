@@ -1,4 +1,4 @@
-[AICB – General Documentation](README.md) &middot; chapter 8 of 12
+[AICB - General Documentation](README.md) &middot; chapter 8 of 12
 
 # 8 Insights: the code quality catalog
 
@@ -27,7 +27,7 @@ Insights are not computed while you type, and a solution load does not block on 
 
 1. Open a solution. AICB restores the last persisted insight run for that solution (when `Persist insights with session` is on) and starts a fresh analysis in the background. The fresh result replaces the restored one as soon as it is ready, so what you see matches the current state of the tree.
 2. To re-evaluate on demand, click **Analyze Solution** in the Insights tab header, or press `Ctrl+Shift+A` from any sub-tab. The button is the single accent action of the tab; it runs all rules over the active solution.
-3. On a fresh installation, the rules run once automatically on the first solution load so the tab is not empty. Afterwards the on-demand behaviour applies.
+3. On a fresh installation, the rules run once automatically on the first solution load so the tab is not empty. Afterwards the on-demand behavior applies.
 4. The optional setting `Auto-trigger insights on solution load` (Settings → General, section "Session & Analysis") starts the run directly as part of every solution load instead of the background preparation. `Persist insights with session` controls whether results are stored per solution and restored on the next load; with it off, insights are recomputed fresh every time and never written to the database.
 
 A full run takes roughly 3-15 seconds depending on solution size. During the run the tab is dimmed by a spinner overlay; the analysis works on a read-only snapshot and cannot disturb your editing session.
@@ -39,7 +39,7 @@ If no solution of your own is loaded yet, the empty state offers **Open sample S
 The tab has four regions:
 
 - A **page header** with the `Insights` title, an info tooltip, and the `Analyze Solution` button.
-- A **metrics strip** over all findings (it appears once a run has produced results): the technical-debt grade `Debt A` … `Debt E`, the estimated total remediation time (e.g. `~3.5 h`), a trend chip comparing the stamped debt with the previous analysis (`Worsened`, `Improved`, or no change; shown only when at least two stamped snapshots exist), and the counts `N Critical`, `N Warning`, `N Info`.
+- A **metrics strip** over all findings (it appears once a run has produced results): the technical-debt grade `Debt A` ... `Debt E`, the estimated total remediation time (e.g. `~3.5 h`), a trend chip comparing the stamped debt with the previous analysis (`Worsened`, `Improved`, or no change; shown only when at least two stamped snapshots exist), and the counts `N Critical`, `N Warning`, `N Info`.
 - Two **filter rows**, both multi-select toggle sets:
   - `Principle`: `All`, `S`, `O`, `L`, `I`, `D`, and `·` for "Other". Each chip shows how many findings it currently holds; a chip with count 0 is not clickable. `All` clears the axis.
   - `Severity`: `All`, `Critical`, `Warning`, `Info`, `Ok`. Several severities can be active at once.
@@ -63,7 +63,7 @@ A card starts collapsed as a one-line row: severity pill, SOLID badges, title, a
   - **Seen this one** - dismisses just this line, locally (`Dismiss just this line - it stops being reported here and to the MCP until you restore dismissed findings.`). It appears only when the line resolves to a scope narrower than the whole rule; to silence a whole rule deliberately, use the card-level Dismiss.
 - Below the detail list, an optional prompt box appears (`Optional prompt - sent to your LLM together with the full Solution context`), and up to three action buttons:
   - **Send selected lines to LLM** - sends the checked detail lines, together with the full solution context, to the active LLM.
-  - **Adopt selection** - selects the checked symbols (and pulls in their relevant neighbours) in the Solution Tree, replacing the current selection, and writes a fix task into the prompt. Review it, then use `Generate & Send MD`.
+  - **Adopt selection** - selects the checked symbols (and pulls in their relevant neighbors) in the Solution Tree, replacing the current selection, and writes a fix task into the prompt. Review it, then use `Generate & Send MD`.
   - **Ignore selected** - dismisses the whole card, the same as the top-right Dismiss button.
   - The insight-card model has support for a rule-specific secondary action, but the only producer that supplies one is not registered in the released application. No shipped card currently shows that button.
 
@@ -112,7 +112,7 @@ The catalog lists 27 entries: 24 analyzer rules, the LLM findings, and one pair 
 | `quality-dead-code-private` | Code Quality | Warning | `Dead private methods (UsedBy == 0)` | Private methods with no detected caller. |
 | `quality-fat-interfaces` | Code Quality | Info | `Fat interfaces (methods over threshold)` | Interfaces with more methods than the threshold (suspected ISP violation). |
 | `quality-large-classes` | Code Quality | Info | `Large classes (members over threshold)` | Classes with more members (methods + properties + fields) than the threshold (suspected SRP violation). |
-| `quality-anti-patterns` | Code Quality | Warning | `Anti-patterns (correctness smells: …)` | Correctness and convention smells: blocking on async (`.Result`/`.Wait`), direct clock reads, `new HttpClient()`, `async void`, dropped fire-and-forget tasks, broad `catch (Exception)`, `Thread.Sleep`, missing `ConfigureAwait(false)`, and a constant `new Regex()` that could be `[GeneratedRegex]`. |
+| `quality-anti-patterns` | Code Quality | Warning | `Anti-patterns (correctness smells: ...)` | Correctness and convention smells: blocking on async (`.Result`/`.Wait`), direct clock reads, `new HttpClient()`, `async void`, dropped fire-and-forget tasks, broad `catch (Exception)`, `Thread.Sleep`, missing `ConfigureAwait(false)`, and a constant `new Regex()` that could be `[GeneratedRegex]`. |
 | `quality-complexity-hotspots` | Code Quality | Info | `Complexity hotspots (top methods by cognitive complexity)` | Methods ranked by cognitive complexity, worst first. |
 | `quality-complex-untested` | Code Quality | Warning | `Complexity hotspots` | Complex methods with no direct test, from the intersection of the complexity ranking and the coverage-gap analysis. |
 | `quality-multi-concern-hotspots` | Code Quality | Info | `Complexity hotspots` + `Side-effect concentration` + `Anti-patterns` | Methods flagged by two or more quality dimensions at once - the highest-priority refactor targets. |
@@ -140,9 +140,9 @@ The catalog lists 27 entries: 24 analyzer rules, the LLM findings, and one pair 
 
 - **Long methods.** LOC counts only the lines that carry code - blank and comment-only lines are not counted, so documenting a method does not make it "long". By default the rule *also* sharpens on cyclomatic complexity, so a short but heavily branched method is flagged too. Both thresholds are editable in the quality profile.
 - **Anti-patterns.** The rule aggregates every hit of its kind into one card and shows the per-kind distribution in the description; the detail list is sorted alphabetically by `Type.Method`, so a capped list shows the first entries, not a sample per kind. The convention smells (broad catch, `Thread.Sleep`, `ConfigureAwait`, `Regex`) are recall-safe - they also work on a restored session. The remaining smells are detected on live sessions only.
-- **Complex, untested.** "Untested" here is a one-hop index: a method that no test invokes *directly* is listed even when a test drives it through intermediate calls. Entries marked as reaching no test at all are listed first, and only those count towards the cost estimate. The rule is a prioritisation signal, not a coverage measurement; for a real coverage view use `coverage_gaps`.
+- **Complex, untested.** "Untested" here is a one-hop index: a method that no test invokes *directly* is listed even when a test drives it through intermediate calls. Entries marked as reaching no test at all are listed first, and only those count towards the cost estimate. The rule is a prioritization signal, not a coverage measurement; for a real coverage view use `coverage_gaps`.
 - **Complexity hotspots** ranks by *cognitive* complexity (nesting and comprehension load), using the same threshold number as the cyclomatic axis. It complements the long-method rule, which thresholds cyclomatically, so the two do not double-report.
-- **Multi-concern hotspots** is a prioritisation ranking over the other rules, not a separate finding: it counts a method once per dimension that flags it (complexity, side-effect concentration, reflection, concurrency, resource leaks, security-sensitive calls), and only dimensions whose switches are on are counted. It deliberately carries no remediation cost, because the underlying concerns already carry theirs.
+- **Multi-concern hotspots** is a prioritization ranking over the other rules, not a separate finding: it counts a method once per dimension that flags it (complexity, side-effect concentration, reflection, concurrency, resource leaks, security-sensitive calls), and only dimensions whose switches are on are counted. It deliberately carries no remediation cost, because the underlying concerns already carry theirs.
 - **Side-effect concentration** counts *real* effect categories; an unanalyzable external call is not counted as a category, so it cannot inflate the number.
 - **Event-subscription concentration** lists types that subscribe to three or more C# events with `+=` and declare no matching `-=`. An event-heavy type is a coupling smell and a lifetime risk; types that release everything they wire are not listed.
 - **LINQ in a loop** is detected strictly: only real `System.Linq` operators count (not a same-named instance method such as `HashSet.Contains`), and only inside the loop body - a `foreach` source runs once and is not flagged. The finding is often benign on a small local collection.
@@ -310,7 +310,7 @@ The guiding rule is **under-report rather than over-report**: a missed finding i
 
 ### Structural exemptions
 
-Some code is alive but structurally invisible to the signal that looks for inbound references. AICB recognises four families and excludes them from the unused-type check rather than reporting a false positive. The public-mutable-field check has its own narrower exemptions: structs and runner-activated types.
+Some code is alive but structurally invisible to the signal that looks for inbound references. AICB recognizes four families and excludes them from the unused-type check rather than reporting a false positive. The public-mutable-field check has its own narrower exemptions: structs and runner-activated types.
 
 | Family | Why the code is invisible | Examples |
 |---|---|---|

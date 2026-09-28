@@ -1,4 +1,4 @@
-[AICB – Desktop Application](README.md) &middot; chapter 2 of 11
+[AICB - Desktop Application](README.md) &middot; chapter 2 of 11
 
 # 2 Workspace, sessions and snapshots
 
@@ -157,7 +157,7 @@ Layer rules: N   Exclusions: M   Test rules: K   Suppressed findings: L
 Commit the .aicb.json next to the .sln - the MCP server / CLI then apply it headless (no --db-path needed).
 ```
 
-That sentence is the application's confirmation text. “Apply it” is not one uniform precedence rule: database-free headless analysis uses the sidecar's layer/exclusion fallback and analysis scope, while test detection resolves from the database or built-in default. Suppression-aware reading tools handle sidecar suppressions separately.
+That sentence is the application's confirmation text. "Apply it" is not one uniform precedence rule: database-free headless analysis uses the sidecar's layer/exclusion fallback and analysis scope, while test detection resolves from the database or built-in default. Suppression-aware reading tools handle sidecar suppressions separately.
 
 `Import Config` opens a file dialog (`Import solution config (sidecar)`, filters `AICB sidecar (*.aicb.json)`, `JSON files (*.json)`, `All files (*.*)`), reads the file and applies it to the selected solution: it creates and activates a layer profile named `Imported layer profile (<Solution>)` and an exclusion list named `Imported exclusions (<Solution>)`, and marks both axes as initialized. A file without layer rules and without exclusions is rejected with `The file contains no layer rules or exclusions to import.` GUI import covers the layer and exclusion axes only. The sidecar's test definition, suppressions, auto-init flags and analysis-scope key remain in the file, but each has its own reading path; they are not all applied by one generic headless-profile resolver.
 
@@ -394,7 +394,7 @@ The database carries a schema version, and the direction decides what happens:
 
 ### When the database moves
 
-`Settings` → `Storage` offers several ways to change the active database: edit `BasePath` and save, use `Switch Database…` for an existing file, create a new database, or pick a recent database from the list. All of them run the same checks:
+`Settings` → `Storage` offers several ways to change the active database: edit `BasePath` and save, use `Switch Database...` for an existing file, create a new database, or pick a recent database from the list. All of them run the same checks:
 
 1. While a background run is active, the change is refused with `Cannot {action} while N background task(s) are active.`
 2. The target database is checked for compatibility with this app build. An incompatible file is rejected with `Not saved - the database under the new BasePath is not compatible.`

@@ -1,4 +1,4 @@
-[AICB – Desktop Application](README.md) &middot; chapter 1 of 11
+[AICB - Desktop Application](README.md) &middot; chapter 1 of 11
 
 # 1 Startup, window and navigation
 
@@ -129,7 +129,7 @@ If an error escapes a command, an event handler or a background task, AICB does 
 >
 > `The application is still running, but its state may be inconsistent. Save any open sessions and restart.`
 >
-> `Details: …`
+> `Details: ...`
 
 The reason AICB stays open is your work: several Context Builder tabs can hold unsaved sessions in memory, and terminating would discard them without asking. After such a message, save your sessions and restart the application.
 
@@ -145,7 +145,7 @@ Errors that the runtime reports while it is already shutting down, and unobserve
 When you close the main window, AICB checks every Context Builder sub-tab for unsaved changes:
 
 1. If no sub-tab has unsaved changes, AICB closes without a prompt.
-2. Otherwise the dialog `Unsaved tabs` appears with one card per affected tab, listing what would be lost. Its subtitle names the number of tabs, for example `2 tabs have unsaved changes. …`.
+2. Otherwise the dialog `Unsaved tabs` appears with one card per affected tab, listing what would be lost. Its subtitle names the number of tabs, for example `2 tabs have unsaved changes. ...`.
 3. Choose one of the three buttons:
 
 | Button | Effect |
@@ -253,7 +253,7 @@ The Context Builder keeps one sub-tab per loaded solution. Its strip sits at the
 - the `+` button, `New Solution tab (Ctrl+N)`, which adds an empty solution tab,
 - the `Save Session` button, `Save the current tab as a Session (Ctrl+S)`.
 
-A sub-tab is labelled `(no solution)` while it is empty and shows the solution's file name once a solution is loaded. Unsaved changes add a ` *` to the label.
+A sub-tab is labeled `(no solution)` while it is empty and shows the solution's file name once a solution is loaded. Unsaved changes add a ` *` to the label.
 
 While a model request is running, the sub-tab strip is locked, so you cannot switch away and lose the run state.
 
@@ -348,12 +348,12 @@ Below it the shortcuts are grouped by scope, each as a monospace pill for the ge
 | `Ctrl+W` | Close the current tab | Closes the frontmost tab. Inner tabs go first: an open file before its solution tab, a solution tab before the area tab. |
 | `Ctrl+PageDown`, `Ctrl+Tab` | Next tab | Moves one tab to the right along the top strip and wraps around at the end. |
 | `Ctrl+PageUp`, `Ctrl+Shift+Tab` | Previous tab | Moves one tab to the left along the top strip and wraps around at the start. |
-| `Ctrl+1` … `Ctrl+9` | Jump to a tab by position | Activates the first, second, … ninth open tab. Nothing happens when fewer tabs are open. |
+| `Ctrl+1` ... `Ctrl+9` | Jump to a tab by position | Activates the first, second, … ninth open tab. Nothing happens when fewer tabs are open. |
 | `Ctrl+B` | Show or hide the navigation menu | Collapses the left sidebar to a slim rail and back. The choice is remembered. |
 | `Ctrl+Plus`, `Ctrl+Add` | Zoom in | Scales the whole window up one step, for this session only. The size saved under Settings › General is left alone. |
 | `Ctrl+Minus`, `Ctrl+Subtract` | Zoom out | Scales the whole window down one step, for this session only. |
 | `Ctrl+0`, `Ctrl+NumPad0` | Reset the zoom | Returns to the size saved under Settings › General, which is not necessarily 100 %. |
-| `Alt+1` … `Alt+5` | Turn a layout mode on or off | Adds or removes `Selection`, `Format`, `LLM`, `Review` or `Run`, the same five chips as in the Context Builder header. Several can be on at once; what they show adds up. |
+| `Alt+1` ... `Alt+5` | Turn a layout mode on or off | Adds or removes `Selection`, `Format`, `LLM`, `Review` or `Run`, the same five chips as in the Context Builder header. Several can be on at once; what they show adds up. |
 | `Alt+0` | Minimal view | Turns every layout mode off, leaving the tree, Details and the generated document - the minimal view. Any chip or its Alt+digit brings the rest back. |
 | `F1` | Keyboard shortcuts | Opens this overview. |
 
@@ -402,7 +402,7 @@ A few display rules are the same everywhere, so you can read any list in AICB th
 
 - Counts are grammatically correct and use `-` when a number has not been measured yet, for example `1 session` rather than `1 sessions`.
 - Enum values are shown as words: `System Default` rather than `SystemDefault`.
-- In lists that use the path-elision converter, long paths are shortened to `beginning … file name` and the full path is in the tooltip. Recent Solutions on the Welcome page is an exception: it displays the raw path, trims its end when space runs out and uses a fixed action tooltip rather than the full path.
+- In lists that use the path-elision converter, long paths are shortened to `beginning ... file name` and the full path is in the tooltip. Recent Solutions on the Welcome page is an exception: it displays the raw path, trims its end when space runs out and uses a fixed action tooltip rather than the full path.
 - Every solution carries a stable color from a six-color palette, so the same solution is recognizable across all lists. The dot is never empty.
 - Nodes in the Solution Tree carry a colored chip for their detail level: Compact (blue), Normal (green), Detailed (orange) and Source (red); a neutral gray marks no level.
 - Times are shown relative to now: `just now`, `N min ago`, `N h ago`, `N d ago`, and a date (`yyyy-MM-dd`) for anything older than seven days.

@@ -1,4 +1,4 @@
-[AICB – General Documentation](README.md) &middot; chapter 11 of 12
+[AICB - General Documentation](README.md) &middot; chapter 11 of 12
 
 # 11 Troubleshooting
 
@@ -8,7 +8,7 @@ Two areas have their own manuals: problems that belong to the MCP server (tool p
 
 ## 11.1 Startup and installation
 
-### `MSBuild not found` — the application does not start
+### `MSBuild not found` - the application does not start
 
 **Symptom.** A dialog titled `MSBuild not found` appears, and after you close it the application exits with exit code `1`.
 
@@ -71,9 +71,9 @@ That warning is a prediction, not a startup failure: the tools that need a loade
 
 | Installation form | Needs the .NET runtime? |
 |---|---|
-| Setup installer (Windows) | No — self-contained, the runtime is included |
-| ZIP archive (Windows) | No — self-contained |
-| `dotnet tool install -g AIContextBuilder` | Yes — a .NET tool is framework-dependent and needs the .NET 8 SDK, which is also what analyzing a solution needs |
+| Setup installer (Windows) | No - self-contained, the runtime is included |
+| ZIP archive (Windows) | No - self-contained |
+| `dotnet tool install -g AIContextBuilder` | Yes - a .NET tool is framework-dependent and needs the .NET 8 SDK, which is also what analyzing a solution needs |
 
 ### Windows SmartScreen warns about the download
 
@@ -109,7 +109,7 @@ Note: only the desktop application refuses to start. The MCP server tolerates a 
 |---|---|
 | Desktop application | Dialog `Database is newer than this build`, exit code `2` |
 | MCP server (`aicb mcp`) | Starts anyway; reports the drift through `server_info` |
-| CLI verbs (`aicb analyze`, `aicb export`, …) | Neither refuses nor reports |
+| CLI verbs (`aicb analyze`, `aicb export`, ...) | Neither refuses nor reports |
 
 The same check applies when you switch databases in the desktop application: `Target DB schema version <N> is newer than this app's latest (<M>). Upgrade the app or pick a different DB.`
 
@@ -126,15 +126,15 @@ The application will exit. Verify that the database path in the
 app settings (Storage) is reachable and writable.
 ```
 
-**Cause.** The schema migration could not be completed — for example the path is unreachable, the file is read-only, the file is not a valid database, or a migration committed and the follow-up foreign-key check found violations:
+**Cause.** The schema migration could not be completed - for example the path is unreachable, the file is read-only, the file is not a valid database, or a migration committed and the follow-up foreign-key check found violations:
 
 ```
-Schema migration v<N> committed but PRAGMA foreign_key_check reported <K> violation(s). Inspect the DB and decide whether to delete the offending rows or restore missing parent rows. First few rows: <table#rowid->parent>; …
+Schema migration v<N> committed but PRAGMA foreign_key_check reported <K> violation(s). Inspect the DB and decide whether to delete the offending rows or restore missing parent rows. First few rows: <table#rowid->parent>; ...
 ```
 
 **What to do.** Check the database path under `Settings > Storage` and make sure the folder is reachable and writable. If another program (typically a backup tool) is holding the file, close it and start the application again. If the message reports foreign-key violations, keep a copy of the database and contact support (see the Support section below).
 
-### `'…' is not an AIContextBuilder database`
+### `'...' is not an AIContextBuilder database`
 
 **Symptom.** When you switch or create a database, or start with a manually edited path:
 
@@ -144,7 +144,7 @@ Schema migration v<N> committed but PRAGMA foreign_key_check reported <K> violat
 
 **Cause.** The application's own database must end in `.acb`; the default is `aicb.acb` under `<BasePath>\user-data`. The rule exists so that one SQLite file cannot be used under two names by two parts of the product, which would look like data that comes and goes.
 
-**What to do.** Rename the file so that it ends in `.acb` and point `Storage.DatabasePath` in `%APPDATA%\AIContextBuilder\app-settings.json` at the renamed file — or pick an existing `.acb` file in the dialog. The file dialog deliberately offers only `.acb`.
+**What to do.** Rename the file so that it ends in `.acb` and point `Storage.DatabasePath` in `%APPDATA%\AIContextBuilder\app-settings.json` at the renamed file - or pick an existing `.acb` file in the dialog. The file dialog deliberately offers only `.acb`.
 
 Note: a database path that you pass explicitly to a CLI verb or to an MCP tool is not checked against this rule; there you are naming a specific existing file on purpose.
 
@@ -156,7 +156,7 @@ Note: a database path that you pass explicitly to a CLI verb or to an MCP tool i
 Application settings - Your settings file could not be read, so this session is running on DEFAULTS - including the database path, which is why your sessions and solutions may look missing (<reason>). A copy of it is preserved at <path>.
 ```
 
-**Cause.** `%APPDATA%\AIContextBuilder\app-settings.json` could not be parsed (or could not be opened at all). Because that file also carries the database path, the application then runs against the default database — which is why your sessions, solutions and runs appear to be gone. They are not: only the pointer to them was lost.
+**Cause.** `%APPDATA%\AIContextBuilder\app-settings.json` could not be parsed (or could not be opened at all). Because that file also carries the database path, the application then runs against the default database - which is why your sessions, solutions and runs appear to be gone. They are not: only the pointer to them was lost.
 
 **What to do.**
 
@@ -171,7 +171,7 @@ If the file could not even be opened, the notice reads `Application settings - Y
 
 **Cause.** The windowless part of the startup does the work before the main window exists; a splash screen is shown on its own thread while it runs. The one case that can turn seconds into a long wait is the automatic backup: if it is enabled (default: off) and its interval has elapsed, it runs synchronously before any window is created. With a large base path and a large database this can add tens of seconds. A **failed** backup run does not advance its timestamp, so the delay repeats on every start until the cause is fixed.
 
-**What to do.** Wait for the window. If the delay repeats, read the startup notice bar — it names the reason (see "Automatic backup reports"). If you do not need the automatic backup, switch it off under `Settings > Storage`.
+**What to do.** Wait for the window. If the delay repeats, read the startup notice bar - it names the reason (see "Automatic backup reports"). If you do not need the automatic backup, switch it off under `Settings > Storage`.
 
 ### `Unfinished runs from previous session`
 
@@ -189,7 +189,7 @@ What should happen with them?
   Cancel    = Leave unchanged (decide later)
 ```
 
-**Cause.** Runs that were still marked as running when the previous session ended — typically after a crash, a hard kill or a power loss.
+**Cause.** Runs that were still marked as running when the previous session ended - typically after a crash, a hard kill or a power loss.
 
 **What to do.** `No` is the least lossy choice if you still care about the run: it is paused so you can resume it later. `Yes` closes it cleanly as Cancelled. `Cancel` (or closing the dialog) leaves everything as it is and asks again at the next start. The list shows at most five entries; the rest are summarized as `... and N more`.
 
@@ -203,7 +203,7 @@ Error: <message>
 The app will start anyway; unfinished runs remain with status=Running.
 ```
 
-Note: `Iteration` and `Preselection` run templates are not yet released — only `Manual` templates can be selected. The recovery dialog concerns runs of any type that were left running.
+Note: `Iteration` and `Preselection` run templates are not yet released - only `Manual` templates can be selected. The recovery dialog concerns runs of any type that were left running.
 
 ## 11.2 Analyzing a solution
 
@@ -226,7 +226,7 @@ Solution file not found:
 
 **Symptom.** When you open a known solution or a stored session, a relocate dialog appears. It shows the old path and asks you to pick the new location.
 
-**Cause.** The stored solution path no longer exists — typical when a database was carried to another machine, or after a folder was renamed.
+**Cause.** The stored solution path no longer exists - typical when a database was carried to another machine, or after a folder was renamed.
 
 **What to do.** Point the dialog at the solution's new location and confirm. The application updates its record and continues opening. The same dialog is used when you open a stored session whose solution has moved.
 
@@ -239,17 +239,17 @@ Follow-up messages you may see:
 | `Session no longer exists.` | `Open Session` |
 | `The associated solution could not be found.` | `Open Session` |
 
-### The solution was never built — the most important case
+### The solution was never built - the most important case
 
 **Symptom.** Answers come back and look plausible, but they are too small. Typical examples:
 
-- A side-effect query (`find_by_side_effects`) answers `count: 0` while its own `methodsScanned` counter reports thousands of methods — which reads like a passed architecture check.
+- A side-effect query (`find_by_side_effects`) answers `count: 0` while its own `methodsScanned` counter reports thousands of methods - which reads like a passed architecture check.
 - An external-call query (`calls_external`) answers zero for an API the solution obviously uses, for example `System.IO.File` in a solution whose job is writing files.
 - `get_diagnostics` lists every project under `incompleteProjects`.
 
-**Cause.** Roslyn cannot resolve the projects' references: no `obj/` folder, no NuGet restore, or a missing targeting pack for the target framework. Unresolved code still parses, so facts are produced — but without the call edges and type identities the answers are derived from. Nothing looks broken; the numbers are simply wrong.
+**Cause.** Roslyn cannot resolve the projects' references: no `obj/` folder, no NuGet restore, or a missing targeting pack for the target framework. Unresolved code still parses, so facts are produced - but without the call edges and type identities the answers are derived from. Nothing looks broken; the numbers are simply wrong.
 
-**How the application tells you.** Every affected answer carries an alarm that qualifies the **run**, not the individual answer — so it also appears over a healthy-looking, non-empty list:
+**How the application tells you.** Every affected answer carries an alarm that qualifies the **run**, not the individual answer - so it also appears over a healthy-looking, non-empty list:
 
 ```
 THIS ANALYSIS RUN WAS INCOMPLETE: <k> of <n> scanned projects could not resolve their references (<names>, and <r> more). <consequence> Restore/build the solution, then refresh_session and re-run this query.
@@ -260,11 +260,11 @@ The middle sentence is worded per question family, because something different b
 | Question family | What the alarm tells you |
 |---|---|
 | Fan-in, dead code, instantiation | The numbers are short by an unknown number of **ordinary** references, not merely exotic ones |
-| Side effects and external calls | Effects are derived by propagating along call edges, so a method whose calls did not resolve is reported as **pure** — treat the result as a floor, never as a passed purity or clean-architecture check |
-| Resource leaks | Both the leak list and the count of creations checked are short — treat a zero here as unmeasured, never as leak-free code |
+| Side effects and external calls | Effects are derived by propagating along call edges, so a method whose calls did not resolve is reported as **pure** - treat the result as a floor, never as a passed purity or clean-architecture check |
+| Resource leaks | Both the leak list and the count of creations checked are short - treat a zero here as unmeasured, never as leak-free code |
 | XAML bindings | Breaks in **both** directions: an unresolved scope is silently skipped (under-reporting), while a view model whose generated members did not bind looks checkable but is not (false reports) |
-| Event subscriptions | A subscription is recorded only where the left-hand side resolved to an event, so both the matches and the `availableEvents` list are short — treat an empty list as unmeasured, never as an absence |
-| Code traits, interface and base-type relationships | The resolved traits (`reflection`, `linq-in-loop`) and the declaration relationships can be missing or attached to the wrong candidate — treat them as partial evidence |
+| Event subscriptions | A subscription is recorded only where the left-hand side resolved to an event, so both the matches and the `availableEvents` list are short - treat an empty list as unmeasured, never as an absence |
+| Code traits, interface and base-type relationships | The resolved traits (`reflection`, `linq-in-loop`) and the declaration relationships can be missing or attached to the wrong candidate - treat them as partial evidence |
 
 If a query's scope matched nothing at all, the answer says so instead:
 
@@ -284,18 +284,18 @@ dotnet build
 2. Tell the session about it: call `refresh_session` (MCP), or load the solution again in the desktop application.
 3. Repeat the query. `get_diagnostics` is the fastest check that the run is now complete: `incompleteProjects` should be empty.
 
-Note: a freshly cloned repository is the most common case. If the solution cannot be built on your machine (a missing targeting pack, for example), the alarm stays — and the answers stay marked as incomplete, which is exactly what the marking is for.
+Note: a freshly cloned repository is the most common case. If the solution cannot be built on your machine (a missing targeting pack, for example), the alarm stays - and the answers stay marked as incomplete, which is exactly what the marking is for.
 
 ### What `incompleteProjects` means for a number
 
-**Symptom.** `get_diagnostics` reports `errorCount` — possibly a large one, possibly a suspiciously small one — next to `incompleteProjects`, `incompleteRatio` and `suppressedDiagnosticsTotal`.
+**Symptom.** `get_diagnostics` reports `errorCount` - possibly a large one, possibly a suspiciously small one - next to `incompleteProjects`, `incompleteRatio` and `suppressedDiagnosticsTotal`.
 
 **Cause and meaning.** A project whose core references do not resolve (for example `System.Object` is missing because a targeting pack is not installed, or the project is not restored) would produce thousands of cascade errors (`CS0518`, `CS0234`, `CS0246`). Such projects are therefore not listed as diagnostics; they are disclosed separately under `incompleteProjects`, each with the project name and the number of diagnostics that were suppressed with it. The counts around them mean different things:
 
 | Field | Meaning |
 |---|---|
 | `errorCount` | Errors only, deduplicated across target frameworks |
-| `suppressedDiagnosticsTotal` | Everything from the chosen severity floor upward that the incomplete projects contributed, **not** deduplicated — a multi-targeted project counts once per target framework. Read it as a magnitude, not as one half of a ratio with `errorCount`: a total that dwarfs `errorCount + warningCount + infoCount` means that only a fraction of the solution was measured |
+| `suppressedDiagnosticsTotal` | Everything from the chosen severity floor upward that the incomplete projects contributed, **not** deduplicated - a multi-targeted project counts once per target framework. Read it as a magnitude, not as one half of a ratio with `errorCount`: a total that dwarfs `errorCount + warningCount + infoCount` means that only a fraction of the solution was measured |
 | `cascadeClassifiedCount` | Diagnostics from projects that **do** resolve but inherit broken references from an incomplete project. They are never filtered away; they are marked `cascadeFromIncomplete: true`, and each `incompleteProjects` entry names its `affectedDependents` (transitively) |
 | `referenceBindingAdvisoriesSuppressed` | `CS1701`/`CS1702` assembly-version advisories without a source location; they cannot be fixed from source and are filtered out |
 | `verdict: 'inconclusive'`, `reliable: false` | Set only when a strict majority of the scanned projects are incomplete. The disclosure (`incompleteRatio`, `suppressedDiagnosticsTotal`) is not rationed the same way: it appears as soon as a single project is incomplete |
@@ -327,11 +327,11 @@ Note: a freshly cloned repository is the most common case. If the solution canno
 Gave up waiting for the solution registry after <N>s: the registry is <loading|reloading|applying edits to> '<path>', started <M>s ago. This call never started - it was queued behind that operation, so retrying now would queue again. Wait for the running load to finish, or analyze a smaller solution/filter (.slnf).
 ```
 
-When a session initializes itself from a `.sln` path, the same message reads `Gave up waiting for the solution analysis after …`.
+When a session initializes itself from a `.sln` path, the same message reads `Gave up waiting for the solution analysis after ...`.
 
 **Cause.** There is one gate per solution path. A second caller waits instead of starting a second analysis; the MCP server gives up after 45 seconds by default, so that you learn what is holding the gate instead of waiting silently.
 
-**What to do.** Wait — do not retry, because a retry queues behind the same operation again. For very large solutions, analyze a solution filter (`.slnf`) instead of the whole solution.
+**What to do.** Wait - do not retry, because a retry queues behind the same operation again. For very large solutions, analyze a solution filter (`.slnf`) instead of the whole solution.
 
 Note: the wait can be changed for the MCP server with the environment variable `AICB_MCP_LOAD_WAIT_MS` (milliseconds). The desktop application and the CLI wait without a limit.
 
@@ -339,7 +339,7 @@ Note: the wait can be changed for the MCP server with the environment variable `
 
 The desktop application can send a generated context document to an LLM: Anthropic, OpenAI, or `Custom` for any local OpenAI-compatible server (Ollama, llama-server, LM Studio, vLLM, and others). Errors are returned as a message on the result, not as a crash. For HTTP errors the provider's own response body is included, truncated to 800 characters.
 
-### The message catalogue
+### The message catalog
 
 | Situation | Message |
 |---|---|
@@ -370,9 +370,9 @@ Stream ended unexpectedly (no finish_reason/[DONE] received; response may be tru
 
 For Anthropic the wording is `Anthropic stream ended unexpectedly (no stop_reason/message_stop received; response may be truncated).` The partial text received so far is kept and delivered together with the message.
 
-**Cause.** A healthy stream ends with a finish marker. If the marker is missing, the connection was closed before the model finished — a clean end of the connection is not proof that the answer is complete.
+**Cause.** A healthy stream ends with a finish marker. If the marker is missing, the connection was closed before the model finished - a clean end of the connection is not proof that the answer is complete.
 
-**What to do.** Repeat the run. If it happens repeatedly, check a proxy or firewall between you and the provider, or — for a local server — whether the server ran out of memory.
+**What to do.** Repeat the run. If it happens repeatedly, check a proxy or firewall between you and the provider, or - for a local server - whether the server ran out of memory.
 
 ### Rate limits and automatic retries
 
@@ -381,14 +381,14 @@ The application retries a failed call automatically for these status codes: `429
 | Setting (`Settings > General`, section `LLM Retry`) | Default | Meaning |
 |---|---|---|
 | `Max attempts` | `3` | Total attempts per call; `1` means no retry |
-| `Base backoff (seconds)` | `1` | First retry delay; doubled on each further attempt (1s → 2s → 4s …) |
+| `Base backoff (seconds)` | `1` | First retry delay; doubled on each further attempt (1s → 2s → 4s ...) |
 | `Max backoff (seconds)` | `30` | Upper bound for a wait, including a provider `Retry-After` value |
 
-Changes take effect after an application restart. A cancellation by you is never retried, and neither is `401`/`403` — retrying a wrong key would only repeat it.
+Changes take effect after an application restart. A cancellation by you is never retried, and neither is `401`/`403` - retrying a wrong key would only repeat it.
 
 ### Before a run: cost estimate and context window
 
-A single `Manual` call starts without a cost pre-flight. For the `Iteration` and `Preselection` run types — **not yet released**, see the note below — the application estimates the token budget before sending and asks for confirmation when the estimate reaches the configured threshold:
+A single `Manual` call starts without a cost pre-flight. For the `Iteration` and `Preselection` run types - **not yet released**, see the note below - the application estimates the token budget before sending and asks for confirmation when the estimate reaches the configured threshold:
 
 | Setting (`Settings > General`, section `Run Confirmation`) | Default |
 |---|---|
@@ -409,7 +409,7 @@ All messages from `Settings > Storage` appear as the error of the operation:
 | Situation | Message |
 |---|---|
 | Empty path | `Database path is empty.` |
-| Wrong extension | see `'…' is not an AIContextBuilder database` above |
+| Wrong extension | see `'...' is not an AIContextBuilder database` above |
 | Schema version unreadable | `Could not read schema version: <message>` |
 | Target database is newer | `Target DB schema version <N> is newer than this app's latest (<M>). Upgrade the app or pick a different DB.` |
 | Target needs migrations | `Target DB needs <N> migration(s); confirm to apply them.` |
@@ -423,13 +423,13 @@ All messages from `Settings > Storage` appear as the error of the operation:
 | Creating a database where a file already exists | `File already exists: <path>. Use Switch for an existing DB.` |
 | Directory could not be created | `Could not create directory: <message>` |
 
-Each message also tells you what state the settings file is in afterwards — whether it was rolled back to the previous path, whether there was no previous path, or whether the rollback itself failed. That is the information you need for the next step.
+Each message also tells you what state the settings file is in afterwards - whether it was rolled back to the previous path, whether there was no previous path, or whether the rollback itself failed. That is the information you need for the next step.
 
 ### A stored snapshot is not reused
 
 **Symptom.** An analysis that normally reuses a stored snapshot runs fully instead, without an error.
 
-**Cause.** The stored snapshot no longer matches the running build — the persisted format or the identity of the analysis engine changed (typically after an update) — or the file-set hash could not be computed reliably. The application discards the snapshot and analyzes fully rather than risk loading an incompatible one.
+**Cause.** The stored snapshot no longer matches the running build - the persisted format or the identity of the analysis engine changed (typically after an update) - or the file-set hash could not be computed reliably. The application discards the snapshot and analyzes fully rather than risk loading an incompatible one.
 
 **What to do.** Nothing; the full analysis is the correct reaction. The only thing worth knowing is why an analysis takes longer once after an update.
 
@@ -452,11 +452,11 @@ The automatic backup reports when something is missing or failed: `Partial` and 
 | Backup failed | `Backup failed: <message>` |
 | No free file name | `Could not find a free backup file name in '<folder>' after 100 attempts.` |
 | Archive written | `Backup written to <path>` |
-| … with locked files | ` (skipped <k> locked file(s): <names> and <r> more)` |
-| … without the database | ` (database NOT archived: <reason>)` — for example `path unusable - <message>` |
-| … with a failed timestamp write | `The archive was written, but the backup timestamp could not be stored (<reason>) - so this backup will run again at the next start.` (or, with the backup switched off: `… the last-backup time still shows the previous run.`) |
+| ... with locked files | ` (skipped <k> locked file(s): <names> and <r> more)` |
+| ... without the database | ` (database NOT archived: <reason>)` - for example `path unusable - <message>` |
+| ... with a failed timestamp write | `The archive was written, but the backup timestamp could not be stored (<reason>) - so this backup will run again at the next start.` (or, with the backup switched off: `... the last-backup time still shows the previous run.`) |
 
-Note: an incomplete archive is renamed with a `-partial` marker before the `.zip` extension, and the newest complete archive is never removed by the retention rule — so a series of partial backups cannot evict the last archive that actually contains your database.
+Note: an incomplete archive is renamed with a `-partial` marker before the `.zip` extension, and the newest complete archive is never removed by the retention rule - so a series of partial backups cannot evict the last archive that actually contains your database.
 
 The bar is dismissible, and the dismissal is deliberately not remembered: a problem that is still there reports again at the next start.
 
@@ -472,13 +472,13 @@ For any other error the message is `The note could not be written: <message>`.
 
 **Cause.** The tool call the note belongs to was deleted in the meantime, so the note's foreign key no longer resolves. The two texts are split on purpose: only this case gets the explanation, while every other failure (a locked file, a wrong database path) carries the real error message.
 
-**What to do.** For the first case there is nothing to do — the call is gone. For the second, read the message: it names the actual cause.
+**What to do.** For the first case there is nothing to do - the call is gone. For the second, read the message: it names the actual cause.
 
 ### An imported usage report seems to be missing
 
 **Symptom.** You imported an MCP usage report, but the numbers in the `MCP Usage` panel do not change.
 
-**Cause.** An imported report is stored **beside** the live data, as a named snapshot — it appears in the `Snapshots` region of the panel, not in the live figures above it, which always aggregate only the local calls.
+**Cause.** An imported report is stored **beside** the live data, as a named snapshot - it appears in the `Snapshots` region of the panel, not in the live figures above it, which always aggregate only the local calls.
 
 **What to do.** Switch to the `Snapshots` region. When there are no local calls but an imported snapshot exists, the panel selects that region for you.
 
@@ -527,7 +527,7 @@ Environment variables for the MCP server process (invalid or non-positive values
 - Desktop application: `Settings > About`.
 - CLI and MCP server: `aicb --version`; the MCP server additionally reports its version and build commit through `server_info`.
 
-Note: if you installed both the installer and the .NET tool, two copies share one data folder. Install one of them per machine — see "License, installation and updates".
+Note: if you installed both the installer and the .NET tool, two copies share one data folder. Install one of them per machine - see "License, installation and updates".
 
 ### If the application reports an unexpected error
 
@@ -547,7 +547,7 @@ The `Details:` line names the exception type and message, including up to three 
 
 - `%APPDATA%\AIContextBuilder\aicb.log` together with the archives `aicb.log.1` to `aicb.log.3` (desktop application).
 - The version you are running (see above).
-- For an analysis problem: the name of the solution — not its content.
+- For an analysis problem: the name of the solution - not its content.
 - For a dialog: a screenshot, including the `Details:` line if it has one.
 - `%APPDATA%\AIContextBuilder\app-settings.json` if the problem concerns paths or a database.
 - For an MCP problem: the stderr log of your MCP client.
@@ -555,7 +555,7 @@ The `Details:` line names the exception type and message, including up to three 
 ## 11.6 Support
 
 - Questions, bug reports and feature requests: **GitHub Issues** at `github.com/gregordadera/AICB/issues`.
-- Security reports: please do **not** open a public issue. Send them to `aicb@dadera.de` or use **Report a vulnerability** on the `Security` tab of the repository. You will get an acknowledgement; there is no response-time deadline.
+- Security reports: please do **not** open a public issue. Send them to `aicb@dadera.de` or use **Report a vulnerability** on the `Security` tab of the repository. You will get an acknowledgment; there is no response-time deadline.
 
 ---
 

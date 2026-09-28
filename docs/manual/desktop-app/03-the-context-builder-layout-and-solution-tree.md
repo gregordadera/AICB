@@ -1,4 +1,4 @@
-[AICB – Desktop Application](README.md) &middot; chapter 3 of 11
+[AICB - Desktop Application](README.md) &middot; chapter 3 of 11
 
 # 3 The Context Builder: layout and solution tree
 
@@ -26,7 +26,7 @@ The Context Builder itself is a tab area at the top of the workspace, one tab pe
 
 ![The solution tabs of the Context Builder](img/gui-context-host.png)
 
-- A fresh tab is labelled `(no solution)` until a solution is loaded. A loaded tab is labelled with the solution file name (for example `MyApp.sln`), and a ` *` suffix marks unsaved changes.
+- A fresh tab is labeled `(no solution)` until a solution is loaded. A loaded tab is labeled with the solution file name (for example `MyApp.sln`), and a ` *` suffix marks unsaved changes.
 - `+` (`Ctrl+N`) adds another empty solution tab.
 - `Save Session` (`Ctrl+S`) saves the active tab as a session. The button stays disabled until a solution is loaded in the tab. It always opens the dialog; for an existing session, the current name and notes are pre-filled. Auto-save and the non-interactive save-before-close path can update an existing record silently.
 - Each tab has a close button; `Ctrl+W` closes the frontmost tab.
@@ -97,12 +97,12 @@ Note: when a tree was restored from a stored snapshot (read-only snapshot mode),
 
 **Run Template and LLM.** Two selectors side by side, each with its caption above it.
 
-- **`Run Template`** lists every available template with its name and a coloured run-type pill. The tooltip lists the active graphs in addition. Only templates of type `Manual` can be selected; the tooltip states: "All run-template types are listed, but only type "Manual" can be selected. Iteration and Preselection runs are wired end to end and simply not finished, so they are not released yet. Pipeline is a placeholder: it is accepted by the stored data and the repositories, but nothing executes it. Both will follow in a future version." An already-selected entry remains selectable regardless of its type, so you can always switch back to it.
+- **`Run Template`** lists every available template with its name and a colored run-type pill. The tooltip lists the active graphs in addition. Only templates of type `Manual` can be selected; the tooltip states: "All run-template types are listed, but only type "Manual" can be selected. Iteration and Preselection runs are wired end to end and simply not finished, so they are not released yet. Pipeline is a placeholder: it is accepted by the stored data and the repositories, but nothing executes it. Both will follow in a future version." An already-selected entry remains selectable regardless of its type, so you can always switch back to it.
 - **`LLM`** selects the model-profile override for subsequent sends from this tab. The first entry shows the resolved default model with a `Default` badge and keeps the normal resolution chain. The choice remains active until you select another entry, close the tab or restart the application.
 
-**The three run actions.** All three buttons are the width of the widest label and each has its own colour.
+**The three run actions.** All three buttons are the width of the widest label and each has its own color.
 
-| Button | Colour | Shortcut | Effect |
+| Button | Color | Shortcut | Effect |
 |---|---|---|---|
 | `Export whole Solution` | Warning | - | Renders the entire solution into the `MD Input` tab. It ignores the tree selection and needs no producer run; the size is capped by `Max MD size`. |
 | `Generate MD` | Success | `Ctrl+M` | Builds the document from the current selection without calling an API, and switches to the `MD Input` tab. |
@@ -112,7 +112,7 @@ Note: when a tree was restored from a stored snapshot (read-only snapshot mode),
 
 **Test display.** When a test description is set in the `Test Description` panel, the header shows `Test:` followed by its text. The whole pair is hidden while the description is empty.
 
-**`Recent runs:`** appears only when there are runs to show. Each run is a pill with its number, its name (shortened with an ellipsis), its run type, a status with a coloured dot, and a timestamp.
+**`Recent runs:`** appears only when there are runs to show. Each run is a pill with its number, its name (shortened with an ellipsis), its run type, a status with a colored dot, and a timestamp.
 
 ### The solution tree sidebar
 
@@ -158,7 +158,7 @@ While `Export whole Solution` renders, a dimming scrim covers the entire workspa
 
 ### Levels
 
-The tree has seven node kinds: `Solution`, `Project`, `Folder`, `File`, `Type` and `Method`, plus an unknown fallback. Every kind has its own icon with its own colour; hovering the icon shows the kind name. After a solution loads, the solution row and its project rows are expanded, deeper rows are collapsed.
+The tree has seven node kinds: `Solution`, `Project`, `Folder`, `File`, `Type` and `Method`, plus an unknown fallback. Every kind has its own icon with its own color; hovering the icon shows the kind name. After a solution loads, the solution row and its project rows are expanded, deeper rows are collapsed.
 
 ### Row layout and markers
 
@@ -167,17 +167,17 @@ Each row has five cells, left to right:
 `[checkbox] [icon] name ...................... [markers] [detail-level chip]`
 
 1. **Export checkbox**, 13 px, tooltip "Include in AI context". It has three visual states:
-   - checked, filled in the accent colour with a tick - the node is effectively included;
-   - unchecked with a warning-coloured fill - the node's children are a mix of included and excluded (the fill is visible while the box itself is unchecked);
+   - checked, filled in the accent color with a tick - the node is effectively included;
+   - unchecked with a warning-colored fill - the node's children are a mix of included and excluded (the fill is visible while the box itself is unchecked);
    - unchecked, plain - the node is effectively excluded.
 2. **Kind icon** of the node.
-3. **Name** - the only elastic cell. Long names are shortened with an ellipsis; the full name is in the tooltip. A node that is explicitly excluded is greyed out.
+3. **Name** - the only elastic cell. Long names are shortened with an ellipsis; the full name is in the tooltip. A node that is explicitly excluded is grayed out.
 4. **Marker cluster.** All four markers can appear together:
    - a small accent dot - "Detail differs from the parent";
    - an `A` badge - "Comes into the export via Auto-Expansion (read-only)";
    - an `M` badge - "Manual Override (Include/Exclude explicitly set by the user)";
    - a red dot - "Per-Node Override set - right-click the node to open the editor." Hovering shows the resolved override values.
-5. **Detail-level chip**, right-aligned and always visible. It shows the *effective* level of the row and its colour dot carries the level: Compact (blue), Normal (green), Detailed (orange), Source (red). Clicking it opens a popup with `Inherit` plus the four levels. The closed chip shows the resolved level; the open list shows whether the node currently inherits. `Source` can be disabled for a node type when the active MD profile does not allow it; the entry then explains "Source level is locked for this node type in the active MD profile."
+5. **Detail-level chip**, right-aligned and always visible. It shows the *effective* level of the row and its color dot carries the level: Compact (blue), Normal (green), Detailed (orange), Source (red). Clicking it opens a popup with `Inherit` plus the four levels. The closed chip shows the resolved level; the open list shows whether the node currently inherits. `Source` can be disabled for a node type when the active MD profile does not allow it; the entry then explains "Source level is locked for this node type in the active MD profile."
 
 ### Selection and multi-selection
 
@@ -239,7 +239,7 @@ The header strip of the tree sidebar shows where the current selection came from
 
 The left pill is a read-only indicator with three states:
 
-| State | Text | Icon | Colour |
+| State | Text | Icon | Color |
 |---|---|---|---|
 | `Manual` | `Manual` | Pencil | neutral |
 | `Insights` | `Insights` | Light bulb | accent |
@@ -288,7 +288,7 @@ The complete overview is available in the application via `F1`. The shortcuts th
 | `F5` | Reload the solution from disk and rebuild the tree. |
 | `Ctrl+F` | Put the cursor in the tree's search box and select what is already there. |
 | `Esc` | Clear the tree search box while the cursor is in it. |
-| `Alt+1` … `Alt+5` | Toggle a layout mode: Selection, Format, LLM, Review, Run. |
+| `Alt+1` ... `Alt+5` | Toggle a layout mode: Selection, Format, LLM, Review, Run. |
 | `Alt+0` | Turn every layout mode off - the minimal view. |
 
 Note: `Ctrl+S` and `Ctrl+W` are deliberately layered. The innermost surface that handles the key wins: with the cursor in the code editor, `Ctrl+S` saves the file and `Ctrl+W` closes the file; everywhere else in the Context Builder the same keys act on the session or the solution tab.

@@ -52,7 +52,7 @@ The boundary is important:
 | Rendered output | AI-Builder-MD in tag or YAML notation | When context is requested or exported |
 
 In other words, AICB keeps reusable semantic facts and indexes warm. A particular
-tool answer may still be calculated from them on demand. “In memory” does not mean
+tool answer may still be calculated from them on demand. "In memory" does not mean
 that every possible transitive path or context document is stored in advance.
 
 Two live-only results are not reconstructed from a persisted snapshot: unresolved
@@ -72,7 +72,7 @@ The persistence surfaces have deliberately different contracts:
 can use `recall_codebase`; its response discloses payload, analyzer and file-set
 drift even though the recalled graph remains available. `refresh_remembered`
 performs a new live analysis, restores the live-only contract and persists the new
-snapshot. This distinction prevents “persistent memory” from being mistaken for a
+snapshot. This distinction prevents "persistent memory" from being mistaken for a
 shared live Roslyn workspace.
 
 ## What does AICB add beyond Roslyn?
@@ -127,7 +127,7 @@ The analyzer then decides which previous document results are safe to replay:
   linked-file instance of the same path.
 - If only method bodies moved and the declaration surface stayed the same, unchanged
   documents can be reused.
-- If declarations moved—including a public API change—the analyzer also invalidates
+- If declarations moved - including a public API change - the analyzer also invalidates
   documents that name a changed identifier, reference a type declared in the changed
   document, or belong to a transitive derived-type chain rooted there.
 - A changed global using, extern alias or assembly attribute disables document reuse
@@ -136,7 +136,7 @@ The analyzer then decides which previous document results are safe to replay:
 - A changed layer profile, namespace-exclusion provider, target-framework scope,
   solution assembly set or project set also disables reuse.
 
-“Public” is therefore not a special invalidation switch. What matters is whether the
+"Public" is therefore not a special invalidation switch. What matters is whether the
 declaration surface changed and which documents can bind differently as a result.
 The closures deliberately prefer re-analyzing too much over serving a plausible
 stale edge. This is document-granular reuse, not method-granular patching of an
@@ -147,8 +147,8 @@ incrementally refreshed session with a separately opened full-reload session. It
 single-edit matrix covers method-body changes, added and deleted methods, changed
 signatures, deleted and renamed types, changes in one half of a partial type, and
 re-deriving attribute-declared source-generated members on the forked Roslyn
-snapshot (name reconstruction from the parsed syntax — source generators are never
-executed). It also asserts
+snapshot (name reconstruction from the parsed syntax, independent of the
+generators' own output). It also asserts
 that the incremental path really ran, so an accidental full reload cannot make the
 comparison pass vacuously. File additions or removals and changes to `.csproj`,
 `.props`, `.targets`, solution, XAML and other project-shaping files deliberately
@@ -170,8 +170,8 @@ containing type and parameter types, and explicit-interface implementations keep
 the interface identity in the key, so overloads and two distinct explicit
 implementations do not collapse onto one node.
 
-Raw facts that require a later binding step—XAML bindings and type references,
-Razor member/parameter references and top-level-statement type references—are kept
+Raw facts that require a later binding step - XAML bindings and type references,
+Razor member/parameter references and top-level-statement type references - are kept
 in lists during the document walk. Post-processing resolves them against the built
 types and folds the result into the corresponding fan-in index. Transitive change
 impact and similar answers traverse these reusable indexes when requested rather
@@ -209,7 +209,7 @@ The task-oriented tools start from explicit evidence rather than sending the who
 repository:
 
 1. `pack_for_task` identifies symbols named in the natural-language goal and
-   expands their semantic neighbourhood.
+   expands their semantic neighborhood.
 2. `prepare_task` adds covering tests and one or two likely siblings based on
    naming or file conventions, such as a validator or factory.
 3. Exact seed symbols remain pinned. Under budget pressure, AICB reduces detail and
@@ -223,7 +223,7 @@ This is bounded task preparation, not an autonomous solution to arbitrary task
 semantics. If a goal names `DiscountCalculator`, for example, the bundle can seed
 that symbol and add known callers, callees, dependencies, tests and a conventionally
 named sibling. It cannot guarantee discovery of an unmentioned runtime registration,
-a relationship hidden in configuration, or the business meaning of “discount.” The
+a relationship hidden in configuration, or the business meaning of "discount." The
 agent still chooses the goal, interprets the evidence and calls specialized tools
 for DI, markup, runtime uncertainty or other axes when the manifest and hints require
 them.
@@ -318,7 +318,7 @@ A standardized public benchmark that reports cold analysis time, warm-query time
 and peak RAM on three public .NET solutions is published below. Measurement
 procedure: each repository was analyzed at the stated revision after a restore
 with its pinned SDK; a fresh MCP server process answered `solution_metrics` twice
-on the restored solution. The first call is **cold** — it carries the full MSBuild
+on the restored solution. The first call is **cold** - it carries the full MSBuild
 load and Roslyn analysis, with no warm AICB session, no persisted analysis and no
 session cache. The second identical call in the same session is the **warm**
 query. Peak RAM is the peak working set of the AICB process tree during the cold
@@ -334,7 +334,8 @@ MSBuild node startup (about 9 s on the test machine). `get_diagnostics` reported
 | `RavenDB.sln` | `ravendb/ravendb` `5415dde` | ≈ 1.76 M | 96.6 s | 1.86 s | 4.05 GB | 9,316 / 33,606 |
 
 Machine: Windows 10 Pro, Intel Core i9-9900K (8 cores / 16 threads), 32 GB RAM.
-AICB `0.5.464.52`, measured 2026-09-26.
+AICB `0.5.464.52` (an internal build; the nearest published release is
+`0.5.464.56`), measured 2026-09-26.
 
 Reading notes: the MahApps solution as published carries 755 compiler diagnostics
 in its `net462` test project; they do not affect the production-scope analysis.
@@ -391,7 +392,7 @@ The documentation separates observations from intended benefits.
 Until those remaining studies exist, AICB does not claim a measured universal
 speedup, lower token bill or higher agent success rate. A future benchmark should
 publish the repository and revision, AICB and competitor versions, machine,
-commands, raw outputs, task set and denominators—not only a summary score.
+commands, raw outputs, task set and denominators - not only a summary score.
 
 ## What is disclosed about the product itself?
 

@@ -1,4 +1,4 @@
-[AICB – Desktop Application](README.md) &middot; chapter 11 of 11
+[AICB - Desktop Application](README.md) &middot; chapter 11 of 11
 
 # 11 Troubleshooting the desktop app
 
@@ -8,7 +8,7 @@ This chapter is the reference for the desktop app's error behavior: what to chec
 
 ### What the app needs
 
-The desktop app is self-contained — no .NET *runtime* is required to start it. Analysis is different: opening a solution runs MSBuild to resolve references, exactly like `dotnet build` does, so the machine needs a **.NET SDK or a Visual Studio installation** with the `.NET desktop development` or `MSBuild Tools` workload. The app checks this before anything else and refuses to start without it (see "MSBuild not found" below). Only analyze solutions you trust, because loading one executes its build logic.
+The desktop app is self-contained - no .NET *runtime* is required to start it. Analysis is different: opening a solution runs MSBuild to resolve references, exactly like `dotnet build` does, so the machine needs a **.NET SDK or a Visual Studio installation** with the `.NET desktop development` or `MSBuild Tools` workload. The app checks this before anything else and refuses to start without it (see "MSBuild not found" below). Only analyze solutions you trust, because loading one executes its build logic.
 
 The desktop app comes in two forms:
 
@@ -27,14 +27,14 @@ The startup order is fixed, and each step assumes the previous one:
 2. MSBuild is located (via the .NET SDK or Visual Studio). Without it: dialog `MSBuild not found`, then the app exits.
 3. The service container is built and validated, then the database schema is migrated. On a fresh installation the database file is created here.
 4. Unfinished runs from the previous session are looked for. Only if any exist do you get the `Unfinished runs from previous session` dialog.
-5. The automatic backup runs if it is enabled and due. It is **off by default**, and it archives synchronously before any window exists — on a large data folder this visibly delays the start.
+5. The automatic backup runs if it is enabled and due. It is **off by default**, and it archives synchronously before any window exists - on a large data folder this visibly delays the start.
 6. The shell is initialized, the theme is applied, the main window appears, and the splash closes.
 
 A start can take several seconds, and longer when the database is large. That is normal, not a hang; the splash exists to make the wait visible.
 
 ### What you see on the Start page
 
-After the start, **no tab is open and no sidebar entry is selected** — the Start page stays visible until you navigate yourself.
+After the start, **no tab is open and no sidebar entry is selected** - the Start page stays visible until you navigate yourself.
 
 | Element | What it does |
 |---|---|
@@ -70,8 +70,8 @@ A bundled sample solution is available too: `ColorMixer.SelectionLab.sln` lives 
 
 | Remembered | Not remembered |
 |---|---|
-| Recently opened solutions (up to 8) and databases | Open tabs — the app always starts on the Start page |
-| The last selected Settings sub-tab | Window size and position — the window always starts maximized, centered, at a fixed default size |
+| Recently opened solutions (up to 8) and databases | Open tabs - the app always starts on the Start page |
+| The last selected Settings sub-tab | Window size and position - the window always starts maximized, centered, at a fixed default size |
 | Theme, font family, font size, UI zoom | Anything you did not save as a session |
 | The active templates and profiles | |
 | Saved sessions (they reappear in the `Recent Sessions` list) | |
@@ -98,14 +98,14 @@ The desktop app reports problems through exactly three channels, plus the splash
 2. **Status lines** inside panels for the outcome of an action.
 3. The **startup notice bar** for problems that happened before any window existed.
 
-There are no toasts, no snackbars and no info bars. A problem that reaches none of these three channels leaves no visible trace at all — see "Silent failures" below.
+There are no toasts, no snackbars and no info bars. A problem that reaches none of these three channels leaves no visible trace at all - see "Silent failures" below.
 
 ### Modal dialogs
 
 All message dialogs are themed windows of the application, not Windows message boxes. They come with four button sets: OK, OK-Cancel, Yes-No, and Yes-No-Cancel.
 
 - `Esc` and the window's close button return the same answer as the dismiss button: Cancel where the dialog has one, otherwise No, otherwise OK.
-- `Enter` answers the primary button — except in a **destructive** confirmation (for example discarding unsaved changes). There the `No` button holds the focus and answers `Enter`, so a reflexive key press cannot delete anything, and the dangerous button is styled as dangerous.
+- `Enter` answers the primary button - except in a **destructive** confirmation (for example discarding unsaved changes). There the `No` button holds the focus and answers `Enter`, so a reflexive key press cannot delete anything, and the dangerous button is styled as dangerous.
 
 Typical startup dialogs and their titles:
 
@@ -120,7 +120,7 @@ Typical startup dialogs and their titles:
 
 ### Status lines
 
-Panels report the result of an action in a status line — usually at the bottom of the panel's action bar. These messages are **not modal and easy to miss**, and the next action can overwrite them. Read the status line right after the action that produced it.
+Panels report the result of an action in a status line - usually at the bottom of the panel's action bar. These messages are **not modal and easy to miss**, and the next action can overwrite them. Read the status line right after the action that produced it.
 
 | Message pattern | Where |
 |---|---|
@@ -131,9 +131,9 @@ Panels report the result of an action in a status line — usually at the bottom
 | `Send failed: <reason>` | Context Builder, under `MD Input` |
 | `Snapshot history could not be read` | Workspace, snapshot list |
 | `Statistics could not be read` | Workspace, overview cards |
-| `Not analyzed yet` | Workspace, overview cards — a statement, not an error |
+| `Not analyzed yet` | Workspace, overview cards - a statement, not an error |
 | `- runs` | A session row whose run count could not be read (a dash, not a zero) |
-| `Auto-save could not save one of your open sessions. …` | Dialog (once per session), see "Auto-save and unnamed tabs" |
+| `Auto-save could not save one of your open sessions. ...` | Dialog (once per session), see "Auto-save and unnamed tabs" |
 
 ### The startup notice bar
 
@@ -142,13 +142,13 @@ The startup notice bar sits at the top of the content area, above the Welcome pa
 - the automatic backup when the archive is incomplete, could not be written at all, or was written successfully but its completion timestamp could not be saved (a fully recorded clean backup, and a start on which none was due, stay silent);
 - an unreadable application settings file.
 
-Messages are prefixed with their source: `Automatic backup at startup - …` or `Application settings - …`. If both happen on one start, both lines appear.
+Messages are prefixed with their source: `Automatic backup at startup - ...` or `Application settings - ...`. If both happen on one start, both lines appear.
 
 The dismiss button hides the bar for the current session only. Nothing is saved: if the problem is still there, the next start reports it again.
 
 ### The splash window
 
-The splash (`Starting up…`) is not an error channel. It exists so that a slow start does not look like a crash — which is exactly why a long-running splash is not a symptom by itself.
+The splash (`Starting up…`) is not an error channel. It exists so that a slow start does not look like a crash - which is exactly why a long-running splash is not a symptom by itself.
 
 ### Silent failures
 
@@ -159,7 +159,7 @@ Some failures produce no message at all; the app simply continues with a plausib
 | The Insights panel is empty and shows `No insights to show here - pick a category on the left, or relax the principle/severity filters.` | Reading the stored insights failed; the empty-state text sends you to the filters while the cause is a database read error. |
 | The `Solutions` tab shows old data that looks current | The refresh of the tab failed and the previously loaded rows stayed on screen. |
 | The model profile picker is empty although profiles exist | Reading the profiles failed. |
-| The list of recent runs is empty | Reading the run history failed — indistinguishable from "no runs yet". |
+| The list of recent runs is empty | Reading the run history failed - indistinguishable from "no runs yet". |
 | A dismissed insight comes back after the next refresh | The database write for the dismissal failed; the card is removed from the list anyway. |
 | The counter-clockwise-arrow button in the Insights toolbar (tooltip beginning `Reset what you hid - ...`) seems to do nothing | The database write failed and the command returned. |
 | Copying to the clipboard does nothing, in any panel | The clipboard was held by another process (for example an RDP session or a virus scanner). Copy retries three times with a 50 ms pause and then gives up without a message. Paste reads once, catches an error and silently returns no text; it is not retried. |
@@ -177,12 +177,12 @@ An unexpected error occurred.
 
 The application is still running, but its state may be inconsistent. Save any open sessions and restart.
 
-Details: <Type>: <message> -> <inner type>: <message> -> …
+Details: <Type>: <message> -> <inner type>: <message> -> ...
 ```
 
 The `Details:` line unwraps up to three nested exceptions, because the outermost one is often a meaningless wrapper.
 
-**Why the app keeps running.** Several Context Builder tabs can hold unsaved sessions in memory. Ending the process would discard them without asking. Staying alive gives you the one thing you cannot get afterwards — the chance to save. The price is a possibly inconsistent state, and the message says so instead of pretending the error was handled.
+**Why the app keeps running.** Several Context Builder tabs can hold unsaved sessions in memory. Ending the process would discard them without asking. Staying alive gives you the one thing you cannot get afterwards - the chance to save. The price is a possibly inconsistent state, and the message says so instead of pretending the error was handled.
 
 Two rules keep this dialog from taking over the app:
 
@@ -200,17 +200,17 @@ The desktop app writes its own warnings and errors to a rotating local file:
 | Property | Value |
 |---|---|
 | Path | `%APPDATA%\AIContextBuilder\aicb.log` |
-| Levels | `Warning`, `Error` and `Critical` only — the normal flow is not recorded |
+| Levels | `Warning`, `Error` and `Critical` only - the normal flow is not recorded |
 | Format | ISO 8601 timestamp (UTC), level in brackets, logger category, message; the full exception follows on the next lines when one is attached |
 | Rotation | at 1 MiB, keeping three archives: `aicb.log.1`, `aicb.log.2`, `aicb.log.3`; the oldest is dropped |
-| Open handle | none — you can copy the file while the app is running |
+| Open handle | none - you can copy the file while the app is running |
 
 Notes:
 
 - The file is created with the first warning or error. On a healthy installation it may not exist at all.
 - A second running instance may lose a single entry when it writes at the exact moment another process holds the file; the entry is dropped so that logging can never turn a recoverable error into a failed start.
 - The log contains the unhandled errors of the `Unexpected error` dialog, including the repeats that were suppressed after the third dialog.
-- A few deliberately non-critical startup steps — applying the theme, the font and the UI zoom — are caught **without** writing a log entry. If the app starts in the wrong theme, the log is silent about it; a restart is the first thing to try.
+- A few deliberately non-critical startup steps - applying the theme, the font and the UI zoom - are caught **without** writing a log entry. If the app starts in the wrong theme, the log is silent about it; a restart is the first thing to try.
 - Logging is best-effort: if the file cannot be written, the error is still shown to you, it is just not recorded.
 
 ### `load-perf.log`
@@ -218,7 +218,7 @@ Notes:
 A second, separate file records solution-load phase timings:
 
 - Location: `%APPDATA%\AIContextBuilder\load-perf.log`
-- One line per solution load, prefixed with a local timestamp, in the form `[PerfLoad] {context} total=…ms Phase1_LeaseAcquire=… Phase2_TreeBuild=… Phase3_Analyze=… Phase4_Snapshot=…`; only `total` carries the `ms` suffix
+- One line per solution load, prefixed with a local timestamp, in the form `[PerfLoad] {context} total=...ms Phase1_LeaseAcquire=... Phase2_TreeBuild=... Phase3_Analyze=... Phase4_Snapshot=...`; only `total` carries the `ms` suffix
 - Switch: `Settings > General` → `Record solution-load performance timings` (on by default)
 - It contains **times, not errors**, and is not the file to send for a malfunction report.
 
@@ -231,7 +231,7 @@ A second, separate file records solution-load phase timings:
 | The app version | `Settings > About` |
 | Settings and paths | `%APPDATA%\AIContextBuilder\app-settings.json` |
 | Load timings (only if the start or a load is the problem) | `%APPDATA%\AIContextBuilder\load-perf.log` |
-| For MCP problems | The stderr log of your MCP client — the only place the MCP server leaves diagnostic text |
+| For MCP problems | The stderr log of your MCP client - the only place the MCP server leaves diagnostic text |
 
 Bugs and feature requests go to GitHub Issues; the `About` panel shows the Issues URL as plain, non-clickable text in its support card.
 
@@ -264,9 +264,9 @@ dotnet --list-sdks
 
 **Symptom.** A dialog titled `Database migration failed` shows the error; the app exits (exit code 2).
 
-**Cause.** The schema migration threw — typically the database file is not reachable or not writable, is locked, or the disk is full.
+**Cause.** The schema migration threw - typically the database file is not reachable or not writable, is locked, or the disk is full.
 
-**What to do.** Check the database path shown in `Settings > Storage` for reachability and write permission, fix the cause, and start again. If the settings file itself is unreadable, the app runs on defaults and may point at a different database — see "The settings file could not be read".
+**What to do.** Check the database path shown in `Settings > Storage` for reachability and write permission, fix the cause, and start again. If the settings file itself is unreadable, the app runs on defaults and may point at a different database - see "The settings file could not be read".
 
 #### `Unfinished runs from previous session`
 
@@ -280,7 +280,7 @@ dotnet --list-sdks
 |---|---|
 | `Yes` | Mark the runs as `Cancelled` and set their finish time to now. |
 | `No` | Pause them for a later resume; no finish time is set. |
-| `Cancel` / window close | Leave them unchanged — they stay visible and the question returns at the next start. |
+| `Cancel` / window close | Leave them unchanged - they stay visible and the question returns at the next start. |
 
 If the recovery check itself fails, a warning dialog titled `Crash recovery` appears, the app starts anyway, and the runs stay in the running state.
 
@@ -300,21 +300,21 @@ If the recovery check itself fails, a warning dialog titled `Crash recovery` app
 
 **What to do.** End the process (`aicb-ui.exe`) in Task Manager and start the app again. If it happens repeatedly, include the `Details:` line and `aicb.log` in a report.
 
-#### Auto-backup delays the start — or repeats at every start
+#### Auto-backup delays the start - or repeats at every start
 
 **Symptom.** The window appears only after a long pause, and the startup notice bar reports a failed backup. The same pause returns at every start.
 
 **Cause.** Auto-backup is enabled and due. It archives synchronously on the UI thread before any window exists, so the whole archive run is startup time; on a large base path that is a noticeable delay. A **failed** run never advances the last-backup timestamp, so it is due again at the next start until the cause is fixed.
 
-**What to do.** Read the reason in the notice (`BasePath does not exist: '…'`, `Could not create backup folder: …`, `Backup failed: …`), fix it, or switch auto-backup off in `Settings > Storage`. `Backup Now` runs a backup immediately and shows its result in the panel's status line. Note that an archive that is missing something (for example the database, because another process holds it open) is written with a `-partial` suffix and **does** advance the timestamp — so it does not repeat every start.
+**What to do.** Read the reason in the notice (`BasePath does not exist: '...'`, `Could not create backup folder: ...`, `Backup failed: ...`), fix it, or switch auto-backup off in `Settings > Storage`. `Backup Now` runs a backup immediately and shows its result in the panel's status line. Note that an archive that is missing something (for example the database, because another process holds it open) is written with a `-partial` suffix and **does** advance the timestamp - so it does not repeat every start.
 
 #### The settings file could not be read
 
-**Symptom.** The startup notice bar shows `Application settings - Your settings file could not be read, so this session is running on DEFAULTS …`. Your sessions and solutions may look missing, and the theme may be the default one.
+**Symptom.** The startup notice bar shows `Application settings - Your settings file could not be read, so this session is running on DEFAULTS ...`. Your sessions and solutions may look missing, and the theme may be the default one.
 
-**Cause.** `%APPDATA%\AIContextBuilder\app-settings.json` is corrupt or could not be opened. The app continues with default settings — and the defaults include the database path, so it may open the default database instead of yours. The settings file is never moved by the `Base path` setting; it always lives at the default location.
+**Cause.** `%APPDATA%\AIContextBuilder\app-settings.json` is corrupt or could not be opened. The app continues with default settings - and the defaults include the database path, so it may open the default database instead of yours. The settings file is never moved by the `Base path` setting; it always lives at the default location.
 
-**What to do.** The message names a preserved copy of the unreadable file, `app-settings.json.corrupt-<timestamp>`, next to the original. Repair that copy and restore your paths, or set the correct database path again in `Settings > Storage`. If no copy could be made, the message says so and warns that the next solution you open will overwrite the file — copy it elsewhere before you continue.
+**What to do.** The message names a preserved copy of the unreadable file, `app-settings.json.corrupt-<timestamp>`, next to the original. Repair that copy and restore your paths, or set the correct database path again in `Settings > Storage`. If no copy could be made, the message says so and warns that the next solution you open will overwrite the file - copy it elsewhere before you continue.
 
 #### The app starts with the wrong theme or font size
 
@@ -346,7 +346,7 @@ If the recovery check itself fails, a warning dialog titled `Crash recovery` app
 
 **Symptom.** Dropping a file onto the window has no effect.
 
-**Cause.** The drop accepts exactly **one** file, and only with the extension `.sln`, `.slnx` or `.slnf`, and only if it exists on disk. Anything else — several files at once, another extension — is discarded without a message.
+**Cause.** The drop accepts exactly **one** file, and only with the extension `.sln`, `.slnx` or `.slnf`, and only if it exists on disk. Anything else - several files at once, another extension - is discarded without a message.
 
 **What to do.** Drop a single solution file, or use the file dialog. If the drop fails while opening, a dialog titled `Open Solution` reports `Could not open solution:` with the reason.
 
@@ -354,7 +354,7 @@ If the recovery check itself fails, a warning dialog titled `Crash recovery` app
 
 **Symptom.** After loading a solution, types or projects that exist in the code do not appear in the tree, or queries report fewer symbols than expected.
 
-**Cause.** Roslyn load problems — an unsupported project type, a broken project file, a missing target framework — are reported as warnings to the log, not to the interface. The affected project quietly drops out of the analysis.
+**Cause.** Roslyn load problems - an unsupported project type, a broken project file, a missing target framework - are reported as warnings to the log, not to the interface. The affected project quietly drops out of the analysis.
 
 **What to do.** Look for `[Workspace]` lines in `aicb.log`. Fix the project so it loads (the same way it would have to load for `dotnet build`), then reload the solution.
 
@@ -390,13 +390,13 @@ If the recovery check itself fails, a warning dialog titled `Crash recovery` app
 
 **Cause.** Splitter positions are saved on every drag, but the write is best-effort: a failure (missing service, database not migrated, write error) is swallowed. The saved position also takes effect only the next time the view is loaded.
 
-**What to do.** Nothing to repair — re-drag the splitter. If it never survives a restart, check `aicb.log` for write errors on the settings side.
+**What to do.** Nothing to repair - re-drag the splitter. If it never survives a restart, check `aicb.log` for write errors on the settings side.
 
 #### Closing the app: `Could not check for unsaved changes`
 
 **Symptom.** You close the window and get a dialog titled `Close Application` with the text `Could not check for unsaved changes, so the app was kept open to protect your work:` followed by the error and the advice `Save your sessions manually, then close again.` The app stays open.
 
-**Cause.** The check for unsaved tabs threw. WPF would still close the window after such an error, which would discard every unsaved session — so the app cancels the close instead. Cancelling is the only safe answer to "we could not establish that closing is safe".
+**Cause.** The check for unsaved tabs threw. WPF would still close the window after such an error, which would discard every unsaved session - so the app cancels the close instead. Cancelling is the only safe answer to "we could not establish that closing is safe".
 
 **What to do.** Save your sessions manually (see "Workspace, sessions and snapshots" in the desktop app manual), then close the app again.
 
@@ -422,7 +422,7 @@ If the recovery check itself fails, a warning dialog titled `Crash recovery` app
 
 **Cause.** The setting is stored, but restoring the previous session has not been implemented yet. This is a planned feature.
 
-**What to do.** Nothing yet — save your session before closing if you want to continue where you left off.
+**What to do.** Nothing yet - save your session before closing if you want to continue where you left off.
 
 ### Insights and panels that can look empty or stale
 
@@ -440,7 +440,7 @@ If the recovery check itself fails, a warning dialog titled `Crash recovery` app
 
 **Cause.** The database write for the dismissal failed. The card is removed from the list anyway, so the dismissal looks successful until the list is rebuilt.
 
-**What to do.** Dismiss it again; if it keeps coming back, check `aicb.log` for write errors. Note that a finding the producers mark as persistent cannot be dismissed at all — its dismiss buttons are hidden.
+**What to do.** Dismiss it again; if it keeps coming back, check `aicb.log` for write errors. Note that a finding the producers mark as persistent cannot be dismissed at all - its dismiss buttons are hidden.
 
 #### The reset button in the Insights action bar seems to do nothing
 
@@ -502,17 +502,17 @@ If the recovery check itself fails, a warning dialog titled `Crash recovery` app
 
 #### Switching the database fails: migration error
 
-**Symptom.** The switch fails with `Migration failed: …` and, depending on the case, `JSON rolled back to previous path.` or `No previous path to roll back to - JSON points to the new (broken) target.` followed, in the worst case, by `Rollback itself failed: …`.
+**Symptom.** The switch fails with `Migration failed: ...` and, depending on the case, `JSON rolled back to previous path.` or `No previous path to roll back to - JSON points to the new (broken) target.` followed, in the worst case, by `Rollback itself failed: ...`.
 
 **Cause.** The pending migrations on the target file could not be applied. The app tries to restore the previous database path in the settings file.
 
 **What to do.** Read the message: it tells you exactly which state the settings file is in. If the rollback succeeded, the previous database is active again; if not, set the path manually in `Settings > Storage`. Background work (runs, analyses) must be idle before a switch.
 
-#### `Cannot … while N background task(s) are active`
+#### `Cannot ... while N background task(s) are active`
 
 **Symptom.** `Switch Database...`, `Create New DB...`, `Backup Now` or saving the base path is refused with `Cannot switch DB while 1 background task(s) are active.` (the action name varies).
 
-**Cause.** A background task is still running — typically a run or an analysis in the Context Builder. The message names the count, not the location.
+**Cause.** A background task is still running - typically a run or an analysis in the Context Builder. The message names the count, not the location.
 
 **What to do.** Finish or cancel the run in the Context Builder, then repeat the action.
 
@@ -522,7 +522,7 @@ If the recovery check itself fails, a warning dialog titled `Crash recovery` app
 
 **Cause.** Something could not be packed into the archive. The most common case is the database: an open SQLite connection (the GUI itself, or a co-running MCP host) prevents the archiver from reading it. Files that are locked are skipped and named in the message (up to five, then `and N more`).
 
-**What to do.** Close the other process that holds the file, or accept the partial archive — it still contains everything else. A partial run does advance the backup timestamp, so it does not repeat at every start.
+**What to do.** Close the other process that holds the file, or accept the partial archive - it still contains everything else. A partial run does advance the backup timestamp, so it does not repeat at every start.
 
 #### Changing `Base path` does not move the settings file
 
@@ -538,7 +538,7 @@ If the recovery check itself fails, a warning dialog titled `Crash recovery` app
 
 **Cause.** The desktop app and the MCP server can point at the same database file, and both write to it while they run. This is the normal case and explains all three behaviors: the usage panel reloads on every activation, the archiver skips a file that is currently held open, and a migration applies to every running process at once.
 
-**What to do.** Nothing to fix — but if you want the two fully independent, point them at different database files. Note that the MCP server tolerates a database written by a newer version and reports the drift, while the desktop app refuses to start on one.
+**What to do.** Nothing to fix - but if you want the two fully independent, point them at different database files. Note that the MCP server tolerates a database written by a newer version and reports the drift, while the desktop app refuses to start on one.
 
 ---
 

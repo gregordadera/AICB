@@ -121,7 +121,8 @@ jobs:
           var greeter = new Greeter();
           System.Console.WriteLine(greeter.Greet("world"));
           CSHARP
-          # .NET 10 defaults to .slnx; the published CLI currently accepts .sln paths.
+          # .NET 10 defaults to .slnx; --format sln keeps the file name the steps below use
+          # (the CLI reads .slnx as well).
           dotnet new sln -o probe -n Probe --format sln
           dotnet sln probe/Probe.sln add probe/app/ProbeApp.csproj
           dotnet build probe/Probe.sln -c Debug

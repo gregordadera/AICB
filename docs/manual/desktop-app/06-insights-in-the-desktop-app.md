@@ -1,8 +1,8 @@
-[AICB – Desktop Application](README.md) &middot; chapter 6 of 11
+[AICB - Desktop Application](README.md) &middot; chapter 6 of 11
 
 # 6 Insights in the desktop app
 
-The Insights tab is the app's own quality-review surface. It runs a set of heuristics (the *producers*) over the C# solution currently loaded in the Context Builder and reports what they find as individual findings: long methods, fat interfaces, missing async conventions, unused types, design smells, architecture problems, security-sensitive calls, and more. Each finding tells you what was detected, where it was detected, how expensive a fix is estimated to be, and — for many rules — a recommended approach. The complete rule catalog is described in "Insights: the code quality catalog" in the General manual.
+The Insights tab is the app's own quality-review surface. It runs a set of heuristics (the *producers*) over the C# solution currently loaded in the Context Builder and reports what they find as individual findings: long methods, fat interfaces, missing async conventions, unused types, design smells, architecture problems, security-sensitive calls, and more. Each finding tells you what was detected, where it was detected, how expensive a fix is estimated to be, and - for many rules - a recommended approach. The complete rule catalog is described in "Insights: the code quality catalog" in the General manual.
 
 Use the tab before a code review, after a larger refactoring, or whenever you want to hand a concrete, pre-selected slice of a problem to your LLM.
 
@@ -16,7 +16,7 @@ Insights is not an entry of the main navigation; it is a sub-tab of the Context 
 - The tab header reads `Insights`, or `Insights (N)` while N findings are loaded. The number falls as you dismiss findings and comes back when you restore them.
 - An info icon next to the page title summarizes the surface: heuristic hints for the currently loaded solution, pick a category on the left, read the findings on the right, and click `Analyze Solution` to re-evaluate.
 
-The heuristics are not part of the solution-load pipeline itself — the tab triggers them (see "Running the analysis").
+The heuristics are not part of the solution-load pipeline itself - the tab triggers them (see "Running the analysis").
 
 ## 6.2 Categories, principles and severities
 
@@ -26,7 +26,7 @@ Findings are classified on three independent axes: category, SOLID principle and
 
 The left column is a single-select category navigator titled `Categories`. `All` is always the first row and is selected by default; it shows the findings of every category, sorted worst-first.
 
-Six categories are always listed, even at count 0: `Code Quality`, `Security`, `Async`, `Design`, `Architecture` and `Other`. A `Compression` row appears only if a finding maps to it — the shipped heuristics do not produce one.
+Six categories are always listed, even at count 0: `Code Quality`, `Security`, `Async`, `Design`, `Architecture` and `Other`. A `Compression` row appears only if a finding maps to it - the shipped heuristics do not produce one.
 
 | Category | What typically lands there |
 |---|---|
@@ -50,11 +50,11 @@ Each finding carries one or more SOLID badges in its card header, derived from t
 
 | Chip | Principle | Meaning (badge tooltip) |
 |---|---|---|
-| `S` | Single Responsibility | A type or method should have exactly one responsibility — a single reason to change. Long methods, large classes, many parameters, or mixed side effects bundle several concerns. |
+| `S` | Single Responsibility | A type or method should have exactly one responsibility - a single reason to change. Long methods, large classes, many parameters, or mixed side effects bundle several concerns. |
 | `O` | Open/Closed | Code should be open for extension but closed for modification. Exposed, mutable state breaks invariants and forces modification instead of extension. |
 | `L` | Liskov Substitution | Subtypes must be usable in place of their base type without breaking its contract. A divergent member of a type family (pattern drift) violates substitutability. |
-| `I` | Interface Segregation | Clients should not depend on methods they do not use. A fat interface forces unnecessary coupling — split it into smaller, role-based contracts. |
-| `D` | Dependency Inversion | Modules should depend on abstractions, not on concrete implementations — and inner layers never on outer ones. Layer violations and circular dependencies break this direction. |
+| `I` | Interface Segregation | Clients should not depend on methods they do not use. A fat interface forces unnecessary coupling - split it into smaller, role-based contracts. |
+| `D` | Dependency Inversion | Modules should depend on abstractions, not on concrete implementations - and inner layers never on outer ones. Layer violations and circular dependencies break this direction. |
 | `·` | Other | Convention/maintainability hint without a clear SOLID mapping (e.g. async convention, dead code, unused type, correctness smell, build hint). |
 
 How the row filters:
@@ -68,14 +68,14 @@ How the row filters:
 
 The second filter row is labeled `Severity`. It contains an `All` chip plus `Critical`, `Warning`, `Info` and `Ok`, each with a colored dot and a count (tooltip `Toggle this severity (multiple can be active).`).
 
-Every finding has exactly one severity. Internally the levels are ranked Critical (10) > Warning (3) > Info (0.5) > Ok (0) — deliberately not the order in which the levels are declared, so that sorting is worst-first.
+Every finding has exactly one severity. Internally the levels are ranked Critical (10) > Warning (3) > Info (0.5) > Ok (0) - deliberately not the order in which the levels are declared, so that sorting is worst-first.
 
 The row is multi-select; no active chip means "all severities". The `All` chip (tooltip `Clear the severity filter.`) clears the row.
 
 ### How the three axes combine
 
 - Category, principle and severity are combined with AND: a card must pass all active filters.
-- A chip whose count is 0 is disabled — an empty bucket cannot be selected.
+- A chip whose count is 0 is disabled - an empty bucket cannot be selected.
 - Both filter rows are hidden until the tab has run at least once; the first-run card is shown instead.
 - Sorting is fixed and cannot be changed: severity (worst first), then category, then title. Within the right pane the findings are grouped by severity; each group header shows a colored dot, the level name and the number of cards.
 - The tab has no free-text search. Use the category, principle and severity filters.
@@ -85,7 +85,7 @@ The row is multi-select; no active chip means "all severities". The `All` chip (
 1. Make sure a solution is loaded in the Context Builder.
 2. Click `Analyze Solution` in the page header, or press `Ctrl+Shift+A`. The shortcut works from any Context Builder sub-tab. The button tooltip reads `Runs all producers over the active Solution. (Ctrl+Shift+A)`.
 3. While the run is in flight the whole tab is dimmed by a translucent scrim and shows a progress ring. The run happens off the UI thread, so the rest of the app stays usable.
-4. Depending on solution size the run takes roughly 3–15 seconds. The first-run card names the same range: `approx. 3-15 seconds depending on size`.
+4. Depending on solution size the run takes roughly 3-15 seconds. The first-run card names the same range: `approx. 3-15 seconds depending on size`.
 5. The results replace the previous list, grouped by severity. The tab header now shows the count.
 
 A run evaluates the 24 analyzer rules in the shipped configuration. The active Quality Profile can switch individual exposed rules off, so the effective set depends on your profile. The rule catalog and the profile options are described in "Insights: the code quality catalog" in the General manual; the profile itself is edited under `Settings` → `Quality Profiles`. The first-run card points there as well: `Configure producer toggles + thresholds under Quality Profiles in Settings.` LLM findings are promoted from a model run rather than evaluated by this analysis run.
@@ -98,7 +98,7 @@ Re-running does not undo your triage: dismissals and intentional markings are ap
 
 - **Setting.** `Auto-trigger insights on solution load` (`Settings` → `General` → `Session & Analysis`) is off by default. Its tooltip: `When on, analyzer insights run automatically after every solution load. When off, use the 'Analyze Solution' button in the Insights tab to run them manually.`
 - **First-run exception.** On the first solution load after a fresh installation, the heuristics run once even when the setting is off, so that a new user does not sit in front of an empty tab. This happens once per installation.
-- **Background recomputation.** In the normal case the tab shows the last stored result for the solution (if there is one) and recomputes the heuristics in the background. When that background run is ready, the panel adopts the fresh result by itself, so what you read matches the current code — which is also what `Adopt selection` needs to resolve its symbols. A `Ready - N insights precomputed.` banner with a `Show` button belongs to this state; because the panel adopts the result as soon as it is ready, the banner is normally not seen.
+- **Background recomputation.** In the normal case the tab shows the last stored result for the solution (if there is one) and recomputes the heuristics in the background. When that background run is ready, the panel adopts the fresh result by itself, so what you read matches the current code - which is also what `Adopt selection` needs to resolve its symbols. A `Ready - N insights precomputed.` banner with a `Show` button belongs to this state; because the panel adopts the result as soon as it is ready, the banner is normally not seen.
 - A background run that finishes after you switched to another solution is discarded.
 
 Note: if you trigger the analysis with no solution loaded, the run cannot produce findings; the tab still leaves the first-run view, and the right pane then shows the empty hint described below.
@@ -112,7 +112,7 @@ As soon as at least one finding is loaded, a summary strip appears above the fil
 | Element | Meaning | Tooltip |
 |---|---|---|
 | `Debt` pill with a colored dot | Coarse technical-debt grade from `A` (best) to `E` (worst), estimated from the summed remediation minutes of all loaded findings. The dot is green for A/B, amber for C, red for D/E | `Coarse technical-debt grade (A best ... E worst), estimated from summed remediation minutes.` |
-| `~… min` / `~… h` / `~… d` | Estimated total remediation effort, order of magnitude (never exact). Under one hour it is shown in minutes, under one working day in hours, above that in working days (one working day = 480 minutes) | `Estimated total remediation effort (order-of-magnitude).` |
+| `~... min` / `~... h` / `~... d` | Estimated total remediation effort, order of magnitude (never exact). Under one hour it is shown in minutes, under one working day in hours, above that in working days (one working day = 480 minutes) | `Estimated total remediation effort (order-of-magnitude).` |
 | Trend chip | Change in the debt of the two most recent snapshots that carry a debt measurement: an upward amber arrow for worse, a downward green arrow for better, a flat muted arrow for unchanged. The label is signed, for example `+45 min` or `-1.5 h`, or `no change`. The chip is hidden until at least two such snapshots exist | `Technical debt decreased since your previous analysis (lower is better).` / `Technical debt increased since your previous analysis.` / `Technical debt is unchanged since your previous analysis.` |
 | `N Critical` | Number of critical findings | `Critical-severity insights` |
 | `N Warning` | Number of warning findings | `Warning-severity insights` |
@@ -165,7 +165,7 @@ A line can carry a lifecycle badge and up to five icon buttons. Only the buttons
 
 `Reveal` selects and expands the matching node in the Solution Tree (the persistent sidebar) and deliberately does not switch the active tab. A symbol that cannot be found in the loaded tree is ignored silently.
 
-Marker and relation lines that carry no symbol cannot be revealed, queued, suppressed or dismissed on their own — there is nothing stable to key them on.
+Marker and relation lines that carry no symbol cannot be revealed, queued, suppressed or dismissed on their own - there is nothing stable to key them on.
 
 ### Card actions
 
@@ -173,7 +173,7 @@ Marker and relation lines that carry no symbol cannot be revealed, queued, suppr
 |---|---|---|
 | `Send selected lines to LLM` | Sends the checked affected items, together with the full solution context, to the active LLM (see below) | the finding has affected items |
 | `Adopt selection` | Replaces the tree selection with the checked symbols (plus their relevant neighbors) and writes a fix task into the prompt; nothing is sent | the finding has affected items |
-| `Ignore selected` | Dismisses the whole finding — the same as the dismiss icon at the top right. Tooltip: `Marks this insight as seen (dismisses it) - same as the dismiss button top-right.` | the finding can be dismissed |
+| `Ignore selected` | Dismisses the whole finding - the same as the dismiss icon at the top right. Tooltip: `Marks this insight as seen (dismisses it) - same as the dismiss button top-right.` | the finding can be dismissed |
 
 A secondary action button can exist next to these (`Runs the secondary action + optionally sends the prompt text plus the full Solution context to the active LLM.`). It is only shown when the finding defines a secondary action; the shipped heuristics do not, so it does not appear in normal use.
 
@@ -214,7 +214,7 @@ Recommended approach: <suggestion>
 
 Affected items (their code - and their relevant neighbors - are selected in the context):
 - <checked line 1>
-…
+...
 
 Implement the fix directly in the code. Preserve the existing public behavior,
 keep the build and tests green, and briefly summarize what you changed and why.
@@ -243,7 +243,7 @@ You can dismiss at three levels:
 
 A dismissed finding stops being reported in the panel and to the MCP tools until you restore it. Dismissals are stored per solution, so they survive a restart and the next load of the same solution.
 
-The action bar shows a `N selected` pill while cards are checked. `Select all` checks every card currently shown on the right (disabled while the pane is empty); `Clear` unchecks all. `Dismiss selected` is enabled while at least one checked card can actually be dismissed — it stays enabled for a mixed selection and reports the rest on the status line: `N finding(s) cannot be dismissed - they are re-reported on every run.` Cards that cannot be dismissed stay checked on purpose, because the dismissal is exactly what did not happen to them.
+The action bar shows a `N selected` pill while cards are checked. `Select all` checks every card currently shown on the right (disabled while the pane is empty); `Clear` unchecks all. `Dismiss selected` is enabled while at least one checked card can actually be dismissed - it stays enabled for a mixed selection and reports the rest on the status line: `N finding(s) cannot be dismissed - they are re-reported on every run.` Cards that cannot be dismissed stay checked on purpose, because the dismissal is exactly what did not happen to them.
 
 Dismissing is a triage decision, not a fix: it does not change your code. `Restore` brings the findings back.
 
@@ -251,7 +251,7 @@ Dismissing is a triage decision, not a fix: it does not change your code. `Resto
 
 The crossed-out-eye icon on an affected item records a permanent suppression for that item's symbol and rule. The item disappears from the panel and from the MCP tools, but the quality gate (`--fail-on` / `solution_metrics`) still counts it.
 
-Suppressions are stored in the app's database for the current solution. To share the decision with your team, export the solution configuration — the `.aicb.json` file next to your solution — from the Solutions workspace. Suppressions declared in that committed file also apply, and they survive `Restore` (see below).
+Suppressions are stored in the app's database for the current solution. To share the decision with your team, export the solution configuration - the `.aicb.json` file next to your solution - from the Solutions workspace. Suppressions declared in that committed file also apply, and they survive `Restore` (see below).
 
 The button appears only on items that resolve to a symbol; marker and relation lines cannot be marked.
 
@@ -261,7 +261,7 @@ The counter-clockwise arrow button in the action bar restores everything you hid
 
 `Restore` has no confirmation step. It clears the dismissals and the database-side intentional markings for the current solution and immediately re-runs all heuristics. Two things are deliberately not affected:
 
-- Suppressions declared in the solution's `.aicb.json` file stay in force — they are a committed team decision, not a local one.
+- Suppressions declared in the solution's `.aicb.json` file stay in force - they are a committed team decision, not a local one.
 - Queued work items are not cleared. `In progress` and `Done` badges stay as they are.
 
 ### Findings that cannot be dismissed
@@ -277,13 +277,13 @@ Note: if a triage write to the local database fails, the panel still updates, bu
 
 ## 6.8 Queuing a finding as work
 
-You can record an affected item as something to fix, together with the run template you want to handle it with. This is a note to yourself — **nothing is started**.
+You can record an affected item as something to fix, together with the run template you want to handle it with. This is a note to yourself - **nothing is started**.
 
 1. Expand a finding card.
 2. Click the clipboard icon on an affected item. If no run templates are stored, no dialog opens and the status line reports `No run templates are available to queue against.`
 3. In the dialog `Queue as work` you see the finding title, the text of the affected item, a `Run template` picker and the note `The finding is marked as in progress. Nothing runs until you start it yourself.` The picker lists all stored run templates, without filtering by run type. It is pre-filled with the run template configured for the active quality profile, if there is one; otherwise the first stored template.
 4. Click `Queue` to record the item, or `Cancel` to close without queueing (Escape also cancels). `Queue` is disabled while no template is selected.
-5. The item stays visible and now carries the badge `In progress`. Hover it to see the tooltip: `Queued as work to do, with the run template "…".`
+5. The item stays visible and now carries the badge `In progress`. Hover it to see the tooltip: `Queued as work to do, with the run template "...".`
 6. When you are done, click the checkmark icon on the line. The badge changes to `Done`, with the tooltip `Marked as done. It is your claim, not a re-scan - the line stays visible so a later run can contradict it.`
 
 The line stays visible in both states on purpose: a line that vanished because somebody started work on it would hide the state it is supposed to report, and a later analysis can contradict your "Done" claim.
@@ -322,7 +322,7 @@ All writes are best-effort: a failure never blocks the panel, and a failed write
 
 ### The sample solution
 
-`Open sample Solution` loads the bundled `ColorMixer.SelectionLab.sln` — a read-only sample — for a trial run (tooltip: `Loads the bundled ColorMixer.SelectionLab.sln (read-only sample) for a trial Insights run.`). The app opens it in the Context Builder; the usual load behavior then applies (first-run analysis or background recomputation). This button is the entry to the sample solution; if the file is missing, an info dialog titled `Sample not found` explains that it normally lives in the `SampleSolutions` folder next to the application.
+`Open sample Solution` loads the bundled `ColorMixer.SelectionLab.sln` - a read-only sample - for a trial run (tooltip: `Loads the bundled ColorMixer.SelectionLab.sln (read-only sample) for a trial Insights run.`). The app opens it in the Context Builder; the usual load behavior then applies (first-run analysis or background recomputation). This button is the entry to the sample solution; if the file is missing, an info dialog titled `Sample not found` explains that it normally lives in the `SampleSolutions` folder next to the application.
 
 ## 6.11 Defaults and limits
 

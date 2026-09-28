@@ -1,10 +1,10 @@
-[AICB – General Documentation](README.md) &middot; chapter 9 of 12
+[AICB - General Documentation](README.md) &middot; chapter 9 of 12
 
 # 9 Command-line reference
 
 `aicb` is the command-line interface of AIContextBuilder. It runs the same analysis engine as the desktop application, but writes its result to a file, reports success and failure through exit codes, and can therefore be used from scripts, build servers and other tools. It is also the way to start the MCP server and to invoke a single MCP tool without a client.
 
-The analysis verb `analyze` needs MSBuild on the machine — a .NET SDK or Visual Studio provides it. The other verbs work without it. Self-contained publishing removes the .NET runtime dependency, not the MSBuild one.
+The analysis verb `analyze` needs MSBuild on the machine - a .NET SDK or Visual Studio provides it. The other verbs work without it. Self-contained publishing removes the .NET runtime dependency, not the MSBuild one.
 
 ## 9.1 Invocation, help and version
 
@@ -45,7 +45,7 @@ The same convention applies to every verb, and it is the interface a script shou
 | Verb | Codes you can receive |
 |---|---|
 | `init` | `0`, `1` |
-| `analyze` | `0`–`6` |
+| `analyze` | `0` - `6` |
 | `export` | `0`, `1`, `2`, `3`, `4` |
 | `import` | `0`, `1`, `2`, `3`, `4` |
 | `list` | `0`, `1`, `2`, `4` |
@@ -56,12 +56,12 @@ The same convention applies to every verb, and it is the interface a script shou
 
 ## 9.3 `aicb init`
 
-Wires `aicb` into a project directory so that an MCP client can find it. It writes three kinds of artefact: the `.mcp.json` server entry, the agent skills under `.claude/skills/`, and the symbol guard together with the harness configuration that loads it. No database, no Roslyn and no MSBuild are involved — this is the step before any of that.
+Wires `aicb` into a project directory so that an MCP client can find it. It writes three kinds of artifact: the `.mcp.json` server entry, the agent skills under `.claude/skills/`, and the symbol guard together with the harness configuration that loads it. No database, no Roslyn and no MSBuild are involved - this is the step before any of that.
 
 | Option | Values | Default | Meaning |
 |---|---|---|---|
 | `--path <dir>` | directory | current directory | The project directory to wire up. |
-| `--force` | flag | off | Overwrite artefacts that are already there. Without it, an existing `aicb` entry or skill file is left untouched, which is what makes re-running safe. |
+| `--force` | flag | off | Overwrite artifacts that are already there. Without it, an existing `aicb` entry or skill file is left untouched, which is what makes re-running safe. |
 | `--skills <context\|all>` | `context` or `all` | `context` | Which agent skills to write. `context` writes the aicb-csharp-context skill only; `all` adds the aicb-code-review and aicb-code-simplifier review pair plus aicb-usage-check. |
 | `--hooks <auto\|none\|all\|claude-code\|codex\|opencode>` | one of the listed values | `auto` | Which agent harnesses get the symbol guard. `auto` installs it for the harnesses already used in this project. |
 
@@ -72,34 +72,34 @@ cd C:\repo\MyApp
 aicb init --skills=all --hooks claude-code
 ```
 
-Behaviour:
+Behavior:
 
 - `--hooks` is validated before anything is written. An unknown value is exit `1` with the accepted values listed.
 - `--path` must exist; otherwise exit `1`.
-- Each artefact is reported as one line: `created`, `updated`, `kept` or `refused`, followed by the path and a short detail. If at least one artefact is refused, `init` reports an error and returns `1`. A refusal always means an existing file that `init` will not risk rewriting — an unusable `.mcp.json`, a harness wiring it cannot read, or a path it may not write — so the fix is yours: repair the file, or point `--path` elsewhere.
+- Each artifact is reported as one line: `created`, `updated`, `kept` or `refused`, followed by the path and a short detail. If at least one artifact is refused, `init` reports an error and returns `1`. A refusal always means an existing file that `init` will not risk rewriting - an unusable `.mcp.json`, a harness wiring it cannot read, or a path it may not write - so the fix is yours: repair the file, or point `--path` elsewhere.
 - When `--hooks auto` finds no harness marker in the project, no guard is installed and the command says so explicitly, together with the way to install one anyway (`--hooks claude-code|codex|opencode`, or `--hooks all`).
 - Once a guard is installed it *blocks*: a C# symbol search is refused and redirected to the aicb tools. The output names, per harness, the wiring file whose `aicb` entry removes the guard again. `--hooks none` writes no enforcement on the next run; it does **not** remove an installation that is already there.
-- Skills are written to `.claude/skills/` only. A harness that gets the guard but no skill is named in the output — where such a harness looks for skills has not been measured, and `init` does not guess.
+- Skills are written to `.claude/skills/` only. A harness that gets the guard but no skill is named in the output - where such a harness looks for skills has not been measured, and `init` does not guess.
 - A harness that does not read the shared `.mcp.json` is named as well, because the server entry written above stays invisible to it until you add the entry to that harness's own configuration.
 - If more than one `aicb` installation is found, a warning lists them: every MCP client starts the *first* one on the search path, so updating another one changes nothing a client runs. The warning names how to remove the extra installation.
 - The last line is always the same reminder: `Restart or reconnect your MCP client, then call server_info to confirm it took.`
 
 Note: `init` has no preview mode. `--force` is broader than "overwrite what is already there": it also replaces an `aicb` entry that you deliberately pointed at a wrapper script or a debug build, and it rewrites the harness wiring back to its canonical form.
 
-Note: the harness detection on `auto` is deliberately conservative. A Claude Code user whose `.claude/` folder contains only their own `skills/` directory is not detected, because the detection must not read a marker that `init` itself created. The message `No agent harness detected here, so no symbol guard was installed.` is not a failure — pass `--hooks claude-code` explicitly.
+Note: the harness detection on `auto` is deliberately conservative. A Claude Code user whose `.claude/` folder contains only their own `skills/` directory is not detected, because the detection must not read a marker that `init` itself created. The message `No agent harness detected here, so no symbol guard was installed.` is not a failure - pass `--hooks claude-code` explicitly.
 
-The concepts behind these artefacts — what the symbol guard does, how the MCP client is wired, and how to remove it — are described in the MCP manual.
+The concepts behind these artifacts - what the symbol guard does, how the MCP client is wired, and how to remove it - are described in the MCP manual.
 
 ## 9.4 `aicb analyze`
 
-Runs the Roslyn analysis on a solution and writes the context Markdown. Optionally it reuses a stored snapshot instead of analysing again, writes a snapshot itself, renders through a run template, and enforces a quality gate.
+Runs the Roslyn analysis on a solution and writes the context Markdown. Optionally it reuses a stored snapshot instead of analyzing again, writes a snapshot itself, renders through a run template, and enforces a quality gate.
 
 | Option | Alias | Required | Default | Meaning |
 |---|---|---|---|---|
-| `--solution <path>` | `-s` | yes | — | The `.sln` file to analyze. |
-| `--output <path>` | `-o` | yes | — | Exact path of the generated `.md`. Missing parent directories are created. |
-| `--session-db <path>` | | no | — | An existing SQLite session database. When its stored fingerprint matches the solution, the stored analysis is reused and the Roslyn run is skipped. |
-| `--emit-session-db <path>` | | no | — | Path at which the session database is written after the run. Created if it does not exist. |
+| `--solution <path>` | `-s` | yes | - | The `.sln` file to analyze. |
+| `--output <path>` | `-o` | yes | - | Exact path of the generated `.md`. Missing parent directories are created. |
+| `--session-db <path>` | | no | - | An existing SQLite session database. When its stored fingerprint matches the solution, the stored analysis is reused and the Roslyn run is skipped. |
+| `--emit-session-db <path>` | | no | - | Path at which the session database is written after the run. Created if it does not exist. |
 | `--force` | | no | off | Bypass the snapshot mode and always run a full Roslyn analysis. |
 | `--layer-profile <path>` | | no | role-based heuristic | Path to a layer-mapping profile (JSON). |
 | `--run-template <id>` | | no | full default render | Id of a run template (built-in or your own). |
@@ -146,7 +146,7 @@ Path, format and other inputs listed below are checked before the expensive work
 ### The run itself
 
 1. **MSBuild bootstrap.** If MSBuild cannot be registered, the run ends with exit `5`.
-2. **Snapshot decision**, only when `--session-db` points to an existing file. The file-set fingerprint of the solution is compared against the fingerprint stored with the latest snapshot. The fingerprint covers the solution's `.cs`, `.csproj` and `.xaml` files, ignoring `bin`, `obj`, `.vs`, `node_modules`, `packages` and `TestResults`. A snapshot is reused only when it carries an analysis, was produced by a compatible version of the analysis engine (payload schema and analyzer identity), and the source files have not changed. Because the fingerprint uses file timestamps, a difference is first checked against a content fingerprint — so a branch switch or a save without a content change does not force a re-analysis. On a hit the run prints `Snapshot hit (file-set hash <hash>); skipping Roslyn analysis.` and skips Roslyn. On a miss it says why, for example:
+2. **Snapshot decision**, only when `--session-db` points to an existing file. The file-set fingerprint of the solution is compared against the fingerprint stored with the latest snapshot. The fingerprint covers the solution's `.cs`, `.csproj` and `.xaml` files, ignoring `bin`, `obj`, `.vs`, `node_modules`, `packages` and `TestResults`. A snapshot is reused only when it carries an analysis, was produced by a compatible version of the analysis engine (payload schema and analyzer identity), and the source files have not changed. Because the fingerprint uses file timestamps, a difference is first checked against a content fingerprint - so a branch switch or a save without a content change does not force a re-analysis. On a hit the run prints `Snapshot hit (file-set hash <hash>); skipping Roslyn analysis.` and skips Roslyn. On a miss it says why, for example:
    - `Force flag set; running full Roslyn analysis.`
    - `No usable snapshot in session DB; running full Roslyn analysis.`
    - `Snapshot payload-schema mismatch; running full Roslyn analysis.`
@@ -155,7 +155,7 @@ Path, format and other inputs listed below are checked before the expensive work
 3. **Analysis.** Without a snapshot hit, Roslyn analyzes the solution. The layer profile precedence is: explicit `--layer-profile` > the default layer profile configured in the database > the `.aicb.json` file next to the solution > the role-based heuristic. Namespace exclusions from the session database or from the `.aicb.json` file are applied and announced.
 4. **Render and write.** The document is written to the exact `--output` path. The output-format precedence is: explicit `--format` > the format configured on the run template > `yaml` on the template-less path. `yaml` is the product default; both notations carry the same content, and the file name stays `.md`.
 5. **Emit.** With `--emit-session-db`, the analysis is stored as a snapshot carrying the file-set fingerprint, the payload-schema stamp, the code-metric roll-up and the estimated technical debt with its rating. If the emitted database is the one that was read and the run reused its snapshot, nothing is written.
-6. **Quality gate**, only with `--fail-on`, and after the Markdown has been written — a failing gate still leaves you the document.
+6. **Quality gate**, only with `--fail-on`, and after the Markdown has been written - a failing gate still leaves you the document.
 
 ### What the output tells you about itself
 
@@ -181,7 +181,7 @@ comparison   := metric operator number [unit]
 operator     := > | >= | < | <= | = | == | !=
 ```
 
-Metric names and operators are case-insensitive. `AND` binds stronger than `OR`, and there are **no parentheses** — an expression such as `(critical>0 OR warning>10) AND debt>60min` is rejected as a user error (exit `1`). The number is an integer; an optional unit suffix such as `min` is accepted and ignored, so `debt>120min` means 120 minutes.
+Metric names and operators are case-insensitive. `AND` binds stronger than `OR`, and there are **no parentheses** - an expression such as `(critical>0 OR warning>10) AND debt>60min` is rejected as a user error (exit `1`). The number is an integer; an optional unit suffix such as `min` is accepted and ignored, so `debt>120min` means 120 minutes.
 
 | Metric | Meaning |
 |---|---|
@@ -219,12 +219,12 @@ Example:
 aicb export --session-db C:/out/app.acb -o C:/out/app-context.md --solution App
 ```
 
-A session database — in particular the shared default configuration database that the desktop application fills for every loaded solution — can carry more than one analyzed solution:
+A session database - in particular the shared default configuration database that the desktop application fills for every loaded solution - can carry more than one analyzed solution:
 
 - Exactly one analyzed solution → it is rendered.
 - None → user error (exit `1`) with a pointer to create one first (`aicb analyze ... --emit-session-db <db>`).
 - More than one **without** `--solution` → user error with a listing, never a silent guess.
-- `--solution` prefers exact matches: the full canonical path, the solution name (file name without `.sln`), or the file name, all case-insensitive. Only when there is no exact match does it fall back to a case-insensitive substring match on the path — so `App` matches `App` and not also `AppCore`. A selector that matches several entries is an error with the matches listed.
+- `--solution` prefers exact matches: the full canonical path, the solution name (file name without `.sln`), or the file name, all case-insensitive. Only when there is no exact match does it fall back to a case-insensitive substring match on the path - so `App` matches `App` and not also `AppCore`. A selector that matches several entries is an error with the matches listed.
 
 On success it prints:
 
@@ -236,13 +236,13 @@ Wrote context MD: C:\out\app-context.md
 
 ## 9.6 `aicb import`
 
-Imports a constellation JSON — a bundle of templates, presets, profiles and app-settings keys — into a target SQLite database. Three phases: read, preview, apply. No Roslyn and no MSBuild.
+Imports a constellation JSON - a bundle of templates, presets, profiles and app-settings keys - into a target SQLite database. Three phases: read, preview, apply. No Roslyn and no MSBuild.
 
 | Option | Alias | Required | Default | Meaning |
 |---|---|---|---|---|
-| `--file <path>` | `-f` | yes | — | The constellation JSON file to import. |
-| `--db-path <path>` | | yes | — | The target database: the master-entity/configuration database, explicitly **not** a session snapshot database. Created if it does not exist. |
-| `--mode <SkipExisting\|Replace>` | | no | `SkipExisting` | Behaviour on id conflicts. `SkipExisting` leaves existing entries untouched; `Replace` overwrites them. Parsed case-insensitively; an empty value counts as `SkipExisting`. |
+| `--file <path>` | `-f` | yes | - | The constellation JSON file to import. |
+| `--db-path <path>` | | yes | - | The target database: the master-entity/configuration database, explicitly **not** a session snapshot database. Created if it does not exist. |
+| `--mode <SkipExisting\|Replace>` | | no | `SkipExisting` | Behavior on id conflicts. `SkipExisting` leaves existing entries untouched; `Replace` overwrites them. Parsed case-insensitively; an empty value counts as `SkipExisting`. |
 | `--preview` | | no | off | Dry run: show the preview and write nothing. |
 
 Example:
@@ -251,7 +251,7 @@ Example:
 aicb import -f C:/share/team-constellation.json --db-path C:/out/app.acb --mode Replace --preview
 ```
 
-Behaviour:
+Behavior:
 
 - The per-section preview is printed **always**, with or without `--preview`:
   ```
@@ -269,7 +269,7 @@ Lists built-in and custom master data. This verb is read-only; there is no verb 
 
 | Parameter | Required | Meaning |
 |---|---|---|
-| `kind` (positional) | yes | The master-entity type to list — see the table below. |
+| `kind` (positional) | yes | The master-entity type to list - see the table below. |
 | `--json` | no | JSON instead of the table. |
 | `--db-path <path>` | no | Source database. Without it, only the built-ins are listed. |
 
@@ -299,17 +299,17 @@ aicb list run-templates --db-path C:/out/app.acb
 aicb list mcp-profiles --json
 ```
 
-Behaviour:
+Behavior:
 
 - Without `--db-path`, a throwaway database is created in a temporary directory, migrated and deleted afterwards, so only the built-in entries appear. The table header then says `(built-ins only - pass --db-path to include custom)`.
 - `--db-path` must point to an existing file. Unlike `import --db-path`, `list` does not create it.
-- The table is one line per entry: two spaces, the id, `  -  `, the name, and the flags in brackets — `built-in` or `custom`, extended by `, overridden` and `, hidden` where they apply. Rows are sorted by id (case-insensitive) so the output is stable and column-aligned. A closing line states the counts, for example `14 entries (9 built-in, 5 custom).`
+- The table is one line per entry: two spaces, the id, `  -  `, the name, and the flags in brackets - `built-in` or `custom`, extended by `, overridden` and `, hidden` where they apply. Rows are sorted by id (case-insensitive) so the output is stable and column-aligned. A closing line states the counts, for example `14 entries (9 built-in, 5 custom).`
 - `--json` prints a JSON array of objects with the keys `Id`, `Name`, `IsBuiltIn`, `IsOverridden` and `IsHidden`.
 - An unknown kind is exit `1` and prints the full list of valid kinds.
 
 ## 9.8 `aicb mcp`
 
-Starts the MCP server: Model Context Protocol over stdio JSON-RPC, for Claude Code, Cursor, Cline and other MCP clients. The server concepts — profiles, tool pools, sessions and the agent artefacts — are described in the MCP manual; this section covers the command's options and runtime behaviour.
+Starts the MCP server: Model Context Protocol over stdio JSON-RPC, for Claude Code, Cursor, Cline and other MCP clients. The server concepts - profiles, tool pools, sessions and the agent artifacts - are described in the MCP manual; this section covers the command's options and runtime behavior.
 
 | Option | Required | Default | Meaning |
 |---|---|---|---|
@@ -322,19 +322,19 @@ Example:
 aicb mcp --db-path "%APPDATA%\AIContextBuilder\user-data\aicb.acb" --mcp-profile mcp-profile/full
 ```
 
-Behaviour:
+Behavior:
 
 - **Standard output is reserved for the protocol.** Everything this verb prints goes to standard error.
-- Without `--db-path`, the standard configuration database — the same one the desktop application uses, `%APPDATA%\AIContextBuilder\user-data\aicb.acb` — is resolved and, on first start, created and migrated. Which database is in effect is always announced on standard error, never silently. If that resolution fails, the server warns and starts without a profile.
+- Without `--db-path`, the standard configuration database - the same one the desktop application uses, `%APPDATA%\AIContextBuilder\user-data\aicb.acb` - is resolved and, on first start, created and migrated. Which database is in effect is always announced on standard error, never silently. If that resolution fails, the server warns and starts without a profile.
 - An explicitly given `--db-path` that does not exist is a **warning**, not a silent creation: a typo must not produce a new database. An automatically resolved standard database *is* created on first start.
 - A failed schema migration is a warning, and the server starts without a profile.
-- `--mcp-profile` is the one rule of this verb that does not fail open. An unknown or hidden profile id, a missing configuration database or file, or a failed migration makes the server **refuse to start** with exit `1`, listing the valid ids on standard error. Serving a different profile than the operator asked for — silently, over stdio, where nobody reads a warning — is the failure this prevents. The pin is process-local and writes nothing back: a second server or the desktop application keeps its own active profile.
+- `--mcp-profile` is the one rule of this verb that does not fail open. An unknown or hidden profile id, a missing configuration database or file, or a failed migration makes the server **refuse to start** with exit `1`, listing the valid ids on standard error. Serving a different profile than the operator asked for - silently, over stdio, where nobody reads a warning - is the failure this prevents. The pin is process-local and writes nothing back: a second server or the desktop application keeps its own active profile.
 - On a successful profile resolution, the server reports on standard error which profile it serves, whether it was pinned, the effective tool set and whether a skill is attached.
 - A failure to register MSBuild is not fatal: a warning is printed, `analyze_solution` and `refresh_session` will fail, and the remaining tools stay usable.
 - The server watches two kinds of drift: a configuration drift (a profile edited in the desktop application while this server runs is detected and reported on `server_info`; restart or reconnect the server to load it) and a version drift (this binary compared against the database it read, reported on `server_info`).
 - Every MCP tool call is recorded in the `tool_calls` table of the configuration database, fail-open. A server started without a database records nothing.
 - The server has **no** `--solution` option: the solution comes with each tool call, and a `.sln` path passed to a session-taking tool initializes the session on first use.
-- One binary serves both current MCP protocol revisions over stdio: `2026-07-28` via `server/discover` (stateless) and `2025-11-25` via the `initialize` handshake. Only stdio is supported — there is no HTTP or SSE transport, so session headers, resumability and OAuth of the newer revision do not apply here.
+- One binary serves both current MCP protocol revisions over stdio: `2026-07-28` via `server/discover` (stateless) and `2025-11-25` via the `initialize` handshake. Only stdio is supported - there is no HTTP or SSE transport, so session headers, resumability and OAuth of the newer revision do not apply here.
 
 ## 9.9 `aicb call`
 
@@ -356,12 +356,12 @@ aicb call find_by_side_effects --sln C:/repo/App.sln --arg effect=io --arg inclu
 aicb call batch --sln C:/repo/App.sln --arg queries='[{"tool":"find_usages","args":{"symbol":"Foo"}}]'
 ```
 
-Behaviour:
+Behavior:
 
 - Each value needs its own `--arg`; a single `--arg` token carries exactly one `name=value` pair. A token without `=`, or with an empty name, is a user error (exit `1`). Repeated names: the last one wins.
 - Values are converted to the parameter type: `bool`, `int`, `long`, `double`, enums (case-insensitive) and string arrays. A string array is written as a JSON array or as a comma-separated list. Any other, complex argument is passed as JSON.
 - Numbers are read with the invariant culture: `.` is the decimal separator, not `,`. A value such as `0,6` is rejected with a message that names the cause and the fix.
-- Dispatch is generic over the registered MCP tools, so a tool that was just added is callable as soon as it ships, and **every** tool is reachable — including tools outside the default profile's pool and tools that write, such as `install_agent_hooks`. This is the one place where the profile's tool selection does not restrict you; use it deliberately.
+- Dispatch is generic over the registered MCP tools, so a tool that was just added is callable as soon as it ships, and **every** tool is reachable - including tools outside the default profile's pool and tools that write, such as `install_agent_hooks`. This is the one place where the profile's tool selection does not restrict you; use it deliberately.
 - `--db-path` applies the same configuration as `aicb mcp --db-path`, so database-defaulting tools and the self-init pick up the per-solution configuration of the desktop application.
 - Standard output carries the tool result, so it can be piped or redirected; diagnostics go to standard error.
 - An unknown tool or a missing or invalid argument is reported as the tool's own message, exit `1`. Any other unexpected failure is exit `2`.
@@ -388,11 +388,11 @@ export AICB_MCP_TOOLS=all
 | `AICB_MCP_STALENESS_WINDOW_MS` | positive integer (milliseconds) | 5000 (5 seconds) | Throttle window of the staleness check, so a burst of tool calls does not repeat the directory walk for each one. |
 | `AICB_MCP_LOAD_WAIT_MS` | positive integer (milliseconds) | 45000 (45 seconds) | How long a tool call waits at the solution registry's load gate before it is told what is holding it up, instead of blocking. Only the MCP server applies this bound; the desktop application and the other CLI verbs wait without one. |
 | `APPDATA` | a directory path | the platform's application-data folder | The root of `%APPDATA%\AIContextBuilder`, from which every settings and database path is derived. An explicitly set value wins on all platforms. On Linux and macOS the same expansion resolves `%VAR%` tokens and converts `\` to `/`. |
-| `DOTNET_gcServer` | `0` disables the server garbage collector | server GC is on | The product's builds enable the server garbage collector, and the packed tool carries that setting with it. Setting this variable to `0` turns it off for one process — the environment variable beats the build setting. Use it on a memory-constrained machine. |
+| `DOTNET_gcServer` | `0` disables the server garbage collector | server GC is on | The product's builds enable the server garbage collector, and the packed tool carries that setting with it. Setting this variable to `0` turns it off for one process - the environment variable beats the build setting. Use it on a memory-constrained machine. |
 
 ### `aicb.mcp.json`
 
-`aicb.mcp.json` is the file-based twin of the two MCP environment variables. It lives in the user configuration directory — `<ApplicationData>/AIContextBuilder/aicb.mcp.json`, on Windows `%APPDATA%\AIContextBuilder\aicb.mcp.json` — and is intended for headless operation without the desktop application.
+`aicb.mcp.json` is the file-based twin of the two MCP environment variables. It lives in the user configuration directory - `<ApplicationData>/AIContextBuilder/aicb.mcp.json`, on Windows `%APPDATA%\AIContextBuilder\aicb.mcp.json` - and is intended for headless operation without the desktop application.
 
 It is **hand-written and only read**; the server never writes it. Do not confuse it with the `.mcp.json` in your project directory, which `aicb init` writes.
 
@@ -432,7 +432,7 @@ aicb analyze -s C:/repo/App.sln -o C:/out/app-context.md --emit-session-db C:/ou
 aicb analyze -s C:/repo/App.sln -o C:/out/app-context.md --session-db C:/out/app.acb
 ```
 
-A run that hits the snapshot prints `Snapshot hit (file-set hash <hash>); skipping Roslyn analysis.` and skips the expensive step. Pass `--force` when you want to re-analyze even though the snapshot matches — for example after passing a different `--layer-profile`, which is ignored on a snapshot hit.
+A run that hits the snapshot prints `Snapshot hit (file-set hash <hash>); skipping Roslyn analysis.` and skips the expensive step. Pass `--force` when you want to re-analyze even though the snapshot matches - for example after passing a different `--layer-profile`, which is ignored on a snapshot hit.
 
 ### Re-render without a new analysis
 
@@ -451,7 +451,7 @@ The shared database of the desktop application can contain several analyzed solu
 aicb export --session-db "%APPDATA%\AIContextBuilder\user-data\aicb.acb" --solution App -o app.md
 ```
 
-Without `--solution`, a database with more than one analyzed solution is a user error with a listing — the tool never guesses.
+Without `--solution`, a database with more than one analyzed solution is a user error with a listing - the tool never guesses.
 
 ### A quality gate in CI
 
@@ -498,7 +498,7 @@ The same gate as a GitHub Actions step:
     path: artifacts/context.md
 ```
 
-`if: always()` is what makes the second step run even when the gate failed — the document exists in both cases.
+`if: always()` is what makes the second step run even when the gate failed - the document exists in both cases.
 
 ### Analyze several solutions in a loop
 

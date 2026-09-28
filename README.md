@@ -4,7 +4,7 @@
 
 [![NuGet Version](https://img.shields.io/nuget/v/AIContextBuilder)](https://www.nuget.org/packages/AIContextBuilder)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/AIContextBuilder)](https://www.nuget.org/packages/AIContextBuilder)
-[![MCP Registry](https://img.shields.io/badge/MCP%20Registry-listed-1584ad)](https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.gregordadera%2Faicb)
+[![MCP Registry](https://img.shields.io/badge/MCP%20Registry-listed-1584ad)](https://registry.modelcontextprotocol.io/?q=io.github.gregordadera%2Faicb)
 [![License](https://img.shields.io/badge/license-custom%20EULA-lightgrey)](https://github.com/gregordadera/AICB/blob/main/EULA.md)
 [![M8ven Verified](https://img.shields.io/badge/M8ven%20Verified-publisher%20verified-4c1)](https://m8ven.ai/mcp/gregordadera-aicb-zb5d9e)
 
@@ -16,8 +16,8 @@ an MCP server and CLI; a Windows desktop app adds visual context selection,
 analysis and editing.
 
 > The software is closed source. This public repository contains its
-> documentation, licence and releases. It is free for individuals, education and
-> organizations below the [licence thresholds](#licence-at-a-glance).
+> documentation, license and releases. It is free for individuals, education and
+> organizations below the [license thresholds](#license-at-a-glance).
 
 ## See it answer a code question
 
@@ -64,7 +64,7 @@ dump:
 |---|---|---|
 | Read one symbol in context | `get_context` | The symbol plus its direct dependencies and callees |
 | Explore a named symbol with selected surroundings | `explain_symbol` | Callers, callees, implementations, tests or other requested dimensions |
-| Pack context for a natural-language goal | `pack_for_task` | Goal-named symbols and their semantic neighbourhood |
+| Pack context for a natural-language goal | `pack_for_task` | Goal-named symbols and their semantic neighborhood |
 | Prepare to edit | `prepare_task` | The goal-focused context plus covering tests and likely siblings such as a factory or validator |
 | Check the response cost first | `measure` | The exact token count of one or more planned tool answers, without returning their large payloads |
 
@@ -149,7 +149,9 @@ These states serve different purposes and should not be treated as interchangeab
 | Saved snapshot | Named baseline used by `compare_with_previous` and public-contract comparison | A comparison baseline, not a live workspace |
 | `<Solution>.aicb.json` | Git-trackable solution configuration | Contains rules and choices, never analysis results, sessions or credentials |
 
-`recall_codebase` reports whether the persisted model still matches the source,
+`remember_codebase`, `recall_codebase` and `refresh_remembered` are opt-in tools: no
+MCP profile exposes them, so start the server with `AICB_MCP_TOOLS` naming them (or
+`AICB_MCP_TOOLS=all`). `recall_codebase` reports whether the persisted model still matches the source,
 payload schema and analyzer identity. It deliberately returns the recalled model
 even when it is stale, with metadata that tells the agent when a live re-analysis
 is necessary. See [sessions, recall and staleness](https://github.com/gregordadera/AICB/blob/main/docs/manual/mcp/03-sessions-and-staleness.md).
@@ -222,6 +224,12 @@ are measured, and where the published scale benchmark stands.
 | Where are concurrency, resource-lifetime or event-subscription risks? | `find_by_concurrency_risk`, `find_by_resource_leak`, `find_by_event_subscription` |
 | Where did repeated structures, conventions or documentation drift apart? | `find_structural_twins`, `check_pattern_drift`, `check_doc_drift` |
 
+The default profile exposes every tool in this table except `semantic_diff`,
+`diff_review`, `find_by_concurrency_risk`, `find_by_resource_leak`,
+`find_structural_twins`, `check_pattern_drift` and `check_doc_drift`, which need the
+Full Select profile, and `compare_public_api`, which is opt-in (see
+[Tool sets and Agent Skills](#tool-sets-and-agent-skills)).
+
 These tools form a broader capability map rather than a flat search catalog:
 
 | Capability | Examples |
@@ -241,8 +249,6 @@ into an actionable review queue:
 AICB is most useful for non-trivial C#/.NET solutions and semantic questions that
 plain text search cannot answer reliably. It analyzes C#; selected XAML/AXAML
 relationships supplement that graph. Other programming languages are out of scope.
-The first question opens and analyzes the solution, which can take seconds to
-minutes; later questions reuse the warm session.
 
 Multi-targeted projects are loaded once per target framework by default, while
 query surfaces generally deduplicate them to one logical project. Setting
@@ -282,9 +288,9 @@ one bounded response. Use `measure` first when the likely response size matters.
 |---|---|
 | Version the portable solution rules | Commit `<Solution>.aicb.json` next to the solution. It can carry layer rules, namespace exclusions, test definitions, suppressions, auto-init flags and analysis scope. Each surface consumes only the axes documented for it; the sidecar contains configuration, not analysis results, sessions, snapshots or credentials. Use `solution_config_status` → `init_solution_config` → `apply_solution_config`; `aicb init` does not create this file. |
 | Enforce a quality threshold in CI | Run `aicb analyze -s App.sln -o context.md --fail-on "critical>0 OR debt>120min"`. A failed gate returns exit code `6` and still writes the context document for diagnosis. |
-| Compare an in-place change with a baseline | Call `save_session` before the edit, then `refresh_session` and `compare_with_previous`; use `diff_public_contract` when the public API is the contract that matters. |
+| Compare an in-place change with a baseline | Call `save_session` before the edit, then `refresh_session` and `compare_with_previous`; use `diff_public_contract` (Full Select profile) when the public API is the contract that matters. |
 | Review two live analyzed states | `semantic_diff` reports structural changes. `diff_review` adds blast radius, tests and newly introduced findings with a policy verdict. These two-session tools require the Full Select profile. |
-| Reuse an analyzed model across processes | `remember_codebase` persists it, `recall_codebase` loads it without Roslyn, and `refresh_remembered` restores a full live analysis when required. |
+| Reuse an analyzed model across processes | `remember_codebase` persists it, `recall_codebase` loads it without Roslyn, and `refresh_remembered` restores a full live analysis when required. These three are opt-in tools (`AICB_MCP_TOOLS`). |
 | Curate context visually | The Windows app adds a solution tree, manual context selection, detail and token controls, AI-Builder-MD preview/export, snapshots, Insights, LLM runs and a source editor. |
 
 Configuration precedence is axis- and surface-specific. For example, headless layer
@@ -304,7 +310,7 @@ The MCP server is currently AICB's most complete and operationally mature
 integration surface. Its 82 registered tools cover semantic navigation, change
 impact, dependency injection, test discovery, architecture, quality, context
 packing, review and session management. Profiles expose a curated 54-tool default
-or a 72-tool full analysis set, while sessions, staleness signals and bounded
+or the 72-tool Full Select set, while sessions, staleness signals and bounded
 responses make the surface practical for coding agents. These numbers describe
 the available product surface; they are not a published benchmark of agent outcome
 quality.
@@ -350,7 +356,7 @@ If a sidecar already covers an axis, the GUI offers to restore it without a mode
 call. Otherwise, with a usable default model profile, one LLM request proposes layer
 rules and exclusions from declared and referenced namespace lists; test detection is
 derived locally from the analyzed projects and test attributes. The confirmation
-dialog decides whether the proposal is applied—the LLM request has already happened
+dialog decides whether the proposal is applied - the LLM request has already happened
 at that point. A missing model profile, no detected tests, or declining the proposal
 can leave an axis unconfigured. Existing choices are never overwritten.
 
@@ -359,7 +365,7 @@ It does **not** create `<SolutionName>.aicb.json` automatically. Use `Workspace 
 Profiles → Export Config` to write that portable sidecar, then commit it. A later GUI
 can restore the supported axes from it without an LLM call; headless consumers apply
 the per-axis rules described in the configuration matrix. `Initialize Now` performs
-only an immediate sidecar restore—it does not call a model or analyze the solution.
+only an immediate sidecar restore - it does not call a model or analyze the solution.
 
 An agent can guide the same setup explicitly:
 
@@ -425,7 +431,9 @@ dotnet tool install -g AIContextBuilder
 aicb --version
 ```
 
-Update it later with `dotnet tool update -g AIContextBuilder`.
+Update it later with `dotnet tool update -g AIContextBuilder`. For a container, the
+repository's [`Dockerfile`](https://github.com/gregordadera/AICB/blob/main/Dockerfile)
+installs the same .NET tool and serves MCP over stdio.
 
 The Windows downloads are self-contained, but analyzing a solution still needs
 MSBuild from a .NET SDK or Visual Studio. The installer is not code-signed yet, so
@@ -439,13 +447,12 @@ Run this from the project you want the agent to work on:
 aicb init
 ```
 
-It writes the MCP configuration for the client it detects (`.mcp.json` for Claude
-Code — other clients need the manual step named below) and the
-`aicb-csharp-context` agent skill without
-overwriting existing files. If it detects Claude Code, Codex or OpenCode project
+It writes `.mcp.json`, the MCP configuration Claude Code reads (other clients need
+the manual step named below), and the `aicb-csharp-context` agent skill under
+`.claude/skills/`, without overwriting existing files. If it detects Claude Code, Codex or OpenCode project
 configuration, it also installs a **symbol guard** that blocks C# symbol searches
 by grep and redirects the agent to the semantic tool. This intentionally changes
-agent behaviour. Opt out with:
+agent behavior. Opt out with:
 
 ```sh
 aicb init --hooks none
@@ -483,15 +490,15 @@ for setup, first questions and troubleshooting.
 | Set | Size | Purpose |
 |---|---:|---|
 | Default MCP profile | 54 tools | Curated semantic and structural tools for normal agent work |
-| Full analysis profile | 72 tools | Default set plus the measured long tail |
-| Complete server surface | 82 tools | Full profile plus opt-in infrastructure tools |
+| Full Select profile | 72 tools | Default set plus the measured long tail |
+| Complete server surface | 82 tools | Full Select plus the opt-in session-memory, database and API-comparison tools |
 
-Start the full analysis profile with
+Start the Full Select profile with
 `aicb mcp --mcp-profile mcp-profile/full`. Set `AICB_MCP_TOOLS=all` to add
-the infrastructure tools. The generated [tool reference](https://github.com/gregordadera/AICB/blob/main/docs/TOOLS.md) documents
+the opt-in tools as well. The generated [tool reference](https://github.com/gregordadera/AICB/blob/main/docs/TOOLS.md) documents
 the default set; the [MCP server manual](https://github.com/gregordadera/AICB/blob/main/docs/manual/mcp/README.md)
 documents all 82 tools and their parameters, and alongside them sessions and
-staleness, profiles, pools and facets, and what `aicb init` writes — twelve
+staleness, profiles, pools and facets, and what `aicb init` writes - twelve
 chapters in Markdown, readable in the browser and by an agent, and also
 published as a [PDF](https://github.com/gregordadera/AICB/blob/main/docs/manual/mcp/AICB-MCP-Server.pdf).
 
@@ -501,7 +508,7 @@ the task facets you want, and select individual core and facet tools. Every core
 tool can be removed except the locked diagnostic `server_info`, so even a very
 small task-specific `tools/list` is possible. The server's fixed lead-in is
 standing agent guidance, not another selectable tool group. For headless setup,
-`AICB_MCP_TOOLS=methods:<tool>,<tool>,…` exposes exactly the named functions;
+`AICB_MCP_TOOLS=methods:<tool>,<tool>,...` exposes exactly the named functions;
 class lists, `lean` and `all` are also supported. Profile and environment changes
 take effect at the next server start. `list_skills` shows the resulting in-pool and
 out-of-pool tools. See [profiles, pools and facets](https://github.com/gregordadera/AICB/blob/main/docs/manual/mcp/04-profiles-pools-and-facets.md).
@@ -562,7 +569,7 @@ Run `aicb <command> --help` for options.
 
 - The CLI and MCP server have no outbound network capability and do not modify
   the source code they analyze.
-- There is no **outbound** telemetry, analytics, update check, account or licence
+- There is no **outbound** telemetry, analytics, update check, account or license
   server. The MCP server records its tool calls locally for `usage_report` and the
   desktop app's **MCP Usage** page; that log never leaves the machine.
 - The desktop app can contact only an LLM endpoint you configure: for a manual run,
@@ -570,15 +577,16 @@ Run `aicb <command> --help` for options.
   Exclude Namespaces when those auto-init flags are armed. The endpoint may be a
   local model. The Details tab is also a real editor and saves a file only when you
   explicitly use Save.
-- Opening a solution runs its MSBuild logic to resolve references. Analyze only
-  solutions you trust. AICB does not run third-party Roslyn analyzers or source
-  generators.
+- Opening a solution runs its MSBuild logic to resolve references, and building its
+  compilation runs the source generators its projects reference, as in an IDE or
+  `dotnet build`. Analyze only solutions you trust. AICB does not run third-party
+  Roslyn analyzers.
 
 A small number of explicitly named tools can write configuration or an export;
 their tool descriptions state this. The complete threat model and private
 reporting route are in [`SECURITY.md`](https://github.com/gregordadera/AICB/blob/main/SECURITY.md).
 
-## Licence at a glance
+## License at a glance
 
 Use is free for:
 
@@ -589,15 +597,15 @@ Use is free for:
   EUR 10 million annual turnover, 21 developers.
 
 The thresholds apply to your organization, not to your clients. After first
-reaching any one threshold, you have 90 days to agree a commercial licence; use
+reaching any one threshold, you have 90 days to agree a commercial license; use
 remains free during that period. The 90 days are contractual text only: AICB
-starts no licence timer, sends no threshold or deadline data, blocks no feature
-and does not technically stop working when the period ends. Commercial licences
+starts no license timer, sends no threshold or deadline data, blocks no feature
+and does not technically stop working when the period ends. Commercial licenses
 start at EUR 25 per licensed developer per month; the exact price and scope depend
 on the number of users, the requested support level and any agreed priority for
 improvement requests. A commercial agreement can include support, defined response
 or maintenance commitments, prioritized consideration or
-implementation of improvements—for example, making a generally useful analyzer
+implementation of improvements - for example, making a generally useful analyzer
 handle patterns found in the customer's code more accurately. Such work improves
 the general AICB product; it does not create a customer-specific fork or specialize
 AICB to one codebase. Customer code is never collected or used for improvement
@@ -617,11 +625,11 @@ AICB is under active development: the
 release, and published releases appear on the
 [Releases](https://github.com/gregordadera/AICB/releases) page.
 
-Support follows the licence:
+Support follows the license:
 
 | | Free | Commercial agreement |
 | --- | --- | --- |
-| Who | Everyone below the [thresholds](#licence-at-a-glance) | Organizations at or above a threshold, or anyone who wants stronger terms |
+| Who | Everyone below the [thresholds](#license-at-a-glance) | Organizations at or above a threshold, or anyone who wants stronger terms |
 | Channel | [GitHub Discussions](https://github.com/gregordadera/AICB/discussions), [Issues](https://github.com/gregordadera/AICB/issues) | Direct contact plus the public channels |
 | Response target | Best effort | ≤ 2 business days |
 | Security fixes | Shipped through public releases | Fix target ≤ 10 business days for confirmed vulnerabilities |
@@ -629,27 +637,26 @@ Support follows the licence:
 | Improvement requests | Community-driven | Prioritized consideration; agreed priorities are written into the contract |
 | Source access | None | Code review under NDA can be agreed |
 
-Commercial licences **start at EUR 25 per licensed developer per month**. The
-targets in this table are typical values an individual agreement can include; they
-bind only when written into the agreement, and payment alone creates no unstated
-SLA. Contact `aicb@dadera.de`.
-
-## Documentation and support
-
-- [Getting started](https://github.com/gregordadera/AICB/blob/main/docs/GETTING-STARTED.md) — install, connect and ask the first question
-- [Tool reference](https://github.com/gregordadera/AICB/blob/main/docs/TOOLS.md) — generated reference for the default MCP profile
-- [Architecture, limits and evidence](https://github.com/gregordadera/AICB/blob/main/docs/ARCHITECTURE.md) — in-memory model, refresh, context selection, static-analysis boundaries and benchmark status
-- **[MCP server manual](https://github.com/gregordadera/AICB/blob/main/docs/manual/mcp/README.md)** — the full reference in twelve Markdown chapters: connecting a client, `aicb init`, sessions and staleness, profiles and facets, every tool, troubleshooting
-- **[General reference manual](https://github.com/gregordadera/AICB/blob/main/docs/manual/general/README.md)** — the full reference in twelve Markdown chapters, with the printable PDF in the same folder
-- **[Desktop app reference manual](https://github.com/gregordadera/AICB/blob/main/docs/manual/desktop-app/README.md)** — the full reference in eleven Markdown chapters, with the printable PDF in the same folder
-- [Changelog](https://github.com/gregordadera/AICB/blob/main/CHANGELOG.md) and [latest release](https://github.com/gregordadera/AICB/releases/latest)
+The targets in this table are typical values an individual agreement can include;
+they bind only when written into the agreement, and payment alone creates no
+unstated SLA. Prices are in [License at a glance](#license-at-a-glance). Contact
+`aicb@dadera.de`.
 
 Questions and feature requests are welcome in
 [GitHub Discussions](https://github.com/gregordadera/AICB/discussions). Report bugs
-through [GitHub Issues](https://github.com/gregordadera/AICB/issues); if GitHub does
-not offer a **New issue** button, use Discussions. Include `aicb --version` and,
-for MCP problems, the output of `server_info`. Report security issues privately as
-described in [`SECURITY.md`](https://github.com/gregordadera/AICB/blob/main/SECURITY.md).
+through [GitHub Issues](https://github.com/gregordadera/AICB/issues) and include
+`aicb --version` and, for MCP problems, the output of `server_info`. Report security
+issues privately as described in [`SECURITY.md`](https://github.com/gregordadera/AICB/blob/main/SECURITY.md).
+
+## Documentation
+
+- [Getting started](https://github.com/gregordadera/AICB/blob/main/docs/GETTING-STARTED.md) - install, connect and ask the first question
+- [Tool reference](https://github.com/gregordadera/AICB/blob/main/docs/TOOLS.md) - generated reference for the default MCP profile
+- [Architecture, limits and evidence](https://github.com/gregordadera/AICB/blob/main/docs/ARCHITECTURE.md) - in-memory model, refresh, context selection, static-analysis boundaries and benchmark status
+- **[MCP server manual](https://github.com/gregordadera/AICB/blob/main/docs/manual/mcp/README.md)** - the full reference in twelve Markdown chapters: connecting a client, `aicb init`, sessions and staleness, profiles and facets, every tool, troubleshooting
+- **[General reference manual](https://github.com/gregordadera/AICB/blob/main/docs/manual/general/README.md)** - the full reference in twelve Markdown chapters, with the printable PDF in the same folder
+- **[Desktop app reference manual](https://github.com/gregordadera/AICB/blob/main/docs/manual/desktop-app/README.md)** - the full reference in eleven Markdown chapters, with the printable PDF in the same folder
+- [Changelog](https://github.com/gregordadera/AICB/blob/main/CHANGELOG.md) and [latest release](https://github.com/gregordadera/AICB/releases/latest)
 
 "AIContextBuilder" and "AIContextBuilder for .NET" are product names used by
 Gregor Dadera; no registration is claimed.

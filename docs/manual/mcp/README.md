@@ -1,4 +1,4 @@
-# AICB – MCP Server
+# AICB - MCP Server
 
 The complete reference, one file per chapter. Describes AICB V0.5.464.43.
 
@@ -56,7 +56,7 @@ The same text as one printable document: [AICB-MCP-Server.pdf](AICB-MCP-Server.p
     - [5.5 Parameter aliases](05-calling-tools-conventions-batch-and-aicb-call.md#55-parameter-aliases)
     - [5.6 Silently dropped arguments](05-calling-tools-conventions-batch-and-aicb-call.md#56-silently-dropped-arguments)
     - [5.7 Which tools write](05-calling-tools-conventions-batch-and-aicb-call.md#57-which-tools-write)
-    - [5.8 Recurring conventions across the catalogue](05-calling-tools-conventions-batch-and-aicb-call.md#58-recurring-conventions-across-the-catalogue)
+    - [5.8 Recurring conventions across the catalog](05-calling-tools-conventions-batch-and-aicb-call.md#58-recurring-conventions-across-the-catalog)
 6. [Tool reference: orientation, sessions and symbols](06-tool-reference-orientation-sessions-and-symbols.md)
     - [6.1 About this chapter](06-tool-reference-orientation-sessions-and-symbols.md#61-about-this-chapter)
     - [6.2 Orientation, operating manual and server introspection](06-tool-reference-orientation-sessions-and-symbols.md#62-orientation-operating-manual-and-server-introspection)

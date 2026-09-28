@@ -1,4 +1,4 @@
-[AICB – Desktop Application](README.md) &middot; chapter 7 of 11
+[AICB - Desktop Application](README.md) &middot; chapter 7 of 11
 
 # 7 Runs and language models
 

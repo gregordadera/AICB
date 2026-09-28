@@ -1,10 +1,10 @@
 # Licensing in plain words
 
-This page explains the licence without legal language. The binding text is
+This page explains the license without legal language. The binding text is
 [`EULA.md`](../EULA.md) (German and English); [`LICENSE.txt`](../LICENSE.txt) is the
 short summary. The full versioned EULA and that summary ship with every distribution.
 
-## Free — no strings attached
+## Free - no strings attached
 
 - **You as a person**, for private use, hobby or learning.
 - **Schools, universities and other accredited educational institutions**, for
@@ -24,31 +24,31 @@ agent is not an additional developer for this threshold.
 
 ## Consultants and freelancers
 
-The thresholds measure **your own** organization. Working for a large client — even
-on their premises, even for months — does not change anything. A one-person
+The thresholds measure **your own** organization. Working for a large client - even
+on their premises, even for months - does not change anything. A one-person
 consultancy stays free no matter who it works for.
 
-## When a licence is needed
+## When a license is needed
 
 As soon as your organization reaches **one** of the three thresholds, a **90-day
 contractual transition period** begins. Use stays free during that period; a
-commercial licence is required to continue afterwards. The 90 days are text in the
+commercial license is required to continue afterwards. The 90 days are text in the
 agreement, not a product feature: AICB starts no timer, sends no threshold or
 deadline data, blocks no feature and does not technically stop working when the
-period ends. Terms are agreed individually — write to **aicb@dadera.de**.
+period ends. Terms are agreed individually - write to **aicb@dadera.de**.
 
 ## What a commercial agreement can include
 
-Commercial licences **start at EUR 25 per licensed developer per month**. The exact
+Commercial licenses **start at EUR 25 per licensed developer per month**. The exact
 price depends in particular on:
 
-- the number of users covered by the licence;
+- the number of users covered by the license;
 - the requested support scope and response expectations;
 - any agreed priority or delivery commitment for improvement requests.
 
 Support typically compares like this:
 
-| | Free licence | Commercial agreement |
+| | Free license | Commercial agreement |
 | --- | --- | --- |
 | Support channel | GitHub Discussions and Issues | Direct contact plus the public channels |
 | Response target | Best effort | ≤ 2 business days |
@@ -67,7 +67,7 @@ accurately.
 Customer code is never collected or used for improvement automatically. Examining
 customer code or derived patterns requires material or access the customer
 deliberately provides and a separate agreement on scope, confidentiality and
-retention. Source-code review under NDA is a commercial-licence option that gives
+retention. Source-code review under NDA is a commercial-license option that gives
 the customer audit insight into AICB without releasing the code.
 
 That does not turn AICB into a customer-specific product: accepted improvements are
@@ -77,9 +77,9 @@ times, maintenance period, priorities and promised deliverables are whatever the
 individual written agreement says; payment alone does not silently create an
 unstated SLA or implementation guarantee.
 
-## No technical licence enforcement
+## No technical license enforcement
 
-There is no activation, licence key, licence server, watermarking or phone-home, and
+There is no activation, license key, license server, watermarking or phone-home, and
 there is no outbound licensing telemetry. Nothing in the software checks the
 thresholds or the 90-day period. The MCP server can record tool calls locally for
 `usage_report` and the desktop app's MCP Usage view; that local operational log is
@@ -89,8 +89,8 @@ your responsibility.
 ## Donations are separate
 
 If `aicb` helps you, a [sponsorship](https://github.com/sponsors/gregordadera) is
-welcome. It is a thank-you, not a licence: a donation never replaces a commercial
-licence where one is required, and being below the thresholds never requires a
+welcome. It is a thank-you, not a license: a donation never replaces a commercial
+license where one is required, and being below the thresholds never requires a
 donation.
 
 ## What is not allowed
