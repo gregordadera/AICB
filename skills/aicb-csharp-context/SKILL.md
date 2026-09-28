@@ -123,7 +123,7 @@ calls (direct calls plus `batch` sub-queries).
 | `instantiation_sites` | 2.3 | Blind to container and reflection construction. Pair with `resolve_injection`. |
 | `find_by_side_effects` | 2.0 | Needs a **built and restored** solution. On an unbuilt tree it reports 0 effects - which reads exactly like a clean result. |
 | `coverage_gaps` · `find_binding_usages` | 1.8 · 1.6 | Both answer a narrower question than their name suggests; read the disclosed denominators. |
-| `find_tests_for` | 1.6 | Its strong tier walks **two** hops, so `invokes` can mean second-hand through a helper. |
+| `find_tests_for` | 1.6 | Its strong tier walks **two** hops: a `-via` reason is second-hand, through one helper. For a type, `constructs` counts a test that only builds it - the type is exercised, not every member. |
 | `find_usages` · `impact_of_change` · `find_dead_code` · `refresh_session` · `server_info` | **0.2 - 0.5** | The reliable core. This is where the forced switch earns its keep. |
 
 Two things this table does not say. It is a **rank order, not an error rate**:

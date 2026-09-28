@@ -4,7 +4,14 @@ Versions follow `Major.Minor.Series.Build`. The build number rises by one for ev
 change that lands, so gaps between published versions are normal - not every build is
 released.
 
-## Unreleased
+## 0.5.464.66 (2026-09-28) - SQLite closes CVE-2025-6965, `get_diagnostics` names what it could not compile, `prepare_task` stays within a budget
+
+**Who is affected.** Everyone gets the SQLite security update and the editorial license version 0.6.
+Everything else concerns the MCP server and the `aicb` CLI: `get_diagnostics`, `prepare_task`,
+`find_tests_for`, `review_context`, `instantiation_sites`, `symbol_metrics`, `resolve_injection`,
+`impact_of_change`, `find_dead_code` and `list_insights`. No database change; saved snapshots stay
+valid. The local-function fix below takes effect when a solution is analyzed again. If your client
+caches tool descriptions, reconnect it once - several descriptions changed.
 
 ### Security
 
@@ -13,7 +20,87 @@ released.
   only its own SQL, so the practical exposure was low - but the vulnerable native library shipped in
   the NuGet tool package, the installer and the portable ZIP, where a vulnerability scanner reports
   it. Existing databases open unchanged; no re-analysis is needed. `THIRD-PARTY-NOTICES.txt` lists
-  the updated `SQLitePCLRaw` 2.1.13 packages. First included in build 0.5.464.66.
+  the updated `SQLitePCLRaw` 2.1.13 packages.
+
+### Licensing
+
+- **EULA version 0.6 is an editorial version with unchanged terms.** The German part now uses real
+  umlauts instead of transliterations, and dashes became plain hyphens. Prices, thresholds and every
+  right and obligation are the same as in version 0.5. The immutable reference is the tag `eula-v0.6`.
+
+### `get_diagnostics` says what it could not compile
+
+- **A failed design-time build is disclosed in `designTimeBuildFailures`.** When MSBuild fails while
+  loading a project - a version task on a shallow clone is the typical case - the project is still
+  compiled with what could be read, so its compiler options can be incomplete, and that moves the
+  counts in both directions. The answer now lists each affected project file with the loader's own
+  message and a note naming the remedy, whenever the scope reaches such a project or one of its
+  dependents. A shared failure is quoted once, not once per project.
+- **Generated code the analysis could not produce is disclosed in `generatedCodeGaps`.** A project can
+  compile without code a source generator or the WPF markup compiler would have written: a generator
+  from a project in the solution that was never built (`not-built`), an analyzer file nobody produces
+  (`not-found`), a generator built for a newer compiler than the analysis host (`cannot-load` -
+  building does not fix that one), a generator that failed to load for another reason (`load-failed`),
+  or WPF code-behind whose markup half is missing. Each entry carries its evidence and affected
+  dependents; `diagnosticsInAffectedProjects` gives the magnitude and `diagnosticsMarked` counts the
+  items marked `missingGeneratedCode: true` because they sit exactly where the code is missing.
+- **A file-scoped call names the incomplete project its marked items inherit from.** Under a file-path
+  scope, an incomplete project is listed whenever a counted diagnostic in the scope sits downstream of
+  it, so a `cascadeFromIncomplete` item always has its cause named. `suppressedDiagnosticsTotal` now
+  appears whenever `incompleteRatio` does, and a scoped call reaches `inconclusive` only where the
+  solution-wide call would too.
+
+### `prepare_task` stays within a budget
+
+- **The template render has a default ceiling.** When neither the MCP profile nor the template sets a
+  budget - true for every built-in - the answer could run to hundreds of thousands of characters, and
+  to millions for a plain-language goal. The default is now a hard ceiling sized to what an MCP client
+  shows inline, and the manifest in front of the context counts toward it. On a goal naming one type,
+  about 304 000 characters became about 15 000. A budget you configure keeps its tolerance.
+- **A goal that names a declared symbol exactly seeds on the symbols it names.** Its other words still
+  steer the trimming but no longer pull in unrelated members - an ordinary word such as "works" or
+  "where", or a capitalized first word of the sentence, used to anchor on a like-named method.
+- **The type the goal names stays in the answer** even when the budget is tight; if its source does
+  not fit, it is shown as structure rather than dropped.
+- **The frontmatter stays parseable.** The pruning and budget notes are now placed after the YAML
+  frontmatter instead of in front of it.
+
+### Tests and construction sites
+
+- **`find_tests_for` counts a test that builds the queried type.** Two new `matchReason` values,
+  `constructs` (the test creates the type: `new X(...)`, target-typed `new()`, a record `with`) and
+  `constructs-via` (through one method it calls), apply to type and constructor queries (`Type.Type`)
+  and rank after the `invokes` tiers. Building a type does not show that a particular member ran, so
+  member queries are unchanged.
+- **`review_context` caps its covering tests like `find_tests_for` does** - 50 per symbol, with
+  `coveringTestsTotal` and `coveringTestsTruncated`. One symbol could previously return well over a
+  hundred rows, and a large solution several thousand in one answer.
+- **`instantiation_sites` separates test from production.** Every site carries `isTestProject`, and
+  `createdByTests` and `injectedIntoTests` stand beside the totals they split, counted over all sites
+  and not just the returned page. "Does anything but a test construct this type?" is now one call.
+  The classification follows the session's configured test projects.
+
+### Corrected answers
+
+- **Calls from constructors and property accessors in test projects count as test calls.**
+  `impact_of_change` no longer counts them as production impact, and `find_dead_code` reports a
+  method that only such test code reaches as unused in production.
+- **Local functions of the same name in different methods are no longer merged** in call graphs, so a
+  caller of one no longer appears as a caller of the other.
+- **`list_insights` drops two false alarms:** `nameof(Task<T>.Result)` is not a blocking wait on a task,
+  and `Enumerable.Empty<T>()` inside a loop is not a per-iteration LINQ cost.
+- **`resolve_injection` no longer matches a factory registration that returns an anonymous object**
+  against an unrelated service. It reports no match, and its note points at the factory site.
+- **`symbol_metrics` carries `metricMeaning`** on every answer: cyclomatic and cognitive complexity
+  describe code shape, not runtime cost.
+
+### Documentation
+
+- The nuget.org package page now matches this repository's README, names the MCP server and lists its
+  search terms. The `aicb-csharp-context` skill explains the new `constructs` reasons of
+  `find_tests_for`; `aicb init --force` refreshes an installed copy.
+- The general manual's licensing chapter names EULA version 0.6. The printable PDFs still describe
+  product state 0.5.464.43.
 
 ## 0.5.464.56 (2026-09-26) - the license that ships is the license that is published, and six answers stop hiding what they left out
 

@@ -435,27 +435,27 @@ COMPONENTS
       Project    https://csharp.sdk.modelcontextprotocol.io/
       In         CLI/MCP
 
-  SQLitePCLRaw.bundle_e_sqlite3 2.1.6
+  SQLitePCLRaw.bundle_e_sqlite3 2.1.13
       Licence    Apache-2.0
-      Copyright  Copyright 2014-2023 SourceGear, LLC
+      Copyright  Copyright 2014-2024 SourceGear, LLC
       Authors    Eric Sink
       In         CLI/MCP + GUI
 
-  SQLitePCLRaw.core 2.1.6
+  SQLitePCLRaw.core 2.1.13
       Licence    Apache-2.0
-      Copyright  Copyright 2014-2023 SourceGear, LLC
+      Copyright  Copyright 2014-2024 SourceGear, LLC
       Authors    Eric Sink
       In         CLI/MCP + GUI
 
-  SQLitePCLRaw.lib.e_sqlite3 2.1.6
+  SQLitePCLRaw.lib.e_sqlite3 2.1.13
       Licence    Apache-2.0
-      Copyright  Copyright 2014-2023 SourceGear, LLC
+      Copyright  Copyright 2014-2024 SourceGear, LLC
       Authors    Eric Sink
       In         CLI/MCP + GUI
 
-  SQLitePCLRaw.provider.e_sqlite3 2.1.6
+  SQLitePCLRaw.provider.e_sqlite3 2.1.13
       Licence    Apache-2.0
-      Copyright  Copyright 2014-2023 SourceGear, LLC
+      Copyright  Copyright 2014-2024 SourceGear, LLC
       Authors    Eric Sink
       In         CLI/MCP + GUI
 
@@ -609,14 +609,14 @@ Apache-2.0  -  applies to 6 components:
 
   ModelContextProtocol 2.2.0
   ModelContextProtocol.Core 2.2.0
-  SQLitePCLRaw.bundle_e_sqlite3 2.1.6
-  SQLitePCLRaw.core 2.1.6
-  SQLitePCLRaw.lib.e_sqlite3 2.1.6
-  SQLitePCLRaw.provider.e_sqlite3 2.1.6
+  SQLitePCLRaw.bundle_e_sqlite3 2.1.13
+  SQLitePCLRaw.core 2.1.13
+  SQLitePCLRaw.lib.e_sqlite3 2.1.13
+  SQLitePCLRaw.provider.e_sqlite3 2.1.13
 
   Copyright notices of those components:
 
-    Copyright 2014-2023 SourceGear, LLC
+    Copyright 2014-2024 SourceGear, LLC
     © Model Context Protocol a Series of LF Projects, LLC.
 
                                  Apache License
