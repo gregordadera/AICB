@@ -4,7 +4,7 @@
 
 [![NuGet Version](https://img.shields.io/nuget/v/AIContextBuilder)](https://www.nuget.org/packages/AIContextBuilder)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/AIContextBuilder)](https://www.nuget.org/packages/AIContextBuilder)
-[![MCP Registry](https://img.shields.io/badge/MCP%20Registry-listed-1584ad)](https://registry.modelcontextprotocol.io/?q=io.github.gregordadera%2Faicb)
+[![MCP Registry](https://img.shields.io/badge/MCP%20Registry-listed-1584ad)](https://registry.modelcontextprotocol.io/?q=io.github.gregordadera%2Faicb-roslyn-mcp)
 [![License](https://img.shields.io/badge/license-custom%20EULA-lightgrey)](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/EULA.md)
 [![M8ven Verified](https://img.shields.io/badge/M8ven%20Verified-publisher%20verified-4c1)](https://m8ven.ai/mcp/gregordadera-aicb-zb5d9e)
 
