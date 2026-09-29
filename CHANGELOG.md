@@ -4,7 +4,15 @@ Versions follow `Major.Minor.Series.Build`. The build number rises by one for ev
 change that lands, so gaps between published versions are normal - not every build is
 released.
 
-## Unreleased
+## 0.5.465.1 (2026-09-29) - New repository name, starts without .NET 8, calls through interfaces are credited to their implementations
+
+**Who is affected.** Everyone: the repository has a new address (every old link keeps working), and
+the MCP Registry lists the server under a new name. Users of the .NET tool can now start it on a
+machine without .NET 8. Everything else concerns the MCP server and the `aicb` CLI: `find_usages`,
+`impact_of_change`, `find_tests_for`, `coverage_gaps` and the tools that repeat their numbers,
+`analyze_solution` and the session tools, `export_markdown`, `refresh_session` and
+`evaluate_change_set`. No database change; saved snapshots stay valid. If your client caches tool
+descriptions, reconnect it once - several descriptions changed.
 
 ### New repository address and MCP Registry name
 
@@ -16,15 +24,14 @@ released.
   entry `io.github.gregordadera/aicb` keeps its published versions and is marked deprecated with a
   pointer to the new name. Clients that already run the server need no change: they start the
   `aicb` command, not the registry name.
-- The desktop app's About page and the `docs` tool link to the new address. First included in
-  build 0.5.464.71.
+- The desktop app's About page and the `docs` tool link to the new address.
 
 ### Listed as an MCP server on nuget.org
 
 - **The NuGet package carries the MCP server package type** next to the .NET tool type, and it
   packs its `server.json` as `.mcp/server.json`. nuget.org lists packages of that type in its MCP
   server filter and builds a client configuration from that file. An existing installation needs
-  no change. First included in build 0.5.464.72.
+  no change.
 
 ### Starts where only a newer .NET is installed
 
@@ -38,8 +45,64 @@ released.
 - **If the .NET it runs on has no SDK of its own** (for example a .NET 9 runtime next to the .NET 10
   SDK), the tool reports that MSBuild could not be registered. Install the .NET 8 SDK, or set the
   environment variable `DOTNET_ROLL_FORWARD=LatestMajor` so that it uses the newest .NET.
-- The installer and the portable ZIP bring their own runtime and are not affected. First included in
-  build 0.5.464.74.
+- The installer and the portable ZIP bring their own runtime and are not affected.
+
+### A call through an interface is credited to the implementing method
+
+- **`find_usages` and `impact_of_change` credit a call through an interface or abstract member to
+  the method that implements it.** Such a call binds to the interface member, so a qualified method
+  query (`Type.Method`) used to miss it, and a method called only through its interface looked
+  unused. Those callers are now listed and counted, and `viaContract` says how many were credited,
+  through which members and how many types implement each; `viaContractNote` says whether the credit
+  is exact (one production implementation) or a union over several. A method in a test project is
+  never credited.
+- **`find_tests_for` adds the tiers `dispatch` and `dispatch-via`** for a test that calls an
+  interface or abstract member the symbol implements, directly or through one method it calls. They
+  rank behind the strong tiers and are counted in `dispatchTotal`, because the test may have run a
+  sibling implementation or a test double instead.
+- **`coverage_gaps` marks with `viaDispatch` a method that only such a test reaches.** Every other
+  entry keeps the depth it had.
+- **The tools that repeat these numbers carry the qualifier with them.** `review_context` and
+  `diff_review` include `viaContract`, `viaContractNote` and `dispatchTotal`; `explain_symbol` says how
+  many of the callers call the contract; `verify_claim` with `symbol_removed_unused` answers
+  `indeterminate` for a removed method whose only callers called its interface; and
+  `find_by_complexity_and_coverage` still counts a method that only a dispatch test reaches as
+  untested (`reachedOnlyThroughDispatch`), so the complex-and-untested insight and its debt estimate
+  do not shrink without a test being added.
+
+### An answer too large to deliver is refused with its size
+
+- **An answer over 16,000,000 bytes as JSON is refused on `tools/call` and on resource reads**, and the
+  refusal names the size and the remedy: `outputPath` for `export_markdown`, a narrower query
+  otherwise. Before, `export_markdown` on a large solution failed only after the work, with a bare
+  `-32603: An error occurred.`, and a client that closes the connection on a message above 16 MiB lost
+  every session the server held.
+- **The limit is set with `AICB_MCP_MAX_RESPONSE_BYTES`** (thousands separators are accepted; the
+  value is capped at what the JSON serializer can write). A refused tool call is counted as a failure
+  in `usage_report`; a refused resource read is not recorded. `aicb call` prints the text directly
+  and is not affected.
+
+### `analyze_solution` says when a load was incomplete
+
+- **The session answer carries `incompleteRun` when scanned projects could not bind their core
+  framework types** (for example a missing targeting pack): how many, out of how many, the first ten
+  names, and a note naming the repair - `refresh_session` with `force=true`, or `refresh_remembered`
+  for a session restored with `recall_codebase`. It appears on `analyze_solution`, `refresh_session`,
+  `inspect_session`, `list_sessions`, `recall_codebase` and `remember_codebase`, and only for an
+  incomplete run, so a healthy answer is unchanged. Before, the first answer said nothing, and only a
+  later refresh or `get_diagnostics` showed it. Its absence is no all-clear: `get_diagnostics` names
+  the errors of a project that binds its framework but is still not restored.
+
+### Fixed
+
+- **A refresh keeps the namespace exclusions of the first analysis.** With a configuration database -
+  the default `aicb mcp` server always has one - `analyze_solution` applied the active
+  `Exclude Namespaces` list to the first analysis but not to later refreshes, whether an explicit
+  `refresh_session` or the automatic one after an edit. Dependencies, metrics and insights of an
+  unchanged solution could therefore change after a refresh. Sessions from `remember_codebase` and
+  `refresh_remembered` had the same gap.
+- **`evaluate_change_set` analyzes the proposed change with the session's namespace exclusions**, so a
+  dependency the exclusions hide is no longer reported as introduced by the change.
 
 ## 0.5.464.66 (2026-09-28) - SQLite closes CVE-2025-6965, `get_diagnostics` names what it could not compile, `prepare_task` stays within a budget
 
