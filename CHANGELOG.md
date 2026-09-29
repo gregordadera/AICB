@@ -26,6 +26,16 @@ released.
   server filter and builds a client configuration from that file. An existing installation needs
   no change. First included in build 0.5.464.72.
 
+### Starts where only a newer .NET is installed
+
+- **The .NET tool now also starts on a machine that has no .NET 8 runtime but a newer one.** That is
+  what the configuration nuget.org offers needs: it starts the tool with `dnx` from the .NET 10 SDK,
+  and `dnx` does not switch to a newer runtime on its own. Tested in an environment that holds only
+  the .NET 10 runtime and SDK: the tool starts, analyzes a `net8.0` and a `net10.0` solution, and
+  answers as an MCP server. Where .NET 8 is installed, the tool keeps using it and nothing changes.
+  The installer and the portable ZIP bring their own runtime and are not affected. First included
+  in build 0.5.464.74.
+
 ## 0.5.464.66 (2026-09-28) - SQLite closes CVE-2025-6965, `get_diagnostics` names what it could not compile, `prepare_task` stays within a budget
 
 **Who is affected.** Everyone gets the SQLite security update and the editorial license version 0.6.

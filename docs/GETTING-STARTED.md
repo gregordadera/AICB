@@ -19,7 +19,8 @@ Windows one download covers both.
   Studio. This applies to every form: opening a solution runs its MSBuild design-time
   build, and without MSBuild nothing can be loaded.
 - **The .NET tool additionally needs the .NET 8 SDK** (it is what installs and runs a
-  .NET tool).
+  .NET tool). On a machine that has only a newer .NET, for example just the .NET 10 SDK,
+  the tool runs on that one.
 - The desktop app and the ZIP bring their own .NET runtime; nothing else to install.
 
 ### Supported projects

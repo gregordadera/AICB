@@ -1,7 +1,7 @@
 ---
 name: aicb-csharp-context
 description: Navigate and safely change C#/.NET code with the aicb MCP server (Roslyn-backed) instead of text search. Use whenever a task touches a C# symbol - who calls this method, what breaks if I change this interface/enum/DTO, where is this interface implemented, what overrides what, which tests cover it, what gets injected where, dead code, dependency cycles, side effects, live compiler errors - or when packing codebase context for an LLM. Also states when plain grep is still the right tool.
-compatibility: Requires the .NET 8 SDK and the `aicb` dotnet tool wired up as an MCP server. Analyzes C# solutions (.sln/.slnx) only.
+compatibility: Requires the .NET 8 SDK (on a machine with only a newer .NET, that one) and the `aicb` dotnet tool wired up as an MCP server. Analyzes C# solutions (.sln/.slnx) only.
 metadata:
   project: AIContextBuilder
   version: "1.0"
@@ -20,8 +20,9 @@ Tool names below are unprefixed. Your host may namespace them (for example
 
 ## Setup (once per machine)
 
-The server is the `aicb` dotnet tool (requires the .NET 8 SDK), published on
-nuget.org:
+The server is the `aicb` dotnet tool (requires the .NET 8 SDK; on a machine that
+has only a newer .NET, for example just the .NET 10 SDK, it runs on that one),
+published on nuget.org:
 
 ```sh
 dotnet tool install -g AIContextBuilder

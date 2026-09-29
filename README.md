@@ -424,7 +424,8 @@ Install **one** form per machine:
 | MCP server and CLI | [.NET global tool](https://www.nuget.org/packages/AIContextBuilder) | Windows, Linux, macOS |
 | Desktop app plus the same MCP server and CLI | [Windows installer or portable ZIP](https://github.com/gregordadera/aicb-roslyn-mcp/releases/latest) | Windows |
 
-The .NET tool needs the **.NET 8 SDK**:
+The .NET tool needs the **.NET 8 SDK**. On a machine that has only a newer .NET, for example just the
+.NET 10 SDK, it runs on that one:
 
 ```sh
 dotnet tool install -g AIContextBuilder
