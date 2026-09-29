@@ -19,6 +19,13 @@ released.
 - The desktop app's About page and the `docs` tool link to the new address. First included in
   build 0.5.464.71.
 
+### Listed as an MCP server on nuget.org
+
+- **The NuGet package carries the MCP server package type** next to the .NET tool type, and it
+  packs its `server.json` as `.mcp/server.json`. nuget.org lists packages of that type in its MCP
+  server filter and builds a client configuration from that file. An existing installation needs
+  no change. First included in build 0.5.464.72.
+
 ## 0.5.464.66 (2026-09-28) - SQLite closes CVE-2025-6965, `get_diagnostics` names what it could not compile, `prepare_task` stays within a budget
 
 **Who is affected.** Everyone gets the SQLite security update and the editorial license version 0.6.
