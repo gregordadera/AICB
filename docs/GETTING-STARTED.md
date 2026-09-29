@@ -19,8 +19,9 @@ Windows one download covers both.
   Studio. This applies to every form: opening a solution runs its MSBuild design-time
   build, and without MSBuild nothing can be loaded.
 - **The .NET tool additionally needs the .NET 8 SDK** (it is what installs and runs a
-  .NET tool). On a machine that has only a newer .NET, for example just the .NET 10 SDK,
-  the tool runs on that one.
+  .NET tool). Without .NET 8 the tool runs on the next newer .NET on the machine and needs
+  that version's SDK, so just the .NET 10 SDK works. If it reports that MSBuild could not
+  be registered, install the .NET 8 SDK or set `DOTNET_ROLL_FORWARD=LatestMajor`.
 - The desktop app and the ZIP bring their own .NET runtime; nothing else to install.
 
 ### Supported projects

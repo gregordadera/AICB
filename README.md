@@ -424,8 +424,8 @@ Install **one** form per machine:
 | MCP server and CLI | [.NET global tool](https://www.nuget.org/packages/AIContextBuilder) | Windows, Linux, macOS |
 | Desktop app plus the same MCP server and CLI | [Windows installer or portable ZIP](https://github.com/gregordadera/aicb-roslyn-mcp/releases/latest) | Windows |
 
-The .NET tool needs the **.NET 8 SDK**. On a machine that has only a newer .NET, for example just the
-.NET 10 SDK, it runs on that one:
+The .NET tool needs the **.NET 8 SDK**. Without .NET 8 it runs on the next newer .NET on the
+machine and needs that version's SDK, so just the .NET 10 SDK works:
 
 ```sh
 dotnet tool install -g AIContextBuilder
@@ -435,6 +435,10 @@ aicb --version
 Update it later with `dotnet tool update -g AIContextBuilder`. For a container, the
 repository's [`Dockerfile`](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/Dockerfile)
 installs the same .NET tool and serves MCP over stdio.
+
+If the tool reports that MSBuild could not be registered, the .NET it runs on has no SDK of
+its own (for example a .NET 9 runtime next to the .NET 10 SDK): install the .NET 8 SDK, or set
+the environment variable `DOTNET_ROLL_FORWARD=LatestMajor` so that it uses the newest .NET.
 
 The Windows downloads are self-contained, but analyzing a solution still needs
 MSBuild from a .NET SDK or Visual Studio. The installer is not code-signed yet, so

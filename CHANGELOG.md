@@ -28,13 +28,18 @@ released.
 
 ### Starts where only a newer .NET is installed
 
-- **The .NET tool now also starts on a machine that has no .NET 8 runtime but a newer one.** That is
-  what the configuration nuget.org offers needs: it starts the tool with `dnx` from the .NET 10 SDK,
-  and `dnx` does not switch to a newer runtime on its own. Tested in an environment that holds only
-  the .NET 10 runtime and SDK: the tool starts, analyzes a `net8.0` and a `net10.0` solution, and
-  answers as an MCP server. Where .NET 8 is installed, the tool keeps using it and nothing changes.
-  The installer and the portable ZIP bring their own runtime and are not affected. First included
-  in build 0.5.464.74.
+- **The .NET tool now also starts on a machine that has no .NET 8 runtime but a newer one.** It then
+  runs on the next newer .NET on the machine and needs that version's SDK, so just the .NET 10 SDK
+  works. That is what the configuration nuget.org offers needs: it starts the tool with `dnx` from
+  the .NET 10 SDK, and neither `dnx` nor a global install switches to a newer runtime on its own.
+  Tested in an environment that holds only the .NET 10 runtime and SDK: the tool starts through
+  `dnx` and as a global install, analyzes a `net8.0` and a `net10.0` solution, and answers as an MCP
+  server. Where .NET 8 is installed, the tool keeps using it and nothing changes.
+- **If the .NET it runs on has no SDK of its own** (for example a .NET 9 runtime next to the .NET 10
+  SDK), the tool reports that MSBuild could not be registered. Install the .NET 8 SDK, or set the
+  environment variable `DOTNET_ROLL_FORWARD=LatestMajor` so that it uses the newest .NET.
+- The installer and the portable ZIP bring their own runtime and are not affected. First included in
+  build 0.5.464.74.
 
 ## 0.5.464.66 (2026-09-28) - SQLite closes CVE-2025-6965, `get_diagnostics` names what it could not compile, `prepare_task` stays within a budget
 
