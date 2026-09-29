@@ -1,11 +1,11 @@
 # AIContextBuilder (`aicb`)
 
-<!-- mcp-name: io.github.gregordadera/aicb -->
+<!-- mcp-name: io.github.gregordadera/aicb-roslyn-mcp -->
 
 [![NuGet Version](https://img.shields.io/nuget/v/AIContextBuilder)](https://www.nuget.org/packages/AIContextBuilder)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/AIContextBuilder)](https://www.nuget.org/packages/AIContextBuilder)
 [![MCP Registry](https://img.shields.io/badge/MCP%20Registry-listed-1584ad)](https://registry.modelcontextprotocol.io/?q=io.github.gregordadera%2Faicb)
-[![License](https://img.shields.io/badge/license-custom%20EULA-lightgrey)](https://github.com/gregordadera/AICB/blob/main/EULA.md)
+[![License](https://img.shields.io/badge/license-custom%20EULA-lightgrey)](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/EULA.md)
 [![M8ven Verified](https://img.shields.io/badge/M8ven%20Verified-publisher%20verified-4c1)](https://m8ven.ai/mcp/gregordadera-aicb-zb5d9e)
 
 **Give coding agents a Roslyn-accurate map of your C#/.NET solution.** `aicb` is
@@ -48,7 +48,7 @@ Abridged output from the bundled `ColorMixer.SelectionLab` sample:
 The desktop app's **MCP Usage** page records calls locally and separates guided
 refusals from suspected defects:
 
-[![AICB MCP Usage statistics showing calls, sessions, latency and the most-used tools](https://raw.githubusercontent.com/gregordadera/AICB/main/docs/assets/aicb-mcp-usage.png)](https://www.dadera.de/en/aicb-mcp.html)
+[![AICB MCP Usage statistics showing calls, sessions, latency and the most-used tools](https://raw.githubusercontent.com/gregordadera/aicb-roslyn-mcp/main/docs/assets/aicb-mcp-usage.png)](https://www.dadera.de/en/aicb-mcp.html)
 
 That answer comes from the Roslyn symbol graph, not a substring search. AICB
 distinguishes overloads, follows interface and override relationships, understands
@@ -80,8 +80,8 @@ including a configurable overshoot allowance and an optional trimming report.
 The result is **AI-Builder-MD**: structured Markdown for an LLM, containing the
 selected code together with symbol relationships, architecture graphs, semantic
 metadata and provenance. It can use the established tag notation or YAML. See the
-[context-document guide](https://github.com/gregordadera/AICB/blob/main/docs/manual/general/05-the-context-document-ai-builder-md.md)
-and the [task-packing tools](https://github.com/gregordadera/AICB/blob/main/docs/manual/mcp/09-tool-reference-markup-export-review-and-insights.md#92-packing-and-exporting-context).
+[context-document guide](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/manual/general/05-the-context-document-ai-builder-md.md)
+and the [task-packing tools](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/manual/mcp/09-tool-reference-markup-export-review-and-insights.md#92-packing-and-exporting-context).
 
 ### Add explicit meaning with AI Tags and semantic annotations
 
@@ -104,10 +104,10 @@ priority, stability, responsibility and side effects. Explicit values take
 precedence over heuristic inference; sentinel values such as `none` can deliberately
 suppress inference for one field. AICB preserves provenance so an agent can
 distinguish source-derived facts, author-provided meaning and inferred hints. The
-[AI annotation reference](https://github.com/gregordadera/AICB/blob/main/docs/manual/general/03-core-concepts.md#39-the-ai-annotation)
+[AI annotation reference](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/manual/general/03-core-concepts.md#39-the-ai-annotation)
 documents the supported forms and fields.
 
-[![AIContextBuilder desktop app with a loaded solution](https://raw.githubusercontent.com/gregordadera/AICB/main/docs/assets/aicb-main-light.png)](https://www.dadera.de/en/aicb-gui.html)
+[![AIContextBuilder desktop app with a loaded solution](https://raw.githubusercontent.com/gregordadera/aicb-roslyn-mcp/main/docs/assets/aicb-main-light.png)](https://www.dadera.de/en/aicb-gui.html)
 
 ## How analysis and memory work
 
@@ -154,7 +154,7 @@ MCP profile exposes them, so start the server with `AICB_MCP_TOOLS` naming them 
 `AICB_MCP_TOOLS=all`). `recall_codebase` reports whether the persisted model still matches the source,
 payload schema and analyzer identity. It deliberately returns the recalled model
 even when it is stale, with metadata that tells the agent when a live re-analysis
-is necessary. See [sessions, recall and staleness](https://github.com/gregordadera/AICB/blob/main/docs/manual/mcp/03-sessions-and-staleness.md).
+is necessary. See [sessions, recall and staleness](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/manual/mcp/03-sessions-and-staleness.md).
 
 ### What the model can and cannot prove
 
@@ -199,7 +199,7 @@ AICB also distinguishes **unknown** from **verified absent**. Tools such as
 `assert_absence` return `confirmed`, `refuted` or `indeterminate` rather than
 turning missing evidence into a false negative.
 
-The question-first [architecture, limits and evidence guide](https://github.com/gregordadera/AICB/blob/main/docs/ARCHITECTURE.md)
+The question-first [architecture, limits and evidence guide](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/ARCHITECTURE.md)
 explains what lives in memory, how refresh and context selection work, which claims
 are measured, and where the published scale benchmark stands.
 
@@ -244,7 +244,7 @@ These tools form a broader capability map rather than a flat search catalog:
 The desktop app turns code-quality, security, design and architecture findings
 into an actionable review queue:
 
-[![AICB Insights page with prioritized code-quality, security, design and architecture findings](https://raw.githubusercontent.com/gregordadera/AICB/main/docs/assets/aicb-gui-insights.png)](https://www.dadera.de/en/aicb-gui.html)
+[![AICB Insights page with prioritized code-quality, security, design and architecture findings](https://raw.githubusercontent.com/gregordadera/aicb-roslyn-mcp/main/docs/assets/aicb-gui-insights.png)](https://www.dadera.de/en/aicb-gui.html)
 
 AICB is most useful for non-trivial C#/.NET solutions and semantic questions that
 plain text search cannot answer reliably. It analyzes C#; selected XAML/AXAML
@@ -297,7 +297,7 @@ Configuration precedence is axis- and surface-specific. For example, headless la
 mapping can fall back to the sidecar, while headless test detection currently resolves
 from the database or built-in rules rather than the sidecar's test axis. The exact
 matrix is in the
-[configuration guide](https://github.com/gregordadera/AICB/blob/main/docs/manual/general/07-profiles-master-data-and-solution-configuration.md#which-axis-wins).
+[configuration guide](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/manual/general/07-profiles-master-data-and-solution-configuration.md#which-axis-wins).
 A running MCP session keeps the configuration it was analyzed with; after editing the
 sidecar, start a new analysis instead of assuming `refresh_session` re-reads it.
 Suppressions hide accepted findings from suppression-aware reading surfaces, but
@@ -331,7 +331,7 @@ A **Quality Profile** controls which insight producers run and the thresholds th
 use, such as method length, cyclomatic complexity and class size. It does not by
 itself define finding severity or the CLI quality gate.
 
-[![AICB Quality Profiles editor with producer switches and thresholds](https://raw.githubusercontent.com/gregordadera/AICB/main/docs/manual/general/img/gui-settings-quality-profiles.png)](https://github.com/gregordadera/AICB/blob/main/docs/manual/general/08-insights-the-code-quality-catalog.md#85-quality-profiles)
+[![AICB Quality Profiles editor with producer switches and thresholds](https://raw.githubusercontent.com/gregordadera/aicb-roslyn-mcp/main/docs/manual/general/img/gui-settings-quality-profiles.png)](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/manual/general/08-insights-the-code-quality-catalog.md#85-quality-profiles)
 
 Each solution also has three independent analysis axes:
 
@@ -346,7 +346,7 @@ solution. The Settings pages are the library editors; the Workspace pickers choo
 which library entry applies to this particular solution. A per-solution choice wins
 over the global default.
 
-[![AICB Workspace showing Layer Profile, Exclude Namespaces and Test Profile side by side](https://raw.githubusercontent.com/gregordadera/AICB/main/docs/manual/general/img/aicb-gui-profiles.png)](https://github.com/gregordadera/AICB/blob/main/docs/manual/general/07-profiles-master-data-and-solution-configuration.md#the-three-axes-in-workspace)
+[![AICB Workspace showing Layer Profile, Exclude Namespaces and Test Profile side by side](https://raw.githubusercontent.com/gregordadera/aicb-roslyn-mcp/main/docs/manual/general/img/aicb-gui-profiles.png)](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/manual/general/07-profiles-master-data-and-solution-configuration.md#the-three-axes-in-workspace)
 
 #### Initialize the three axes
 
@@ -387,7 +387,7 @@ An agent can guide the same setup explicitly:
 and installs the agent skill and optional symbol guard. It does **not** initialize
 these three solution axes or create `<SolutionName>.aicb.json`.
 
-See [profiles and solution configuration](https://github.com/gregordadera/AICB/blob/main/docs/manual/general/07-profiles-master-data-and-solution-configuration.md)
+See [profiles and solution configuration](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/manual/general/07-profiles-master-data-and-solution-configuration.md)
 for precedence, the sidecar schema and the full initialization behavior.
 
 ### Context templates and run templates
@@ -403,7 +403,7 @@ Detail Presets, Markdown Profiles, Expansion Strategies, Compression Rules,
 Pipeline Profiles and Quality Profiles are reusable building blocks referenced by
 a context template; a run template selects that context template.
 
-[![AICB Context Templates editor with prompt, detail-level and export configuration](https://raw.githubusercontent.com/gregordadera/AICB/main/docs/manual/general/img/gui-templates.png)](https://github.com/gregordadera/AICB/blob/main/docs/manual/desktop-app/09-mcp-profiles-mcp-usage-and-templates.md#93-templates)
+[![AICB Context Templates editor with prompt, detail-level and export configuration](https://raw.githubusercontent.com/gregordadera/aicb-roslyn-mcp/main/docs/manual/general/img/gui-templates.png)](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/manual/desktop-app/09-mcp-profiles-mcp-usage-and-templates.md#93-templates)
 
 ### Product direction, not a release commitment
 
@@ -422,7 +422,7 @@ Install **one** form per machine:
 | You want | Install | Platform |
 |---|---|---|
 | MCP server and CLI | [.NET global tool](https://www.nuget.org/packages/AIContextBuilder) | Windows, Linux, macOS |
-| Desktop app plus the same MCP server and CLI | [Windows installer or portable ZIP](https://github.com/gregordadera/AICB/releases/latest) | Windows |
+| Desktop app plus the same MCP server and CLI | [Windows installer or portable ZIP](https://github.com/gregordadera/aicb-roslyn-mcp/releases/latest) | Windows |
 
 The .NET tool needs the **.NET 8 SDK**:
 
@@ -432,7 +432,7 @@ aicb --version
 ```
 
 Update it later with `dotnet tool update -g AIContextBuilder`. For a container, the
-repository's [`Dockerfile`](https://github.com/gregordadera/AICB/blob/main/Dockerfile)
+repository's [`Dockerfile`](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/Dockerfile)
 installs the same .NET tool and serves MCP over stdio.
 
 The Windows downloads are self-contained, but analyzing a solution still needs
@@ -482,7 +482,7 @@ Manual `.mcp.json` configuration for clients that read it:
 
 Verify the connection by asking the client to call `server_info`. Every analysis
 tool accepts an absolute `.sln`, `.slnx` or `.slnf` path as its session, so no
-separate analyze step is required. See the [five-minute guide](https://github.com/gregordadera/AICB/blob/main/docs/GETTING-STARTED.md)
+separate analyze step is required. See the [five-minute guide](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/GETTING-STARTED.md)
 for setup, first questions and troubleshooting.
 
 ## Tool sets and Agent Skills
@@ -495,12 +495,12 @@ for setup, first questions and troubleshooting.
 
 Start the Full Select profile with
 `aicb mcp --mcp-profile mcp-profile/full`. Set `AICB_MCP_TOOLS=all` to add
-the opt-in tools as well. The generated [tool reference](https://github.com/gregordadera/AICB/blob/main/docs/TOOLS.md) documents
-the default set; the [MCP server manual](https://github.com/gregordadera/AICB/blob/main/docs/manual/mcp/README.md)
+the opt-in tools as well. The generated [tool reference](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/TOOLS.md) documents
+the default set; the [MCP server manual](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/manual/mcp/README.md)
 documents all 82 tools and their parameters, and alongside them sessions and
 staleness, profiles, pools and facets, and what `aicb init` writes - twelve
 chapters in Markdown, readable in the browser and by an agent, and also
-published as a [PDF](https://github.com/gregordadera/AICB/blob/main/docs/manual/mcp/AICB-MCP-Server.pdf).
+published as a [PDF](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/manual/mcp/AICB-MCP-Server.pdf).
 
 The three published counts are starting points, not fixed editions. In the
 desktop **MCP Profiles** editor you can create or duplicate a profile, enable only
@@ -511,9 +511,9 @@ standing agent guidance, not another selectable tool group. For headless setup,
 `AICB_MCP_TOOLS=methods:<tool>,<tool>,...` exposes exactly the named functions;
 class lists, `lean` and `all` are also supported. Profile and environment changes
 take effect at the next server start. `list_skills` shows the resulting in-pool and
-out-of-pool tools. See [profiles, pools and facets](https://github.com/gregordadera/AICB/blob/main/docs/manual/mcp/04-profiles-pools-and-facets.md).
+out-of-pool tools. See [profiles, pools and facets](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/manual/mcp/04-profiles-pools-and-facets.md).
 
-Four Agent Skills ship in [`skills/`](https://github.com/gregordadera/AICB/tree/main/skills):
+Four Agent Skills ship in [`skills/`](https://github.com/gregordadera/aicb-roslyn-mcp/tree/main/skills):
 
 - `aicb-csharp-context` routes semantic C# questions to the right tool.
 - `aicb-code-review` checks a completed change for correctness.
@@ -535,7 +535,7 @@ response volume; they do not necessarily reduce the underlying solution analysis
 The desktop `load-perf.log` and MCP `usage_report` provide local phase and latency
 measurements. A standardized cold/warm time and RAM benchmark on three public
 .NET solutions (≈ 25k, ≈ 55k and ≈ 1.8M lines of C#) is published in the
-[architecture and evidence guide](https://github.com/gregordadera/AICB/blob/main/docs/ARCHITECTURE.md#how-does-aicb-scale-on-large-solutions);
+[architecture and evidence guide](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/ARCHITECTURE.md#how-does-aicb-scale-on-large-solutions);
 these controls are still not a universal performance claim, but there is now a
 measured boundary.
 
@@ -584,7 +584,7 @@ Run `aicb <command> --help` for options.
 
 A small number of explicitly named tools can write configuration or an export;
 their tool descriptions state this. The complete threat model and private
-reporting route are in [`SECURITY.md`](https://github.com/gregordadera/AICB/blob/main/SECURITY.md).
+reporting route are in [`SECURITY.md`](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/SECURITY.md).
 
 ## License at a glance
 
@@ -615,22 +615,22 @@ deliverables, priorities and guarantees exist only when written into the individ
 agreement. Connecting AICB to MCP clients, agent harnesses, scripts, build systems
 and CI through its documented interfaces is permitted. Redistributing, modifying,
 repackaging, reselling or offering the AICB binaries as a hosted service is not.
-Contact `aicb@dadera.de`. See the [plain-language guide](https://github.com/gregordadera/AICB/blob/main/docs/LICENSING.md),
-[`LICENSE.txt`](https://github.com/gregordadera/AICB/blob/main/LICENSE.txt) and the full bilingual [`EULA.md`](https://github.com/gregordadera/AICB/blob/main/EULA.md).
+Contact `aicb@dadera.de`. See the [plain-language guide](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/LICENSING.md),
+[`LICENSE.txt`](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/LICENSE.txt) and the full bilingual [`EULA.md`](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/EULA.md).
 
 ## Support and continued development
 
 AICB is under active development: the
-[changelog](https://github.com/gregordadera/AICB/blob/main/CHANGELOG.md) records every
+[changelog](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/CHANGELOG.md) records every
 release, and published releases appear on the
-[Releases](https://github.com/gregordadera/AICB/releases) page.
+[Releases](https://github.com/gregordadera/aicb-roslyn-mcp/releases) page.
 
 Support follows the license:
 
 | | Free | Commercial agreement |
 | --- | --- | --- |
 | Who | Everyone below the [thresholds](#license-at-a-glance) | Organizations at or above a threshold, or anyone who wants stronger terms |
-| Channel | [GitHub Discussions](https://github.com/gregordadera/AICB/discussions), [Issues](https://github.com/gregordadera/AICB/issues) | Direct contact plus the public channels |
+| Channel | [GitHub Discussions](https://github.com/gregordadera/aicb-roslyn-mcp/discussions), [Issues](https://github.com/gregordadera/aicb-roslyn-mcp/issues) | Direct contact plus the public channels |
 | Response target | Best effort | ≤ 2 business days |
 | Security fixes | Shipped through public releases | Fix target ≤ 10 business days for confirmed vulnerabilities |
 | Version maintenance | Current release | Individually agreed maintenance window |
@@ -643,20 +643,20 @@ unstated SLA. Prices are in [License at a glance](#license-at-a-glance). Contact
 `aicb@dadera.de`.
 
 Questions and feature requests are welcome in
-[GitHub Discussions](https://github.com/gregordadera/AICB/discussions). Report bugs
-through [GitHub Issues](https://github.com/gregordadera/AICB/issues) and include
+[GitHub Discussions](https://github.com/gregordadera/aicb-roslyn-mcp/discussions). Report bugs
+through [GitHub Issues](https://github.com/gregordadera/aicb-roslyn-mcp/issues) and include
 `aicb --version` and, for MCP problems, the output of `server_info`. Report security
-issues privately as described in [`SECURITY.md`](https://github.com/gregordadera/AICB/blob/main/SECURITY.md).
+issues privately as described in [`SECURITY.md`](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/SECURITY.md).
 
 ## Documentation
 
-- [Getting started](https://github.com/gregordadera/AICB/blob/main/docs/GETTING-STARTED.md) - install, connect and ask the first question
-- [Tool reference](https://github.com/gregordadera/AICB/blob/main/docs/TOOLS.md) - generated reference for the default MCP profile
-- [Architecture, limits and evidence](https://github.com/gregordadera/AICB/blob/main/docs/ARCHITECTURE.md) - in-memory model, refresh, context selection, static-analysis boundaries and benchmark status
-- **[MCP server manual](https://github.com/gregordadera/AICB/blob/main/docs/manual/mcp/README.md)** - the full reference in twelve Markdown chapters: connecting a client, `aicb init`, sessions and staleness, profiles and facets, every tool, troubleshooting
-- **[General reference manual](https://github.com/gregordadera/AICB/blob/main/docs/manual/general/README.md)** - the full reference in twelve Markdown chapters, with the printable PDF in the same folder
-- **[Desktop app reference manual](https://github.com/gregordadera/AICB/blob/main/docs/manual/desktop-app/README.md)** - the full reference in eleven Markdown chapters, with the printable PDF in the same folder
-- [Changelog](https://github.com/gregordadera/AICB/blob/main/CHANGELOG.md) and [latest release](https://github.com/gregordadera/AICB/releases/latest)
+- [Getting started](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/GETTING-STARTED.md) - install, connect and ask the first question
+- [Tool reference](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/TOOLS.md) - generated reference for the default MCP profile
+- [Architecture, limits and evidence](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/ARCHITECTURE.md) - in-memory model, refresh, context selection, static-analysis boundaries and benchmark status
+- **[MCP server manual](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/manual/mcp/README.md)** - the full reference in twelve Markdown chapters: connecting a client, `aicb init`, sessions and staleness, profiles and facets, every tool, troubleshooting
+- **[General reference manual](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/manual/general/README.md)** - the full reference in twelve Markdown chapters, with the printable PDF in the same folder
+- **[Desktop app reference manual](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/manual/desktop-app/README.md)** - the full reference in eleven Markdown chapters, with the printable PDF in the same folder
+- [Changelog](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/CHANGELOG.md) and [latest release](https://github.com/gregordadera/aicb-roslyn-mcp/releases/latest)
 
 "AIContextBuilder" and "AIContextBuilder for .NET" are product names used by
 Gregor Dadera; no registration is claimed.

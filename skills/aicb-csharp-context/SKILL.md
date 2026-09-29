@@ -30,7 +30,7 @@ dotnet tool install -g AIContextBuilder
 `dotnet tool update -g AIContextBuilder` updates it. On Windows with the desktop
 app, install the Windows installer INSTEAD: it contains this same server, and one
 `aicb` per machine keeps updates from reaching a copy nothing runs. Documentation
-and releases: https://github.com/gregordadera/AICB
+and releases: https://github.com/gregordadera/aicb-roslyn-mcp
 
 Then register the server with your agent, e.g. `.mcp.json` in the project root:
 

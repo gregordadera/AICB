@@ -6,7 +6,7 @@ AIContextBuilder is closed source: you install a released build, and there is no
 
 ## 2.1 The license
 
-AIContextBuilder is licensed under the AIContextBuilder End-User License Agreement (EULA). The full bilingual agreement `EULA.md` and its non-binding orientation summary `LICENSE.txt` are shipped with every distribution form and packed into the NuGet package. The public current text is https://github.com/gregordadera/AICB/blob/main/EULA.md; the immutable reference for version 0.6 is https://github.com/gregordadera/AICB/blob/eula-v0.6/EULA.md. The German version is binding for natural persons habitually resident in Germany and organizations with their registered office or principal place of business in Germany; the English version is binding for other licensees unless an individual agreement selects the German version.
+AIContextBuilder is licensed under the AIContextBuilder End-User License Agreement (EULA). The full bilingual agreement `EULA.md` and its non-binding orientation summary `LICENSE.txt` are shipped with every distribution form and packed into the NuGet package. The public current text is https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/EULA.md; the immutable reference for version 0.6 is https://github.com/gregordadera/aicb-roslyn-mcp/blob/eula-v0.6/EULA.md. The German version is binding for natural persons habitually resident in Germany and organizations with their registered office or principal place of business in Germany; the English version is binding for other licensees unless an individual agreement selects the German version.
 
 ### Free use below three thresholds
 
@@ -78,7 +78,7 @@ AIContextBuilder comes in three forms, all built from the same analysis engine:
 | **Windows installer** | Desktop app, CLI and MCP server | Windows 10 or later, 64-bit | GitHub Releases: `AIContextBuilder-Setup-<version>.exe` |
 | **Portable ZIP** | The same payload, no installation | Windows 10 or later, 64-bit | GitHub Releases: `AIContextBuilder-<version>-win-x64.zip` |
 
-All downloads are at https://github.com/gregordadera/AICB/releases.
+All downloads are at https://github.com/gregordadera/aicb-roslyn-mcp/releases.
 
 The desktop app is Windows-only. On Linux and macOS you get the CLI and the MCP server through the .NET tool; there is no GUI build for those platforms. The Windows builds are 64-bit; the installer also runs on ARM64 Windows through x64 emulation.
 
@@ -294,7 +294,7 @@ Note: The MCP server records one row per tool call in the local database: timest
 
 ## 2.12 Support and security reports
 
-Questions, bug reports and feature requests go to GitHub Issues at https://github.com/gregordadera/AICB/issues. Please include the version (`aicb --version`, or `Settings > About` in the desktop app) and, for MCP problems, the output of the `server_info` tool.
+Questions, bug reports and feature requests go to GitHub Issues at https://github.com/gregordadera/aicb-roslyn-mcp/issues. Please include the version (`aicb --version`, or `Settings > About` in the desktop app) and, for MCP problems, the output of the `server_info` tool.
 
 Report security issues privately, not as a public issue: by email to **aicb@dadera.de**, or through GitHub's `Report a vulnerability` on the repository's *Security* tab. You will get an acknowledgment, and a fix or mitigation will be coordinated before any public disclosure. There is no supported-versions table and no response-time commitment.
 

@@ -554,7 +554,7 @@ The `Details:` line names the exception type and message, including up to three 
 
 ## 11.6 Support
 
-- Questions, bug reports and feature requests: **GitHub Issues** at `github.com/gregordadera/AICB/issues`.
+- Questions, bug reports and feature requests: **GitHub Issues** at `github.com/gregordadera/aicb-roslyn-mcp/issues`.
 - Security reports: please do **not** open a public issue. Send them to `aicb@dadera.de` or use **Report a vulnerability** on the `Security` tab of the repository. You will get an acknowledgment; there is no response-time deadline.
 
 ---

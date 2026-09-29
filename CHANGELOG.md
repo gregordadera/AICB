@@ -4,6 +4,21 @@ Versions follow `Major.Minor.Series.Build`. The build number rises by one for ev
 change that lands, so gaps between published versions are normal - not every build is
 released.
 
+## Unreleased
+
+### New repository address and MCP Registry name
+
+- **The repository moved to `github.com/gregordadera/aicb-roslyn-mcp`** (it was
+  `github.com/gregordadera/AICB`). GitHub forwards every old link, clone URL and release download,
+  so nothing you set up breaks; update bookmarks and git remotes when convenient. The nuget.org
+  package `AIContextBuilder` and the `aicb` command keep their names.
+- **The MCP Registry lists the server as `io.github.gregordadera/aicb-roslyn-mcp`.** The previous
+  entry `io.github.gregordadera/aicb` keeps its published versions and is marked deprecated with a
+  pointer to the new name. Clients that already run the server need no change: they start the
+  `aicb` command, not the registry name.
+- The desktop app's About page and the `docs` tool link to the new address. First included in
+  build 0.5.464.71.
+
 ## 0.5.464.66 (2026-09-28) - SQLite closes CVE-2025-6965, `get_diagnostics` names what it could not compile, `prepare_task` stays within a budget
 
 **Who is affected.** Everyone gets the SQLite security update and the editorial license version 0.6.

@@ -8,7 +8,7 @@ grepping, in about five minutes.
 | You want ... | Install | Runs on |
 |---|---|---|
 | your coding agent (Claude Code, Codex, Cursor, ...) to understand your C# code | the `aicb` .NET tool from [nuget.org](https://www.nuget.org/packages/AIContextBuilder) | Windows, Linux, macOS |
-| to decide by hand what a model gets to see, and look at the result | the desktop app from [GitHub Releases](https://github.com/gregordadera/AICB/releases) | Windows |
+| to decide by hand what a model gets to see, and look at the result | the desktop app from [GitHub Releases](https://github.com/gregordadera/aicb-roslyn-mcp/releases) | Windows |
 
 Both share one analysis engine. The desktop download also contains the CLI, so on
 Windows one download covers both.
@@ -64,13 +64,13 @@ Update later with `dotnet tool update -g AIContextBuilder`. The package page is
 [nuget.org/packages/AIContextBuilder](https://www.nuget.org/packages/AIContextBuilder).
 
 Without access to nuget.org (an offline or locked-down machine), the same package is
-attached to every [release](https://github.com/gregordadera/AICB/releases/latest):
+attached to every [release](https://github.com/gregordadera/aicb-roslyn-mcp/releases/latest):
 put the `.nupkg` into an otherwise empty folder and add
 `--add-source ./that-folder` to the install command.
 
 ### The desktop app (Windows)
 
-From the [latest release](https://github.com/gregordadera/AICB/releases/latest):
+From the [latest release](https://github.com/gregordadera/aicb-roslyn-mcp/releases/latest):
 
 - **`AIContextBuilder-Setup-<version>.exe`** - installer. Needs administrator rights.
   The option to put `aicb` on `PATH` is preselected; keep it if you want to use the
@@ -220,8 +220,8 @@ facets and troubleshooting - is the [MCP server manual](manual/mcp/README.md).
 | Freshly written code is reported `not_found` | The session has not seen it yet. `refresh_session`, then ask again. Answers carry a `staleness` note - read it. |
 | `Connection closed` | Restart the client so it restarts the server. |
 
-Still stuck? Open an [issue](https://github.com/gregordadera/AICB/issues) with
+Still stuck? Open an [issue](https://github.com/gregordadera/aicb-roslyn-mcp/issues) with
 `aicb --version`, the `server_info` answer and, for the desktop app,
 `%APPDATA%\AIContextBuilder\aicb.log`. Questions are welcome in
-[Discussions](https://github.com/gregordadera/AICB/discussions). Never attach your
+[Discussions](https://github.com/gregordadera/aicb-roslyn-mcp/discussions). Never attach your
 source code.
