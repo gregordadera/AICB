@@ -12,7 +12,8 @@ or configures solutions in the desktop app: `analyze_solution`, the memory tools
 `solution_config_status`, `check_solution_config_drift` and `aicb analyze` now apply and report one
 and the same configuration. The Windows installer and the portable ZIP need nothing beyond the
 usual update. No database change; saved snapshots stay valid. If your client caches tool
-descriptions, reconnect it once - the description of `recall_codebase` changed.
+descriptions, reconnect it once - the descriptions of `analyze_solution`, `solution_config_status`,
+`check_solution_config_drift`, `remember_codebase` and `recall_codebase` changed.
 
 ### The .NET tool is now the NuGet package `aicb-roslyn-mcp`
 
@@ -60,7 +61,8 @@ descriptions, reconnect it once - the description of `recall_codebase` changed.
   was passed, no test profile, never the configuration database. On the default `aicb mcp` server a
   remembered session could therefore show other dependencies than `analyze_solution` on the same
   solution, and a recalled session classified test projects by the built-in default whatever the
-  repository pinned.
+  repository pinned. A configuration database that cannot be opened now fails the recall, as it
+  fails an analysis.
 
 ### Fixed
 
