@@ -20,7 +20,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0
 
 # Unpinned on purpose: this image is meant to track the current release. Add
-# `--version 0.5.465.10` or later when you need a reproducible build (earlier
+# `--version 0.5.465.11` or later when you need a reproducible build (earlier
 # versions were published as AIContextBuilder).
 RUN dotnet tool install -g aicb-roslyn-mcp
 

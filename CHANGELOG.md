@@ -4,7 +4,15 @@ Versions follow `Major.Minor.Series.Build`. The build number rises by one for ev
 change that lands, so gaps between published versions are normal - not every build is
 released.
 
-## Unreleased
+## 0.5.465.11 (2026-09-30) - The .NET tool is now `aicb-roslyn-mcp`, and every tool applies a solution's configuration in the same order
+
+**Who is affected.** Users of the .NET tool: the NuGet package has a new name, and an existing
+installation is switched once by hand (below). Anyone who commits a `.aicb.json` next to a solution
+or configures solutions in the desktop app: `analyze_solution`, the memory tools,
+`solution_config_status`, `check_solution_config_drift` and `aicb analyze` now apply and report one
+and the same configuration. The Windows installer and the portable ZIP need nothing beyond the
+usual update. No database change; saved snapshots stay valid. If your client caches tool
+descriptions, reconnect it once - the description of `recall_codebase` changed.
 
 ### The .NET tool is now the NuGet package `aicb-roslyn-mcp`
 
@@ -21,6 +29,46 @@ released.
 - The Windows installer removes an existing .NET tool under either name when you let it. Winget keeps
   the identifier `GregorDadera.AIContextBuilder`.
 - The package carries the tag `aicb`, so a nuget.org search for the command name finds it.
+
+### One order for a solution's configuration
+
+- **`analyze_solution`, `solution_config_status`, `check_solution_config_drift` and `aicb analyze`
+  resolve a solution's namespace exclusions, layer profile, test profile and analysis scope in one
+  order:** an explicit parameter, then the configuration database (a choice made for this solution,
+  then the app-wide default), then the `.aicb.json` committed next to the solution, then a built-in
+  default.
+- **A built-in default no longer overrides a committed `.aicb.json`.** Where the configuration
+  database only falls back to the built-in exclusion list, or its app-wide default is the `Empty`
+  layer preset or the default test profile, the `.aicb.json` now applies. Before, `analyze_solution`
+  then analyzed with the built-in exclusion list while `solution_config_status` named the
+  `.aicb.json` as the source. A choice made for one solution still wins over the `.aicb.json`, even
+  when it names a built-in - that is how a single solution opts out of the committed profile.
+- **`solution_config_status` and `check_solution_config_drift` report the configuration in force**,
+  the one an analysis of the solution runs on, each with its `source`: `explicit`, `db`, `sidecar`,
+  `none`, or the new `built-in` for the built-in exclusion list. `check_solution_config_drift`
+  evaluates that configuration instead of whichever `.aicb.json` it found.
+- **`aicb analyze` uses the test profile of a `.aicb.json`** for test-project detection in the
+  quality gate and the snapshot's debt, and prints on stderr which layer or test profile it takes
+  from the `.aicb.json`, as it already did for a configured one.
+
+### The memory tools analyze like `analyze_solution`
+
+- **`remember_codebase`, `recall_codebase` and `refresh_remembered` apply the same configuration as
+  `analyze_solution`** - the configuration database first, then the `.aicb.json`, then a built-in
+  default; an explicit `layerProfile` on `remember_codebase` still wins. Before, they read only the
+  `.aicb.json`, and from it only the exclusions and the analysis scope: no layer profile unless one
+  was passed, no test profile, never the configuration database. On the default `aicb mcp` server a
+  remembered session could therefore show other dependencies than `analyze_solution` on the same
+  solution, and a recalled session classified test projects by the built-in default whatever the
+  repository pinned.
+
+### Fixed
+
+- **Asking `solution_config_status` or `check_solution_config_drift` about a solution no longer
+  registers it in the configuration database.** The first such question created an entry for the
+  solution whose defaults made the next `analyze_solution` state in `configInit.directive` that the
+  user had opted the solution into automatic initialization, which nobody had.
+  `apply_solution_config` still creates the entry, since it has a configuration to store.
 
 ## 0.5.465.1 (2026-09-29) - New repository name, starts without .NET 8, calls through interfaces are credited to their implementations
 

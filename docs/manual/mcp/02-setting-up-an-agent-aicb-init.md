@@ -275,7 +275,7 @@ If more than one `aicb` is on your `PATH`, every run also prints a warning, beca
 warning: "aicb" is installed 2 times. Every MCP client starts the FIRST one; updating another one changes nothing a client runs.
   runs    C:\Program Files\AIContextBuilder\cli\aicb.exe - Windows installer (AI Context Builder)
   ignored C:\Users\you\.dotnet\tools\aicb.exe - .NET tool (dotnet tool install -g aicb-roslyn-mcp)
-  Keep one. With the desktop app: keep the installer and run 'dotnet tool uninstall -g aicb-roslyn-mcp' (installed before 0.5.465.10: 'dotnet tool uninstall -g AIContextBuilder'). Without it: uninstall "AI Context Builder" in Windows Settings > Apps.
+  Keep one. With the desktop app: keep the installer and run 'dotnet tool uninstall -g aicb-roslyn-mcp' (installed before 0.5.465.11: 'dotnet tool uninstall -g AIContextBuilder'). Without it: uninstall "AI Context Builder" in Windows Settings > Apps.
 ```
 
 The run ends with the step it cannot take for you:
