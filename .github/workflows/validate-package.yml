@@ -31,7 +31,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Published NuGet package version to test, e.g. 0.5.464.44.'
+        description: 'Published NuGet package version to test, e.g. 0.5.465.10 (earlier versions were published as AIContextBuilder).'
         type: string
         required: true
 
