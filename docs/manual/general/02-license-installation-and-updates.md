@@ -74,7 +74,7 @@ AIContextBuilder comes in three forms, all built from the same analysis engine:
 
 | Form | Contains | Platforms | Where to get it |
 |---|---|---|---|
-| **.NET tool** (NuGet package `AIContextBuilder`) | CLI and MCP server | Windows, Linux, macOS | nuget.org, installed with `dotnet tool install -g AIContextBuilder` |
+| **.NET tool** (NuGet package `aicb-roslyn-mcp`) | CLI and MCP server | Windows, Linux, macOS | nuget.org, installed with `dotnet tool install -g aicb-roslyn-mcp` |
 | **Windows installer** | Desktop app, CLI and MCP server | Windows 10 or later, 64-bit | GitHub Releases: `AIContextBuilder-Setup-<version>.exe` |
 | **Portable ZIP** | The same payload, no installation | Windows 10 or later, 64-bit | GitHub Releases: `AIContextBuilder-<version>-win-x64.zip` |
 
@@ -106,7 +106,7 @@ Note: The analysis runs with server garbage collection limited to four heaps. On
 2. Run:
 
 ```sh
-dotnet tool install -g AIContextBuilder
+dotnet tool install -g aicb-roslyn-mcp
 ```
 
 3. Confirm the installation:
@@ -120,13 +120,15 @@ The tool is installed for your user account, normally under `%USERPROFILE%\.dotn
 Update later with:
 
 ```sh
-dotnet tool update -g AIContextBuilder
+dotnet tool update -g aicb-roslyn-mcp
 ```
+
+Up to 0.5.465.1 the package was called `AIContextBuilder`. An update does not cross that rename: remove the old package with `dotnet tool uninstall -g AIContextBuilder` first, then install `aicb-roslyn-mcp` as above.
 
 Remove it with:
 
 ```sh
-dotnet tool uninstall -g AIContextBuilder
+dotnet tool uninstall -g aicb-roslyn-mcp
 ```
 
 ## 2.5 Installing the desktop app on Windows
@@ -187,7 +189,7 @@ Install one of them per machine:
 
 The installer detects an existing .NET tool and offers to remove it (selected by default). It removes it in the account of the signed-in user, not in the administrator account the setup runs as.
 
-For the opposite order, installer first and `dotnet tool install` later, `aicb init` warns when it finds more than one `aicb` on `PATH`, lists which copy runs and which one is ignored, and names the fix: with the desktop app, keep the installer and run `dotnet tool uninstall -g AIContextBuilder`; without it, uninstall `AI Context Builder` in Windows Settings > Apps.
+For the opposite order, installer first and `dotnet tool install` later, `aicb init` warns when it finds more than one `aicb` on `PATH`, lists which copy runs and which one is ignored, and names the fix: with the desktop app, keep the installer and run `dotnet tool uninstall -g aicb-roslyn-mcp`; without it, uninstall `AI Context Builder` in Windows Settings > Apps.
 
 ## 2.7 The Windows SmartScreen warning
 
@@ -218,7 +220,7 @@ There is no automatic update: the product does not check for updates, and it doe
 
 | Form | How to update |
 |---|---|
-| .NET tool | `dotnet tool update -g AIContextBuilder` |
+| .NET tool | `dotnet tool update -g aicb-roslyn-mcp` |
 | Installer | download the newer `AIContextBuilder-Setup-<version>.exe` from the release page and run it |
 | Portable ZIP | download the newer ZIP and replace the extracted folder |
 
@@ -237,7 +239,7 @@ Note: A newer version migrates the database schema to its own shape, and that mi
 
 | Form | How to uninstall | What remains |
 |---|---|---|
-| .NET tool | `dotnet tool uninstall -g AIContextBuilder` | your data in `%APPDATA%\AIContextBuilder\` |
+| .NET tool | `dotnet tool uninstall -g aicb-roslyn-mcp` | your data in `%APPDATA%\AIContextBuilder\` |
 | Installer | Windows Settings > Apps > `AI Context Builder` > Uninstall | your data; the uninstaller removes the `PATH` entry it added |
 | Portable ZIP | delete the extracted folder | your data |
 

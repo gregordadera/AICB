@@ -22,15 +22,17 @@ Tool names below are unprefixed. Your host may namespace them (for example
 
 The server is the `aicb` dotnet tool (requires the .NET 8 SDK; without .NET 8 it
 runs on the next newer .NET installed and needs that version's SDK, so just the
-.NET 10 SDK works), published on nuget.org:
+.NET 10 SDK works), published on nuget.org as `aicb-roslyn-mcp`:
 
 ```sh
-dotnet tool install -g AIContextBuilder
+dotnet tool install -g aicb-roslyn-mcp
 ```
 
 If aicb reports that MSBuild could not be registered, install the .NET 8 SDK or
 set `DOTNET_ROLL_FORWARD=LatestMajor` so that it runs on the newest .NET.
-`dotnet tool update -g AIContextBuilder` updates it. On Windows with the desktop
+`dotnet tool update -g aicb-roslyn-mcp` updates it; a machine that still has the
+package under its former name first runs `dotnet tool uninstall -g AIContextBuilder`.
+On Windows with the desktop
 app, install the Windows installer INSTEAD: it contains this same server, and one
 `aicb` per machine keeps updates from reaching a copy nothing runs. Documentation
 and releases: https://github.com/gregordadera/aicb-roslyn-mcp

@@ -69,7 +69,7 @@ The desktop app is where you load a solution, browse it in a tree, and read the 
 `aicb` is a .NET global tool for Windows, Linux and macOS:
 
 ```sh
-dotnet tool install -g AIContextBuilder
+dotnet tool install -g aicb-roslyn-mcp
 ```
 
 It has seven verbs:

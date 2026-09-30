@@ -2,8 +2,8 @@
 
 <!-- mcp-name: io.github.gregordadera/aicb-roslyn-mcp -->
 
-[![NuGet Version](https://img.shields.io/nuget/v/AIContextBuilder)](https://www.nuget.org/packages/AIContextBuilder)
-[![NuGet Downloads](https://img.shields.io/nuget/dt/AIContextBuilder)](https://www.nuget.org/packages/AIContextBuilder)
+[![NuGet Version](https://img.shields.io/nuget/v/aicb-roslyn-mcp)](https://www.nuget.org/packages/aicb-roslyn-mcp)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/aicb-roslyn-mcp)](https://www.nuget.org/packages/aicb-roslyn-mcp)
 [![MCP Registry](https://img.shields.io/badge/MCP%20Registry-listed-1584ad)](https://registry.modelcontextprotocol.io/?q=io.github.gregordadera%2Faicb-roslyn-mcp)
 [![License](https://img.shields.io/badge/license-custom%20EULA-lightgrey)](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/EULA.md)
 [![M8ven Verified](https://img.shields.io/badge/M8ven%20Verified-publisher%20verified-4c1)](https://m8ven.ai/mcp/gregordadera-aicb-zb5d9e)
@@ -421,18 +421,25 @@ Install **one** form per machine:
 
 | You want | Install | Platform |
 |---|---|---|
-| MCP server and CLI | [.NET global tool](https://www.nuget.org/packages/AIContextBuilder) | Windows, Linux, macOS |
+| MCP server and CLI | [.NET global tool `aicb-roslyn-mcp`](https://www.nuget.org/packages/aicb-roslyn-mcp) | Windows, Linux, macOS |
 | Desktop app plus the same MCP server and CLI | [Windows installer or portable ZIP](https://github.com/gregordadera/aicb-roslyn-mcp/releases/latest) | Windows |
 
 The .NET tool needs the **.NET 8 SDK**. Without .NET 8 it runs on the next newer .NET on the
 machine and needs that version's SDK, so just the .NET 10 SDK works:
 
 ```sh
-dotnet tool install -g AIContextBuilder
+dotnet tool install -g aicb-roslyn-mcp
 aicb --version
 ```
 
-Update it later with `dotnet tool update -g AIContextBuilder`. For a container, the
+Up to 0.5.465.1 the package was called `AIContextBuilder`. An update does not cross that
+rename: remove the old package first, then install the new one as above.
+
+```sh
+dotnet tool uninstall -g AIContextBuilder
+```
+
+Update it later with `dotnet tool update -g aicb-roslyn-mcp`. For a container, the
 repository's [`Dockerfile`](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/Dockerfile)
 installs the same .NET tool and serves MCP over stdio.
 

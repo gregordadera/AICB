@@ -4,6 +4,24 @@ Versions follow `Major.Minor.Series.Build`. The build number rises by one for ev
 change that lands, so gaps between published versions are normal - not every build is
 released.
 
+## Unreleased
+
+### The .NET tool is now the NuGet package `aicb-roslyn-mcp`
+
+- **The MCP server and CLI are published on nuget.org as
+  [`aicb-roslyn-mcp`](https://www.nuget.org/packages/aicb-roslyn-mcp)** - up to 0.5.465.1 the package
+  was called `AIContextBuilder`. The command stays `aicb`, and the MCP Registry entry
+  `io.github.gregordadera/aicb-roslyn-mcp` names the new package.
+- **Switching an existing installation:** `dotnet tool update` does not cross the rename. Run
+  `dotnet tool uninstall -g AIContextBuilder`, then `dotnet tool install -g aicb-roslyn-mcp`. An MCP
+  client configuration that starts the `aicb` command needs no change; one that starts the package
+  itself with `dnx AIContextBuilder` needs the new name.
+- The package `AIContextBuilder` stays on nuget.org with its versions, is marked deprecated with a
+  pointer to the new name, and receives no further versions.
+- The Windows installer removes an existing .NET tool under either name when you let it. Winget keeps
+  the identifier `GregorDadera.AIContextBuilder`.
+- The package carries the tag `aicb`, so a nuget.org search for the command name finds it.
+
 ## 0.5.465.1 (2026-09-29) - New repository name, starts without .NET 8, calls through interfaces are credited to their implementations
 
 **Who is affected.** Everyone: the repository has a new address (every old link keeps working), and

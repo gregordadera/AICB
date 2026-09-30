@@ -2,7 +2,7 @@
 #
 # This repository holds no source code, so nothing is built here: the image
 # installs the published .NET tool from nuget.org - the same package a local
-# `dotnet tool install -g AIContextBuilder` gives you.
+# `dotnet tool install -g aicb-roslyn-mcp` gives you.
 #
 #   docker build -t aicb .
 #   docker run --rm -i -v /path/to/your/solution:/src aicb
@@ -21,7 +21,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0
 
 # Unpinned on purpose: this image is meant to track the current release. Add
 # `--version 0.5.464.36` when you need a reproducible build.
-RUN dotnet tool install -g AIContextBuilder
+RUN dotnet tool install -g aicb-roslyn-mcp
 
 ENV PATH="${PATH}:/root/.dotnet/tools"
 

@@ -73,7 +73,7 @@ That warning is a prediction, not a startup failure: the tools that need a loade
 |---|---|
 | Setup installer (Windows) | No - self-contained, the runtime is included |
 | ZIP archive (Windows) | No - self-contained |
-| `dotnet tool install -g AIContextBuilder` | Yes - a .NET tool is framework-dependent and needs the .NET 8 SDK, which is also what analyzing a solution needs |
+| `dotnet tool install -g aicb-roslyn-mcp` | Yes - a .NET tool is framework-dependent and needs the .NET 8 SDK, which is also what analyzing a solution needs |
 
 ### Windows SmartScreen warns about the download
 

@@ -67,7 +67,7 @@ jobs:
           raw="${{ inputs.version }}"
           version="${raw#v}"
           echo "arg=--version $version" >> "$GITHUB_OUTPUT"
-          echo "Testing AIContextBuilder $version"
+          echo "Testing aicb-roslyn-mcp $version"
 
       # nuget.org can still take a few minutes to serve a version consistently across endpoints,
       # even after the flat-container index exposes it. Retrying keeps that propagation delay from
@@ -75,14 +75,14 @@ jobs:
       - name: Install the published tool (retries while nuget indexes)
         run: |
           for attempt in 1 2 3 4 5 6; do
-            if dotnet tool install -g AIContextBuilder ${{ steps.v.outputs.arg }}; then
+            if dotnet tool install -g aicb-roslyn-mcp ${{ steps.v.outputs.arg }}; then
               echo "installed on attempt $attempt"
               exit 0
             fi
             echo "attempt $attempt failed - waiting 30s for nuget.org to index"
             sleep 30
           done
-          echo "::error::could not install AIContextBuilder after 6 attempts"
+          echo "::error::could not install aicb-roslyn-mcp after 6 attempts"
           exit 1
 
       - name: Put the tool on PATH

@@ -7,7 +7,7 @@ grepping, in about five minutes.
 
 | You want ... | Install | Runs on |
 |---|---|---|
-| your coding agent (Claude Code, Codex, Cursor, ...) to understand your C# code | the `aicb` .NET tool from [nuget.org](https://www.nuget.org/packages/AIContextBuilder) | Windows, Linux, macOS |
+| your coding agent (Claude Code, Codex, Cursor, ...) to understand your C# code | the `aicb` .NET tool `aicb-roslyn-mcp` from [nuget.org](https://www.nuget.org/packages/aicb-roslyn-mcp) | Windows, Linux, macOS |
 | to decide by hand what a model gets to see, and look at the result | the desktop app from [GitHub Releases](https://github.com/gregordadera/aicb-roslyn-mcp/releases) | Windows |
 
 Both share one analysis engine. The desktop download also contains the CLI, so on
@@ -58,12 +58,15 @@ an existing .NET tool (preselected), and `aicb init` warns when it finds two.
 ### The .NET tool (MCP server + CLI)
 
 ```sh
-dotnet tool install -g AIContextBuilder
+dotnet tool install -g aicb-roslyn-mcp
 aicb --version
 ```
 
-Update later with `dotnet tool update -g AIContextBuilder`. The package page is
-[nuget.org/packages/AIContextBuilder](https://www.nuget.org/packages/AIContextBuilder).
+Update later with `dotnet tool update -g aicb-roslyn-mcp`. The package page is
+[nuget.org/packages/aicb-roslyn-mcp](https://www.nuget.org/packages/aicb-roslyn-mcp).
+
+Up to 0.5.465.1 the package was called `AIContextBuilder`. An update does not cross that
+rename: run `dotnet tool uninstall -g AIContextBuilder` first, then the install above.
 
 Without access to nuget.org (an offline or locked-down machine), the same package is
 attached to every [release](https://github.com/gregordadera/aicb-roslyn-mcp/releases/latest):
