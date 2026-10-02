@@ -1,0 +1,109 @@
+AIContextBuilder and AIContextBuilder for .NET
+Copyright (c) 2026 Gregor Dadera. All rights reserved.
+
+This software is licensed under version 0.6 of the AIContextBuilder
+End-User License Agreement (EULA). The full bilingual text (German /
+English) is shipped as EULA.md and published at this immutable reference:
+https://github.com/gregordadera/AICB/blob/eula-v0.6/EULA.md
+
+SUMMARY (for orientation only; the EULA is binding)
+===================================================
+
+Free use:
+  Free of charge for as long as your organization reaches NONE of these
+  three thresholds:
+
+    (a) one hundred (100) employees,
+    (b) ten million Euro (EUR 10,000,000) annual turnover,
+    (c) twenty-one (21) developers.
+
+  "Organization" includes linked enterprises under common control: a
+  subsidiary is counted together with its group. A minority participation
+  without control does not by itself join two organizations. See EULA
+  sections 4.2 / 14.2 for the complete definitions.
+
+Always free, regardless of the thresholds:
+  - Natural persons, for private, hobby or educational purposes.
+  - Accredited educational institutions, for teaching, learning and
+    non-commercial research (not for contract research).
+  - Work you do for clients: the thresholds measure YOUR organization
+    only. The size of your client does not matter, including when you
+    work on their premises.
+
+Commercial license required:
+  - If your organization reaches or exceeds even one threshold, a
+    ninety-day transition period begins. Use stays free of charge during
+    that period; a commercial license is required to continue afterwards.
+  - The ninety days are a contractual period only. The software starts no
+    timer, sends no threshold or deadline data, blocks no feature and does
+    not technically stop working when the period ends.
+  - Commercial licenses start at EUR 25 per licensed developer per
+    month. Price and scope may depend on licensed users, requested
+    support and response scope, and agreed priority or delivery
+    commitments for improvement requests.
+  - A written agreement may include support with defined response and
+    security-fix targets (for example, answers within two business days
+    and fixes for confirmed vulnerabilities within ten business days),
+    version maintenance, prioritized general product improvements, and
+    source-code review under NDA. Payment alone creates no unstated SLA,
+    warranty or implementation promise.
+  - Customer code is never collected or used for improvement automatically.
+    Any examination requires material or access deliberately provided by
+    the customer and a separate agreement on scope and confidentiality.
+
+No technical license enforcement:
+  - No license server, activation token, watermarking or phone-home.
+  - The MCP server may record local operational data about tool calls for
+    usage_report and the local MCP Usage view. This is not license telemetry
+    and never leaves the machine.
+
+Donations:
+  - Voluntary and welcome (e.g., https://github.com/sponsors/gregordadera),
+    but they are a separate matter. A donation does NOT replace a
+    commercial license where one is required.
+
+Restrictions:
+  - No reverse engineering, decompilation, or disassembly, except as
+    permitted by mandatory applicable law (German Copyright Act
+    sections 69d / 69e for interoperability).
+  - No removal or alteration of copyright notices, trademarks, or
+    version information.
+  - No redistribution, modification, repackaging, re-branding or resale of
+    the AICB software itself.
+  - No bundling of the AICB binaries into another product and no hosted or
+    shared AICB service for direct third-party use without written permission.
+  - No competing products based on this software.
+
+Intended integration and outputs:
+  - Connecting AICB to MCP clients, agent harnesses, scripts, build systems
+    and CI/CD through its documented interfaces is permitted.
+  - Consultants may use AICB internally while serving clients; the client
+    does not receive a hosted AICB service merely because its code is analyzed.
+  - You retain all rights in your source code. AICB acquires no rights merely
+    by analyzing it locally.
+  - Generated context, exports, .aicb.json sidecars and files installed by
+    aicb init may be used, adapted, versioned and shared, subject to rights in
+    their underlying source and third-party content.
+  - Bundled third-party components remain governed by the licenses listed in
+    THIRD-PARTY-NOTICES.txt.
+
+Trademarks:
+  - "AIContextBuilder" and "AIContextBuilder for .NET" are unregistered
+    product names used by Gregor Dadera. Any protection arises under the
+    applicable name and trademark law; no registration is claimed.
+
+Warranty and liability:
+  - Software is provided "as is", without warranty.
+  - Liability limited per EULA sections 9 / 19 (German law: unlimited for
+    intent and gross negligence; limited to typical foreseeable damage
+    for ordinary negligence in case of breach of cardinal duties).
+
+Governing law:
+  - German law applies. Exclusive jurisdiction at the domicile of the
+    licensor (Gregor Dadera) for merchants and legal entities; statutory
+    rules for consumers.
+
+By installing or using the software, you accept the EULA.
+
+Contact for licensing: aicb@dadera.de
+Project page: https://github.com/gregordadera/AICB

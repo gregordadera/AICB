@@ -1,0 +1,29 @@
+{
+  "name": "aicb-roslyn-mcp",
+  "displayName": "AICB Roslyn MCP",
+  "version": "0.5.465.11",
+  "description": "Roslyn MCP server and Agent Skills for C#/.NET code intelligence: semantic code analysis and navigation for coding agents - callers, change impact, implementations, dependency injection, tests, side effects, dead code and token-budgeted context. Runs locally over stdio. Requires the AICB .NET tool: dotnet tool install -g aicb-roslyn-mcp",
+  "author": {
+    "name": "Gregor Dadera",
+    "url": "https://www.dadera.de/en/"
+  },
+  "homepage": "https://github.com/gregordadera/aicb-roslyn-mcp",
+  "repository": "https://github.com/gregordadera/aicb-roslyn-mcp",
+  "license": "LicenseRef-AICB-EULA",
+  "keywords": [
+    "roslyn",
+    "csharp",
+    "dotnet",
+    "mcp",
+    "code-analysis",
+    "code-intelligence",
+    "static-analysis",
+    "wpf",
+    "xaml"
+  ],
+  "icon": "./icon.png",
+  "documentationUrl": "https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/manual/mcp/README.md",
+  "supportUrl": "https://github.com/gregordadera/aicb-roslyn-mcp/discussions",
+  "privacyPolicyUrl": "https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/manual/general/10-data-storage-and-privacy.md",
+  "termsOfServiceUrl": "https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/EULA.md"
+}

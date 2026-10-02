@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "aicb": {
+      "command": "aicb",
+      "args": ["mcp"]
+    }
+  }
+}
