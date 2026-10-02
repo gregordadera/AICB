@@ -17,11 +17,14 @@
 # solution needs MSBuild. The server starts and answers tools/list without it,
 # so a runtime image would produce a container that looks healthy and fails at
 # the first real question.
-FROM mcr.microsoft.com/dotnet/sdk:8.0
+#
+# .NET 10 since 0.5.500.1: the tool targets .NET 10 from that version on and does
+# not start on the .NET 8 image this file used before.
+FROM mcr.microsoft.com/dotnet/sdk:10.0
 
 # Unpinned on purpose: this image is meant to track the current release. Add
-# `--version 0.5.465.11` or later when you need a reproducible build (earlier
-# versions were published as AIContextBuilder).
+# `--version 0.5.500.1` or later when you need a reproducible build (versions
+# before 0.5.465.11 were published as AIContextBuilder).
 RUN dotnet tool install -g aicb-roslyn-mcp
 
 ENV PATH="${PATH}:/root/.dotnet/tools"

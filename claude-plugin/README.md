@@ -18,8 +18,9 @@ Install the AICB .NET tool once per machine. The plugin starts it; it does not c
 dotnet tool install -g aicb-roslyn-mcp
 ```
 
-- The tool needs the .NET 8 SDK. Without .NET 8 it runs on the next newer .NET on the
-  machine and needs that version's SDK, so just the .NET 10 SDK works.
+- The tool needs the .NET 10 SDK. Without .NET 10 it runs on the next newer .NET on the
+  machine and needs that version's SDK. A machine that has only .NET 8 or .NET 9 cannot
+  start it.
 - On Windows, the [installer](https://github.com/gregordadera/aicb-roslyn-mcp/releases/latest)
   contains the same server and CLI. Install one form per machine, and keep its option
   that adds `aicb` to the PATH.
@@ -54,7 +55,7 @@ aicb mcp
 - The MCP server records its own tool calls in a local SQLite database for the
   `usage_report` tool. That log never leaves the machine.
 - The plugin itself causes no network access. The one download is the install command
-  above, which you run yourself: the .NET SDK fetches the package (about 32 MB) from
+  above, which you run yourself: the .NET SDK fetches the package (about 40 MB) from
   nuget.org.
 
 Details: [Data, storage and privacy](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/manual/general/10-data-storage-and-privacy.md)

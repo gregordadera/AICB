@@ -23,15 +23,15 @@ did the set of third-party components move?
 SUMMARY
 ==============================================================================
 
-  Components listed          80
-  of which ship a binary     76
+  Components listed          70
+  of which ship a binary     66
   metapackage or provided
   by the target framework    4
 
-  MIT                         72
+  MIT                         62
   Apache-2.0                   6
   BSD-3-Clause                 1
-  url: https://github.com/dotnet/corefx/blob/master/LICENSE.TXT   1
+  file: LICENSE.txt            1
 
 ==============================================================================
 COMPONENTS
@@ -84,42 +84,42 @@ COMPONENTS
       Project    https://github.com/microsoft/MSBuildLocator
       In         CLI/MCP + GUI
 
-  Microsoft.CodeAnalysis.Analyzers 5.3.0-2.25625.1
+  Microsoft.CodeAnalysis.Analyzers 5.9.0-1.26328.17
       Licence    MIT
       Copyright  © Microsoft Corporation. All rights reserved.
       Authors    Microsoft
       Project    https://github.com/dotnet/roslyn
       In         CLI/MCP + GUI   (no binary of its own)
 
-  Microsoft.CodeAnalysis.Common 5.3.0
+  Microsoft.CodeAnalysis.Common 5.9.0
       Licence    MIT
       Copyright  © Microsoft Corporation. All rights reserved.
       Authors    Microsoft
       Project    https://github.com/dotnet/roslyn
       In         CLI/MCP + GUI
 
-  Microsoft.CodeAnalysis.CSharp 5.3.0
+  Microsoft.CodeAnalysis.CSharp 5.9.0
       Licence    MIT
       Copyright  © Microsoft Corporation. All rights reserved.
       Authors    Microsoft
       Project    https://github.com/dotnet/roslyn
       In         CLI/MCP + GUI
 
-  Microsoft.CodeAnalysis.CSharp.Workspaces 5.3.0
+  Microsoft.CodeAnalysis.CSharp.Workspaces 5.9.0
       Licence    MIT
       Copyright  © Microsoft Corporation. All rights reserved.
       Authors    Microsoft
       Project    https://github.com/dotnet/roslyn
       In         CLI/MCP + GUI
 
-  Microsoft.CodeAnalysis.Workspaces.Common 5.3.0
+  Microsoft.CodeAnalysis.Workspaces.Common 5.9.0
       Licence    MIT
       Copyright  © Microsoft Corporation. All rights reserved.
       Authors    Microsoft
       Project    https://github.com/dotnet/roslyn
       In         CLI/MCP + GUI
 
-  Microsoft.CodeAnalysis.Workspaces.MSBuild 5.3.0
+  Microsoft.CodeAnalysis.Workspaces.MSBuild 5.9.0
       Licence    MIT
       Copyright  © Microsoft Corporation. All rights reserved.
       Authors    Microsoft
@@ -435,35 +435,35 @@ COMPONENTS
       Project    https://csharp.sdk.modelcontextprotocol.io/
       In         CLI/MCP
 
-  SQLitePCLRaw.bundle_e_sqlite3 2.1.13
+  SQLite 3.53.4
+      Licence    file: LICENSE.txt
+      Copyright  Copyright 2014-2026 SourceGear, LLC
+      Authors    Eric Sink
+      Project    https://sqlite.org/
+      In         CLI/MCP + GUI
+
+  SQLitePCLRaw.bundle_e_sqlite3 3.0.5
       Licence    Apache-2.0
-      Copyright  Copyright 2014-2024 SourceGear, LLC
+      Copyright  Copyright 2014-2026 SourceGear, LLC
+      Authors    Eric Sink
+      In         CLI/MCP + GUI   (no binary of its own)
+
+  SQLitePCLRaw.config.e_sqlite3 3.0.5
+      Licence    Apache-2.0
+      Copyright  Copyright 2014-2026 SourceGear, LLC
       Authors    Eric Sink
       In         CLI/MCP + GUI
 
-  SQLitePCLRaw.core 2.1.13
+  SQLitePCLRaw.core 3.0.5
       Licence    Apache-2.0
-      Copyright  Copyright 2014-2024 SourceGear, LLC
+      Copyright  Copyright 2014-2025 SourceGear, LLC
       Authors    Eric Sink
       In         CLI/MCP + GUI
 
-  SQLitePCLRaw.lib.e_sqlite3 2.1.13
+  SQLitePCLRaw.provider.e_sqlite3 3.0.5
       Licence    Apache-2.0
-      Copyright  Copyright 2014-2024 SourceGear, LLC
+      Copyright  Copyright 2014-2025 SourceGear, LLC
       Authors    Eric Sink
-      In         CLI/MCP + GUI
-
-  SQLitePCLRaw.provider.e_sqlite3 2.1.13
-      Licence    Apache-2.0
-      Copyright  Copyright 2014-2024 SourceGear, LLC
-      Authors    Eric Sink
-      In         CLI/MCP + GUI
-
-  System.Collections.Immutable 9.0.0
-      Licence    MIT
-      Copyright  © Microsoft Corporation. All rights reserved.
-      Authors    Microsoft
-      Project    https://dot.net/
       In         CLI/MCP + GUI
 
   System.CommandLine 2.0.0-beta4.22272.1
@@ -473,61 +473,47 @@ COMPONENTS
       Project    https://github.com/dotnet/command-line-api
       In         CLI/MCP
 
-  System.Composition 9.0.0
+  System.Composition 10.0.1
       Licence    MIT
       Copyright  © Microsoft Corporation. All rights reserved.
       Authors    Microsoft
       Project    https://dot.net/
       In         CLI/MCP + GUI   (no binary of its own)
 
-  System.Composition.AttributedModel 9.0.0
+  System.Composition.AttributedModel 10.0.1
       Licence    MIT
       Copyright  © Microsoft Corporation. All rights reserved.
       Authors    Microsoft
       Project    https://dot.net/
       In         CLI/MCP + GUI
 
-  System.Composition.Convention 9.0.0
+  System.Composition.Convention 10.0.1
       Licence    MIT
       Copyright  © Microsoft Corporation. All rights reserved.
       Authors    Microsoft
       Project    https://dot.net/
       In         CLI/MCP + GUI
 
-  System.Composition.Hosting 9.0.0
+  System.Composition.Hosting 10.0.1
       Licence    MIT
       Copyright  © Microsoft Corporation. All rights reserved.
       Authors    Microsoft
       Project    https://dot.net/
       In         CLI/MCP + GUI
 
-  System.Composition.Runtime 9.0.0
+  System.Composition.Runtime 10.0.1
       Licence    MIT
       Copyright  © Microsoft Corporation. All rights reserved.
       Authors    Microsoft
       Project    https://dot.net/
       In         CLI/MCP + GUI
 
-  System.Composition.TypedParts 9.0.0
+  System.Composition.TypedParts 10.0.1
       Licence    MIT
       Copyright  © Microsoft Corporation. All rights reserved.
       Authors    Microsoft
       Project    https://dot.net/
       In         CLI/MCP + GUI
-
-  System.Diagnostics.DiagnosticSource 10.0.10
-      Licence    MIT
-      Copyright  © Microsoft Corporation. All rights reserved.
-      Authors    Microsoft
-      Project    https://dot.net/
-      In         CLI/MCP
-
-  System.Diagnostics.DiagnosticSource 10.0.5
-      Licence    MIT
-      Copyright  © Microsoft Corporation. All rights reserved.
-      Authors    Microsoft
-      Project    https://dot.net/
-      In         GUI
 
   System.Diagnostics.EventLog 10.0.7
       Licence    MIT
@@ -535,62 +521,6 @@ COMPONENTS
       Authors    Microsoft
       Project    https://dot.net/
       In         CLI/MCP
-
-  System.IO.Pipelines 10.0.10
-      Licence    MIT
-      Copyright  © Microsoft Corporation. All rights reserved.
-      Authors    Microsoft
-      Project    https://dot.net/
-      In         CLI/MCP
-
-  System.IO.Pipelines 9.0.0
-      Licence    MIT
-      Copyright  © Microsoft Corporation. All rights reserved.
-      Authors    Microsoft
-      Project    https://dot.net/
-      In         GUI
-
-  System.Memory 4.5.3
-      Licence    url: https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
-      Copyright  © Microsoft Corporation. All rights reserved.
-      Authors    Microsoft
-      Project    https://dot.net/
-      In         CLI/MCP + GUI   (no binary of its own)
-
-  System.Net.ServerSentEvents 10.0.10
-      Licence    MIT
-      Copyright  © Microsoft Corporation. All rights reserved.
-      Authors    Microsoft
-      Project    https://dot.net/
-      In         CLI/MCP
-
-  System.Reflection.Metadata 9.0.0
-      Licence    MIT
-      Copyright  © Microsoft Corporation. All rights reserved.
-      Authors    Microsoft
-      Project    https://dot.net/
-      In         CLI/MCP + GUI
-
-  System.Text.Encodings.Web 10.0.10
-      Licence    MIT
-      Copyright  © Microsoft Corporation. All rights reserved.
-      Authors    Microsoft
-      Project    https://dot.net/
-      In         CLI/MCP
-
-  System.Text.Json 10.0.10
-      Licence    MIT
-      Copyright  © Microsoft Corporation. All rights reserved.
-      Authors    Microsoft
-      Project    https://dot.net/
-      In         CLI/MCP
-
-  System.Text.Json 8.0.5
-      Licence    MIT
-      Copyright  © Microsoft Corporation. All rights reserved.
-      Authors    Microsoft
-      Project    https://dot.net/
-      In         GUI
 
   WPF-UI 3.1.1
       Licence    MIT
@@ -609,14 +539,15 @@ Apache-2.0  -  applies to 6 components:
 
   ModelContextProtocol 2.2.0
   ModelContextProtocol.Core 2.2.0
-  SQLitePCLRaw.bundle_e_sqlite3 2.1.13
-  SQLitePCLRaw.core 2.1.13
-  SQLitePCLRaw.lib.e_sqlite3 2.1.13
-  SQLitePCLRaw.provider.e_sqlite3 2.1.13
+  SQLitePCLRaw.bundle_e_sqlite3 3.0.5
+  SQLitePCLRaw.config.e_sqlite3 3.0.5
+  SQLitePCLRaw.core 3.0.5
+  SQLitePCLRaw.provider.e_sqlite3 3.0.5
 
   Copyright notices of those components:
 
-    Copyright 2014-2024 SourceGear, LLC
+    Copyright 2014-2025 SourceGear, LLC
+    Copyright 2014-2026 SourceGear, LLC
     © Model Context Protocol a Series of LF Projects, LLC.
 
                                  Apache License
@@ -859,7 +790,26 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ------------------------------------------------------------------------------
-MIT  -  applies to 72 components:
+file: LICENSE.txt  -  applies to 1 component:
+------------------------------------------------------------------------------
+
+  SQLite 3.53.4
+
+  Copyright notices of those components:
+
+    Copyright 2014-2026 SourceGear, LLC
+
+  These components declare their licence as a file inside the package rather than by
+  SPDX identifier. Each file is reproduced below as its package carries it.
+
+  SQLite 3.53.4  -  LICENSE.txt:
+
+SQLite is Public Domain
+
+https://sqlite.org/copyright.html
+
+------------------------------------------------------------------------------
+MIT  -  applies to 62 components:
 ------------------------------------------------------------------------------
 
   AvalonEdit 6.3.0.90
@@ -867,12 +817,12 @@ MIT  -  applies to 72 components:
   Humanizer.Core 2.14.1
   Microsoft.Build.Framework 17.11.48
   Microsoft.Build.Locator 1.9.1
-  Microsoft.CodeAnalysis.Analyzers 5.3.0-2.25625.1
-  Microsoft.CodeAnalysis.Common 5.3.0
-  Microsoft.CodeAnalysis.CSharp 5.3.0
-  Microsoft.CodeAnalysis.CSharp.Workspaces 5.3.0
-  Microsoft.CodeAnalysis.Workspaces.Common 5.3.0
-  Microsoft.CodeAnalysis.Workspaces.MSBuild 5.3.0
+  Microsoft.CodeAnalysis.Analyzers 5.9.0-1.26328.17
+  Microsoft.CodeAnalysis.Common 5.9.0
+  Microsoft.CodeAnalysis.CSharp 5.9.0
+  Microsoft.CodeAnalysis.CSharp.Workspaces 5.9.0
+  Microsoft.CodeAnalysis.Workspaces.Common 5.9.0
+  Microsoft.CodeAnalysis.Workspaces.MSBuild 5.9.0
   Microsoft.Data.Sqlite 8.0.10
   Microsoft.Data.Sqlite.Core 8.0.10
   Microsoft.Extensions.AI.Abstractions 10.8.3
@@ -915,24 +865,14 @@ MIT  -  applies to 72 components:
   Microsoft.ML.Tokenizers.Data.Cl100kBase 1.0.2
   Microsoft.ML.Tokenizers.Data.O200kBase 1.0.2
   Microsoft.VisualStudio.SolutionPersistence 1.0.52
-  System.Collections.Immutable 9.0.0
   System.CommandLine 2.0.0-beta4.22272.1
-  System.Composition 9.0.0
-  System.Composition.AttributedModel 9.0.0
-  System.Composition.Convention 9.0.0
-  System.Composition.Hosting 9.0.0
-  System.Composition.Runtime 9.0.0
-  System.Composition.TypedParts 9.0.0
-  System.Diagnostics.DiagnosticSource 10.0.10
-  System.Diagnostics.DiagnosticSource 10.0.5
+  System.Composition 10.0.1
+  System.Composition.AttributedModel 10.0.1
+  System.Composition.Convention 10.0.1
+  System.Composition.Hosting 10.0.1
+  System.Composition.Runtime 10.0.1
+  System.Composition.TypedParts 10.0.1
   System.Diagnostics.EventLog 10.0.7
-  System.IO.Pipelines 10.0.10
-  System.IO.Pipelines 9.0.0
-  System.Net.ServerSentEvents 10.0.10
-  System.Reflection.Metadata 9.0.0
-  System.Text.Encodings.Web 10.0.10
-  System.Text.Json 10.0.10
-  System.Text.Json 8.0.5
   WPF-UI 3.1.1
 
   Copyright notices of those components:
@@ -962,20 +902,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-------------------------------------------------------------------------------
-url: https://github.com/dotnet/corefx/blob/master/LICENSE.TXT  -  applies to 1 component:
-------------------------------------------------------------------------------
-
-  System.Memory 4.5.3
-
-  Copyright notices of those components:
-
-    © Microsoft Corporation. All rights reserved.
-
-  These components declare their licence by reference rather than by SPDX
-  identifier, so no canonical text is stored here. Read it at the URL above.
-  None of them ships a binary of its own, so nothing here is redistributed under it.
 
 ==============================================================================
 NOTICE FILES CARRIED BY THE COMPONENTS

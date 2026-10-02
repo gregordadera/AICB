@@ -21,7 +21,7 @@ Every file is written atomically: a temporary file in the same directory is fill
 
 ## 2.2 Before you run it
 
-`aicb init` assumes the `aicb` command is already installed. The .NET tool needs the .NET 8 SDK:
+`aicb init` assumes the `aicb` command is already installed. The .NET tool needs the .NET 10 SDK:
 
 ```sh
 dotnet tool install -g aicb-roslyn-mcp

@@ -50,12 +50,14 @@ jobs:
         os: [ubuntu-latest, macos-latest]
 
     steps:
-      # The tool targets net8.0, and opening a solution runs MSBuild from an SDK - so the SDK is
-      # the prerequisite, not just the runtime. Same requirement the README states for users.
-      - name: Setup .NET 8 SDK
+      # The tool targets net10.0 since 0.5.500.1, and opening a solution runs MSBuild from an
+      # SDK - so the SDK is the prerequisite, not just the runtime. Same requirement the README
+      # states for users. 0.5.465.1 and 0.5.465.11 target net8.0 and roll forward onto this SDK;
+      # older versions need the .NET 8 SDK and do not start here.
+      - name: Setup .NET 10 SDK
         uses: actions/setup-dotnet@v6
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '10.0.x'
 
       # The publishing runbook stages a GitHub draft first, publishes to NuGet, then makes the
       # GitHub release public. An automatic release-event run would be coupled to that timing for

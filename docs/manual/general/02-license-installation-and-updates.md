@@ -89,7 +89,7 @@ Note: The public repository carries the documentation, the license and the relea
 | Requirement | Applies to | Why |
 |---|---|---|
 | **MSBuild** (a .NET SDK or a Visual Studio installation) | every form | Roslyn loads a solution through MSBuild; without it no solution can be analyzed |
-| **.NET 8 SDK** | the .NET tool | needed to install and run the tool; the same SDK also provides MSBuild |
+| **.NET 10 SDK** | the .NET tool | needed to install and run the tool; the same SDK also provides MSBuild. Versions up to 0.5.465.11 needed the .NET 8 SDK |
 | **Windows 10 or later, 64-bit** | installer and ZIP | the desktop app is a WPF application |
 | **Administrator rights** | the installer | it installs under `Program Files` and maintains the machine-wide `PATH` |
 | none | the ZIP | unpack and run |
@@ -102,7 +102,7 @@ Note: The analysis runs with server garbage collection limited to four heaps. On
 
 ## 2.4 Installing the .NET tool (CLI and MCP server)
 
-1. Install the .NET 8 SDK if you do not have it.
+1. Install the .NET 10 SDK if you do not have it. Without .NET 10 the tool runs on the next newer .NET on the machine and needs that version's SDK; a machine that has only .NET 8 or .NET 9 cannot start it.
 2. Run:
 
 ```sh

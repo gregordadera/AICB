@@ -38,7 +38,7 @@ AICB searches in this order:
 3. `vswhere.exe` under `%ProgramFiles(x86)%\Microsoft Visual Studio\Installer` (Windows) - this catches Visual Studio versions the locator does not know yet.
 4. The newest .NET SDK under `%ProgramFiles%\dotnet\sdk` that contains an `MSBuild.dll` (Windows).
 
-On Linux and macOS only the default discovery applies; a .NET SDK must be installed. If nothing is found, the message states what was tried and suggests installing the .NET 8 SDK or the MSBuild tools workload. A `global.json` next to the solution can pin which SDK version is used when several are installed.
+On Linux and macOS only the default discovery applies; a .NET SDK must be installed. If nothing is found, the message states what was tried and names the possible causes: Visual Studio without the '.NET desktop development' or 'MSBuild Tools' workload, or neither Visual Studio nor a .NET SDK installed. A `global.json` next to the solution can pin which SDK version is used when several are installed.
 
 ### The solution registry
 

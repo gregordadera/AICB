@@ -18,10 +18,12 @@ Windows one download covers both.
 - **To analyze a solution you need MSBuild on the machine** - a .NET SDK or Visual
   Studio. This applies to every form: opening a solution runs its MSBuild design-time
   build, and without MSBuild nothing can be loaded.
-- **The .NET tool additionally needs the .NET 8 SDK** (it is what installs and runs a
-  .NET tool). Without .NET 8 the tool runs on the next newer .NET on the machine and needs
-  that version's SDK, so just the .NET 10 SDK works. If it reports that MSBuild could not
-  be registered, install the .NET 8 SDK or set `DOTNET_ROLL_FORWARD=LatestMajor`.
+- **The .NET tool additionally needs the .NET 10 SDK** (it is what installs and runs a
+  .NET tool). Without .NET 10 the tool runs on the next newer .NET on the machine and needs
+  that version's SDK; a machine that has only .NET 8 or .NET 9 cannot start it. If it
+  reports that MSBuild could not be registered, install the .NET 10 SDK or set
+  `DOTNET_ROLL_FORWARD=LatestMajor` (a preview .NET additionally needs
+  `DOTNET_ROLL_FORWARD_TO_PRERELEASE=1`). Versions up to 0.5.465.11 needed the .NET 8 SDK.
 - The desktop app and the ZIP bring their own .NET runtime; nothing else to install.
 
 ### Supported projects
@@ -43,8 +45,13 @@ AICB loads C# projects in the SDK project format:
   solution's targets.
 
 Projects in the classic, non-SDK project format, still common in older .NET Framework
-applications, are not supported. If a solution contains such projects, analyze the
-rest through a solution filter (`.slnf`) that leaves them out.
+applications, load since 0.5.500.1 (tested with .NET Framework 4.8). They are built with
+the .NET Framework MSBuild, so they need Windows with Visual Studio or the Build Tools
+for Visual Studio. Where that is missing, and on Linux and macOS, `get_diagnostics` says
+so (`designTimeBuildFailures`); analyze the rest through a solution filter (`.slnf`) that
+leaves the classic projects out. The COM references of a classic project resolve on x64
+Windows; the first load of such a project can take a minute. One that still does not
+resolve is listed by `get_diagnostics`, with the way out.
 
 ## 3. Install
 

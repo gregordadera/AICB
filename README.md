@@ -19,6 +19,10 @@ analysis and editing.
 > documentation, license and releases. It is free for individuals, education and
 > organizations below the [license thresholds](#license-at-a-glance).
 
+This page is a short tour, not the reference. It names 35 of the 54 tools an agent
+sees by default; the three [manuals](#documentation) run to 35 chapters, about 40
+times the length of this page.
+
 ## See it answer a code question
 
 Ask your coding agent:
@@ -424,8 +428,8 @@ Install **one** form per machine:
 | MCP server and CLI | [.NET global tool `aicb-roslyn-mcp`](https://www.nuget.org/packages/aicb-roslyn-mcp) | Windows, Linux, macOS |
 | Desktop app plus the same MCP server and CLI | [Windows installer or portable ZIP](https://github.com/gregordadera/aicb-roslyn-mcp/releases/latest) | Windows |
 
-The .NET tool needs the **.NET 8 SDK**. Without .NET 8 it runs on the next newer .NET on the
-machine and needs that version's SDK, so just the .NET 10 SDK works:
+The .NET tool needs the **.NET 10 SDK**. Without .NET 10 it runs on the next newer .NET on the
+machine and needs that version's SDK. A machine that has only .NET 8 or .NET 9 cannot start it.
 
 ```sh
 dotnet tool install -g aicb-roslyn-mcp
@@ -443,9 +447,12 @@ Update it later with `dotnet tool update -g aicb-roslyn-mcp`. For a container, t
 repository's [`Dockerfile`](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/Dockerfile)
 installs the same .NET tool and serves MCP over stdio.
 
-If the tool reports that MSBuild could not be registered, the .NET it runs on has no SDK of
-its own (for example a .NET 9 runtime next to the .NET 10 SDK): install the .NET 8 SDK, or set
-the environment variable `DOTNET_ROLL_FORWARD=LatestMajor` so that it uses the newest .NET.
+If the tool reports that MSBuild could not be registered, the .NET it runs on found no SDK it
+can use: an SDK newer than that .NET does not count (for example a .NET 10 runtime next to only
+the .NET 11 SDK). Install the .NET 10 SDK; beside a .NET 10 runtime the .NET 8 and .NET 9 SDKs
+work as well. Or set the environment variable `DOTNET_ROLL_FORWARD=LatestMajor` so that the tool
+runs on the newest .NET - a preview .NET additionally needs
+`DOTNET_ROLL_FORWARD_TO_PRERELEASE=1`.
 
 The Windows downloads are self-contained, but analyzing a solution still needs
 MSBuild from a .NET SDK or Visual Studio. The installer is not code-signed yet, so
@@ -505,6 +512,7 @@ for setup, first questions and troubleshooting.
 | Full Select profile | 72 tools | Default set plus the measured long tail |
 | Complete server surface | 82 tools | Full Select plus the opt-in session-memory, database and API-comparison tools |
 
+This README names 35 of the 54 default tools; the references below describe all of them.
 Start the Full Select profile with
 `aicb mcp --mcp-profile mcp-profile/full`. Set `AICB_MCP_TOOLS=all` to add
 the opt-in tools as well. The generated [tool reference](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/TOOLS.md) documents
@@ -661,6 +669,10 @@ through [GitHub Issues](https://github.com/gregordadera/aicb-roslyn-mcp/issues) 
 issues privately as described in [`SECURITY.md`](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/SECURITY.md).
 
 ## Documentation
+
+Everything above is the short version. The three manuals below hold the full reference -
+35 chapters, each manual roughly 70,000 words, together about 40 times the length of this
+README.
 
 - [Getting started](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/GETTING-STARTED.md) - install, connect and ask the first question
 - [Tool reference](https://github.com/gregordadera/aicb-roslyn-mcp/blob/main/docs/TOOLS.md) - generated reference for the default MCP profile

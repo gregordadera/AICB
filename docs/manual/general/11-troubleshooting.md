@@ -48,7 +48,7 @@ Note: a self-contained installation removes the dependency on the .NET **runtime
 `aicb analyze` stops with exit code `5` and writes to stderr:
 
 ```
-error: MSBuild registration failed on <platform>: <reason>. Make sure the .NET 8 SDK is installed and reachable via 'dotnet --info'. On Windows a global.json next to the .sln can help disambiguate SDK versions.
+error: MSBuild registration failed on <platform>: <reason>. aicb runs on .NET <N> here and cannot use a .NET SDK that is newer than that. Install the .NET <N> SDK and check that 'dotnet --list-sdks' lists it. The .NET tool can instead run on the newest installed .NET: set DOTNET_ROLL_FORWARD=LatestMajor, and DOTNET_ROLL_FORWARD_TO_PRERELEASE=1 as well if that .NET is a preview. On Windows a global.json next to the .sln can help disambiguate SDK versions.
 ```
 
 The CLI uses only the first of the four routes, so on Windows the message points at the SDK rather than at Visual Studio.
@@ -73,7 +73,7 @@ That warning is a prediction, not a startup failure: the tools that need a loade
 |---|---|
 | Setup installer (Windows) | No - self-contained, the runtime is included |
 | ZIP archive (Windows) | No - self-contained |
-| `dotnet tool install -g aicb-roslyn-mcp` | Yes - a .NET tool is framework-dependent and needs the .NET 8 SDK, which is also what analyzing a solution needs |
+| `dotnet tool install -g aicb-roslyn-mcp` | Yes - a .NET tool is framework-dependent and needs the .NET 10 SDK, which is also what analyzing a solution needs |
 
 ### Windows SmartScreen warns about the download
 
