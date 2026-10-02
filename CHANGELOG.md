@@ -4,6 +4,213 @@ Versions follow `Major.Minor.Series.Build`. The build number rises by one for ev
 change that lands, so gaps between published versions are normal - not every build is
 released.
 
+## 0.5.500.1 (2026-10-04) - Runs on .NET 10, loads classic .NET Framework projects, and every tool description fits in 2048 characters
+
+**Who is affected.** Users of the .NET tool: it now needs **.NET 10**. A machine that has only
+.NET 8 or .NET 9 cannot start this version - install the .NET 10 SDK first, then update. The
+Windows installer and the portable ZIP bring their own runtime and need nothing beyond the usual
+update. Anyone with classic (non-SDK-style) .NET Framework projects: such a solution now loads.
+Everyone on the MCP server: reconnect your client once - 32 of the 54 tools of the default profile
+have a new description, and every tool now lists a title and the MCP annotation hints. Several
+answers are sharper: `find_dead_code` lists unused private methods, `find_tests_for` finds the
+tests that read a property or field. Callers that pass a `dbPath` to a tool that only reads a
+database: a path that does not exist is now an error. The configuration database does not
+change. A snapshot or remembered codebase saved by an earlier version is analyzed afresh the
+first time it is used, and the first open of each solution after the update runs its full
+design-time build once.
+
+### The .NET tool needs .NET 10
+
+- **The .NET tool `aicb-roslyn-mcp` runs on .NET 10** and needs the .NET 10 SDK; up to 0.5.465.11
+  it was .NET 8. Without .NET 10 it runs on the next newer .NET on the machine and needs that
+  version's SDK. A machine that has only .NET 8 or .NET 9 cannot start it.
+- **Updating:** install the .NET 10 SDK, then `dotnet tool update -g aicb-roslyn-mcp`. The
+  requirement concerns the machine `aicb` runs on, not the solutions it analyzes: their target
+  frameworks are supported as before.
+- Beside a .NET 10 runtime the .NET 8 and .NET 9 SDKs are found as well. An SDK newer than the
+  .NET the tool runs on is not (for example a .NET 10 runtime next to only the .NET 11 SDK). The
+  environment variable `DOTNET_ROLL_FORWARD=LatestMajor` makes the tool run on the newest .NET; a
+  preview .NET additionally needs `DOTNET_ROLL_FORWARD_TO_PRERELEASE=1`.
+- **The message for an MSBuild that could not be registered says what to install:** it names the
+  .NET the tool runs on, asks for that version's SDK and names the two switches above. Before, it
+  asked for the .NET 8 SDK whatever the tool ran on.
+- **The Windows installer and the portable ZIP bring the .NET 10 runtime** instead of .NET 8.
+  Analyzing a solution still needs MSBuild on the machine - a .NET SDK or Visual Studio.
+- **In a container:** the repository's `Dockerfile` builds on the .NET 10 SDK image. The earlier
+  file installed the newest tool onto the .NET 8 SDK image, which cannot start this version; build
+  from the current file.
+- **The analysis runs on Roslyn 5.9.0** instead of 5.3.0. A source generator built for a newer
+  compiler than the host's cannot be loaded and is listed under `generatedCodeGaps`; with 5.3.0
+  that included the Razor compiler of a current .NET 10 SDK. Such projects are compiled with their
+  generated code again.
+- `THIRD-PARTY-NOTICES.txt` follows the new components, among them Roslyn 5.9.0 and SQLite 3.53.4.
+
+### Classic .NET Framework projects load
+
+- **A solution that contains a project in the classic, non-SDK format loads.** Up to 0.5.465.11
+  one such project could fail the whole solution, its SDK-style projects included. Classic projects
+  are built with the .NET Framework MSBuild, so they need Windows with Visual Studio or the Build
+  Tools for Visual Studio, and the .NET Framework targeting pack the project names.
+- **Without Visual Studio the load does not fail:** the loader uses the .NET SDK's MSBuild instead.
+  When a classic project fails then, `get_diagnostics` marks its entry under
+  `designTimeBuildFailures.projects` with the new field `missingMSBuild` (`visual-studio`, or
+  `mono` on Linux and macOS), and the `note` says what to install - neither `dotnet restore`
+  nor another .NET SDK brings the missing MSBuild.
+- **The COM references of a classic project resolve on x64 Windows.** The interop assemblies the
+  analysis generates for them go into a folder of its own,
+  `%LOCALAPPDATA%\AIContextBuilder\design-time-build`, not into the project's `obj` folder, so
+  your own build and the analysis leave each other's interop assemblies alone. The new
+  environment variable `AICB_DESIGN_TIME_BUILD_DIR` names another folder, or switches this off
+  with `0`. The first load of a project with COM references generates them and can take a
+  minute; later loads reuse them. After a COM library is updated or registered again on the
+  machine, the next load in a new process imports it again; a running server needs
+  `refresh_session(force: true)`.
+- **Two aicb processes that load the same classic project with COM references for the first time
+  wait for each other** instead of colliding in that folder. The lock sits beside the interop
+  folder; a process that waited five minutes builds anyway.
+- **A COM reference that still does not resolve** - its library is not registered on the
+  machine, the project is SDK-style, or the host is not an x64 Windows - is in most cases listed
+  in the new field `comReferences` of the same entry, and the `note` names the way out: reference
+  an interop assembly, or install what registers the library. The errors that name types of such
+  a library are fallout of the missing reference, not findings about the source.
+- **`analyze_solution`** says so when a load fails because the MSBuild of the chosen Visual Studio
+  installation could not be loaded and the solution names classic projects: repair that
+  installation, or analyze a subset solution without the classic projects.
+- The `docs` tool's overview page describes the case.
+
+### Tool descriptions, titles and annotation hints
+
+- **Every tool description is at most 2048 characters.** Claude Code passes only the first 2048
+  characters of a tool description to the model, and in 0.5.465.11 the descriptions of 21 of the
+  54 tools of the default profile ran past that. The rewritten texts say what the tool does, when
+  to use it, what comes back and what it writes.
+- **Tools with a new description** (37 of all 82, 32 of them in the default profile):
+  `analyze_solution`, `batch`, `calls_external`, `check_solution_config_drift`, `coverage_gaps`,
+  `detect_circular_dependencies`, `export_markdown`, `find_binding_usages`, `find_by_code_traits`,
+  `find_by_concurrency_risk`, `find_by_event_subscription`, `find_by_resource_leak`,
+  `find_by_semantics`, `find_by_side_effects`, `find_dead_code`, `find_implementations`,
+  `find_overrides`, `find_production_dead`, `find_resource_usages`, `find_structural_twins`,
+  `find_tests_for`, `find_unresolved_bindings`, `find_usages`, `get_diagnostics`,
+  `get_type_hierarchy`, `impact_of_change`, `init_solution_config`, `instantiation_sites`,
+  `prepare_task`, `resolve_injection`, `review_context`, `save_session`, `server_info`,
+  `solution_metrics`, `symbol_metrics`, `symbol_signature`, `usage_report`.
+- **The `sessionId` parameter says that it also takes a solution path:** in every tool but one
+  that has the parameter, its text now names the absolute `.sln`, `.slnx` or `.slnf` path,
+  analyzed on first use. No tool, parameter or response field was added, removed or renamed by
+  the rewrite.
+- **Every tool lists a `title` and the four MCP annotation hints** - `readOnlyHint`,
+  `destructiveHint`, `idempotentHint` and `openWorldHint` - in `tools/list`; none did before.
+  Eleven tools are not read-only: `analyze_solution`, `refresh_session`, `recall_codebase`,
+  `save_session`, `diff_review`, `export_markdown`, `install_agent_hooks`,
+  `apply_solution_config`, `remember_codebase`, `refresh_remembered` and
+  `import_constellation`; the last six are marked destructive, because they can overwrite a file
+  or a stored entry. Six of the eleven are in the default profile. A client that decides by these
+  hints whether to ask before a call can now tell the writers from the 71 readers.
+- The help text of `aicb mcp` and of its `--db-path` option is reworded; no option changed.
+
+### Sharper answers
+
+- **`find_dead_code` lists private methods that nothing calls.** With `kinds='method'` (the
+  default) it effectively listed none before. Methods a framework calls are declined, not judged,
+  and counted in the new field `methodsIneligibleFrameworkInvoked`: those carrying `[RelayCommand]`
+  or another framework attribute, partial methods, event handlers of markup code-behind and
+  designer types, a static `Main`, a record's `PrintMembers`, and a `ShouldSerialize<P>` or
+  `Reset<P>` method beside a property `P`. `methodsIneligibleUnanalyzedCallers` now counts only
+  methods whose callers were not measured. The insight `quality-dead-code-private`
+  (`list_insights` and the desktop app) uses the same rule and reports findings for the first
+  time; a comparison against a snapshot saved by an earlier version shows them as new.
+- **More callers are recorded** in `find_usages`, `impact_of_change` and `call_graph`: a
+  `nameof(M)` inside a method's own attribute (`[RelayCommand(CanExecute = nameof(CanSave))]`,
+  `[MemberData(nameof(Cases))]`) counts that method as a caller of `M`; so do the bodies of
+  operators, conversions and finalizers, the arguments a primary constructor passes to its base,
+  and a type's `[DebuggerDisplay]` format.
+- **`find_tests_for` finds the tests that read or write a property or field.** A property or field
+  query matched test names only before; it now matches tests that access it, under the new
+  `matchReason` values `accesses` and `accesses-via` (strong, ranked after the calls). A type query
+  also counts tests that read the type's static members, and `invokesTotal` includes these rows. A
+  `Type.Member` query matches a test by name only when both names appear. `assert_absence` with
+  `no_tests` counts the reading and writing tests in its reason.
+- **Qualified names:** `symbol_signature` takes `Type.Member` and qualified type names (`Ns.Type`,
+  `Outer.Inner`); `symbol_metrics` takes `Type..ctor` for one type's constructors. A qualified query
+  that resolves to nothing, but whose last part is a declared name, answers `not_found` with that
+  name as `nearest`. `find_overrides` (on an empty answer) and `get_type_hierarchy` (on `not_found`) now
+  carry `nearest` too.
+- **Same-named symbols of another kind:** `impact_of_change` has a new field `collision` that names
+  them, ahead of the counts, which still describe the resolved symbol; `find_usages` names them in
+  more cases, also when the answer is a type.
+- **`find_resource_usages`** reads the `ResourceKey=` forms - `{StaticResource ResourceKey=X}`,
+  `{DynamicResource ResourceKey=X}` and the element `<StaticResource ResourceKey="X" />`. With a
+  `scope` it says what the solution holds outside that scope; before, a scoped call could answer
+  that a key existed nowhere in the markup when it existed outside the scope.
+- **`instantiation_sites`** steers only to interfaces something in the solution is injected
+  under, and on an empty answer names the markup views that use the type.
+- **`detect_circular_dependencies`** marks a cycle whose witness list was cut at 50 edges with the
+  new field `edgesTruncated`.
+- **`get_diagnostics`:** under `generatedCodeGaps` a generator that loads and then fails is named
+  with the new kinds `cannot-run` (it needs a newer version of an assembly than the .NET the tool
+  runs on; the note names `DOTNET_ROLL_FORWARD=LatestMajor` or an SDK pinned in `global.json` as
+  the repair) and `run-failed`. `designTimeBuildFailures` no longer lists a restore warning that
+  every build repeats (a NuGet audit warning) or a solution entry in a language aicb does not load
+  (`.shproj`, `.dcproj`), and its note says that MSBuild reports a warning the way it reports an
+  error.
+- The note on generated sources that `find_symbol` and `symbol_signature` add to an empty answer
+  no longer counts generated files that declare no type.
+
+### Faster repeat opens
+
+- **A solution with a NuGet audit warning or a `.shproj` or `.dcproj` entry is now cached** like
+  any other, so opening it again no longer repeats the full design-time build.
+- Editing a shared project's `.projitems` file invalidates the cached build of the solutions that
+  include it.
+
+### A reading tool does not create a database
+
+- **A tool that only reads a database refuses a `dbPath` that does not exist.** The error starts
+  with `dbPath not found: <path>. This tool only reads the database and does not create one` and
+  names the tools that do create it. Before, such a call created the folder and an empty database
+  at the path and answered from it.
+  This applies to `analyze_solution`, `diff_review`, `solution_config_status`,
+  `check_solution_config_drift`, `list_insights`, `get_insight`, `solution_metrics`,
+  `evaluate_change_set`, `compare_with_previous`, `diff_public_contract`, `list_remembered` and
+  `recall_codebase`, and to the resource `acb://snapshots/{hash}`.
+- The tools that write keep creating the database: `apply_solution_config`, `save_session`,
+  `remember_codebase` and `refresh_remembered`. A call without `dbPath` is not affected.
+- **`aicb call --db-path <path>` follows the same rule:** for a tool that writes, a database that
+  does not exist is created; for a read-only tool the call is refused with
+  `--db-path not found: <path>`.
+- A configuration database deleted while the server runs is no longer re-created as an empty file
+  when the server records a call.
+
+### Solutions the desktop app has not registered
+
+- **`save_session`, `remember_codebase`, `apply_solution_config` and `aicb analyze
+  --emit-session-db` no longer switch on automatic configuration for a solution the desktop app
+  has not registered.** The desktop app still switches it on when it registers the solution.
+  `apply_solution_config` keeps the `autoInit` block a committed `.aicb.json` already has instead
+  of writing one of its own, and so does the desktop app's configuration export.
+- The `configInit.directive` of `analyze_solution` says where the setting is stored and that it
+  is a stored setting, not a request made in the conversation.
+- `save_session` called with a solution path returns the session id as `sessionId`, not the path.
+
+### Memory, and files saved during an analysis
+
+- **The MCP server and the desktop app give memory back after a load.** About two seconds after
+  an analysis, a recall, an evicted session or a larger refresh (the server), or after a solution
+  has finished loading (the desktop app), the process returns the memory the load no longer needs.
+  The environment variable `AICB_MEMORY_TRIM=0` (also `off` or `false`) switches this off.
+- **Reloading a solution no longer keeps the previous load in memory.** In a long-running
+  process every full reload added to the memory in use.
+- **A file saved while an analysis runs is picked up by the next refresh.** `analyze_solution`,
+  `remember_codebase`, `refresh_remembered` and the desktop app take the file baseline of a
+  session before they read the solution. Before, it was taken after the analysis, so such a file
+  could count as current although the analysis held its old content.
+
+### Package
+
+- The description of the package on nuget.org names what the server does in the words people
+  search for: semantic code analysis, navigation, the impact of a change, dependency injection
+  and refactoring.
+
 ## 0.5.465.11 (2026-09-30) - The .NET tool is now `aicb-roslyn-mcp`, and every tool applies a solution's configuration in the same order
 
 **Who is affected.** Users of the .NET tool: the NuGet package has a new name, and an existing
