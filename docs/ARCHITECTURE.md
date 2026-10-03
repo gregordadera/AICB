@@ -312,60 +312,64 @@ not a declared support limit. The desktop app can record per-phase load timings 
 distributions. These let a team measure its own solution rather than extrapolate
 from an unrelated repository.
 
-### Published benchmark (2026-09-26)
+### Published benchmark (re-measured 2026-10-04)
 
 A standardized public benchmark that reports cold analysis time, warm-query time
 and peak RAM on three public .NET solutions is published below. Measurement
 procedure: each repository was analyzed at the stated revision after a restore
 with its pinned SDK; a fresh MCP server process answered `solution_metrics` twice
 on the restored solution. The first call is **cold** - it carries the full MSBuild
-load and Roslyn analysis, with no warm AICB session, no persisted analysis and no
-session cache. The second identical call in the same session is the **warm**
-query. Peak RAM is the peak working set of the AICB process tree during the cold
-phase, sampled once per second. NuGet and MSBuild machine caches were warm from
-the restore; the very first analysis on a cold machine additionally pays one-time
-MSBuild node startup (about 9 s on the test machine). `get_diagnostics` reported
+load and Roslyn analysis, with no warm AICB session, no persisted analysis, no
+session cache and an empty design-time-build cache. The second identical call in
+the same session is the **warm** query. Peak RAM is the peak working set of the
+AICB process tree during the cold phase, sampled once per second. NuGet and
+MSBuild machine caches were warm from the restore. `get_diagnostics` reported
 `incompleteProjects: []` on all three solutions.
+
+Each cell reads `0.5.465.11 -> 0.5.500.1`: both versions measured in the same
+series, medians of 6 interleaved runs per version, each run in a fresh process.
 
 | Solution | Repository revision | C# LOC (git-tracked) | Cold | Warm | Peak RAM | Production types / methods |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
-| `Serilog.sln` | `serilog/serilog` `2ef6364` | ≈ 24,700 | 9.5 s | 188 ms | 1.21 GB | 129 / 657 |
-| `src/MahApps.Metro.sln` | `MahApps/MahApps.Metro` `72099e3` | ≈ 54,700 | 30.1 s | 215 ms | 2.92 GB | 322 / 1,840 |
-| `RavenDB.sln` | `ravendb/ravendb` `5415dde` | ≈ 1.76 M | 96.6 s | 1.86 s | 4.05 GB | 9,316 / 33,606 |
+| `Serilog.sln` | `serilog/serilog` `2ef6364` | ~ 24,700 | 14.4 s -> 13.5 s | 98 ms -> 100 ms | 1.29 GB -> 1.28 GB | 129 / 657 |
+| `src/MahApps.Metro.sln` | `MahApps/MahApps.Metro` `72099e3` | ~ 54,700 | 23.2 s -> 20.3 s | 146 ms -> 136 ms | 3.64 GB -> 3.52 GB | 322 / 1,840 |
+| `RavenDB.sln` | `ravendb/ravendb` `5415dde` | ~ 1.76 M | 85.5 s -> 69.7 s | 2.00 s -> 1.70 s | 4.35 GB -> 4.31 GB | 9,316 / 33,606 |
 
-Machine: Windows 10 Pro, Intel Core i9-9900K (8 cores / 16 threads), 32 GB RAM.
-AICB `0.5.464.52` (an internal build; the nearest published release is
-`0.5.464.56`), measured 2026-09-26.
+Machine: Windows 10 Pro, Intel Core i9-9900K (8 cores / 16 threads), 32 GB RAM,
+measured 2026-10-04. Cold, `0.5.500.1` is 6.5 % faster on Serilog, 12.3 % on
+MahApps and 18.5 % on RavenDB. Warm is a tie on Serilog and 7 and 15 % faster on
+the other two. The peak RAM differences lie inside the run-to-run spread, so
+memory did not change measurably. Both versions return the same production types
+and methods. The change is version against version - .NET 10, Roslyn 5.9 and the
+load-path work since `0.5.465.11` together - not the effect of any one of them.
 
 Reading notes: the MahApps solution as published carries 755 compiler diagnostics
 in its `net462` test project; they do not affect the production-scope analysis.
 Serilog's restore required `-p:NuGetAudit=false` because a vulnerable transitive
-test dependency would otherwise fail the restore as an error. Incremental refresh
-time is not yet covered by this benchmark, and these numbers are measured data
-points on one machine, not a universal performance promise.
+test dependency would otherwise fail the restore as an error. The very first
+analysis on a cold machine additionally pays one-time MSBuild node startup (about
+9 s on the test machine). Incremental refresh time is not yet covered by this
+benchmark, and these numbers are measured data points on one machine, not a
+universal performance promise.
 
-#### Re-measured for 0.5.500.1 (2026-10-04)
+#### First measurement (2026-09-26)
 
-| Solution | Cold | Warm | Peak RAM | Change against 0.5.465.11 (cold / warm / RAM) |
-| --- | ---: | ---: | ---: | ---: |
-| `Serilog.sln` | 13.5 s | 100 ms | 1.28 GB | -6.5 % / +2.0 % / -0.5 % |
-| `src/MahApps.Metro.sln` | 20.3 s | 136 ms | 3.52 GB | -12.3 % / -6.9 % / -3.5 % |
-| `RavenDB.sln` | 69.7 s | 1.70 s | 4.31 GB | -18.5 % / -15.0 % / -1.0 % |
+| Solution | Cold | Warm | Peak RAM |
+| --- | ---: | ---: | ---: |
+| `Serilog.sln` | 9.5 s * | 188 ms | 1.21 GB |
+| `src/MahApps.Metro.sln` | 30.1 s | 215 ms | 2.92 GB |
+| `RavenDB.sln` | 96.6 s | 1.86 s | 4.05 GB |
 
-AICB `0.5.500.1` against the published release `0.5.465.11` (the build of the
-table above, `0.5.464.52`, is not available as a release), on the same machine
-and at the same repository revisions: medians of 6 interleaved runs per version,
-each in a fresh process with an empty design-time-build cache. Production types
-and methods are identical to the table above for both versions. The peak RAM
-changes lie inside the run-to-run spread, so memory did not change measurably.
-The change is version against version - .NET 10, Roslyn 5.9 and the load-path
-work since `0.5.465.11` together - not the effect of any one of them.
+AICB `0.5.464.52`, an internal build that was never published (the nearest
+published release is `0.5.464.56`), same machine, one run per solution. These
+numbers are not comparable with the table above: a different build, a different
+day and a single run instead of a median of six.
 
-The two tables are not directly comparable. With an empty build cache
-`0.5.465.11` takes 14.4 s cold on Serilog; with the cache filled it takes
-10.0 to 10.3 s (and `0.5.500.1` 9.0 to 9.1 s), so the 9.5 s above was by every
-indication served from that cache. `0.5.465.11` does not cache MahApps or
-RavenDB at all, so no such hit was possible for those two.
+\* By every indication this cell was served from the design-time-build cache,
+which the measurement did not empty. With that cache filled, Serilog takes 10.0
+to 10.3 s cold on `0.5.465.11` and 9.0 to 9.1 s on `0.5.500.1`; with it empty,
+14.4 s and 13.5 s as in the table above. So Serilog did not get slower: the
+earlier cell measured a different situation.
 
 ## What long-term reliability and compatibility are promised?
 
