@@ -344,6 +344,29 @@ test dependency would otherwise fail the restore as an error. Incremental refres
 time is not yet covered by this benchmark, and these numbers are measured data
 points on one machine, not a universal performance promise.
 
+#### Re-measured for 0.5.500.1 (2026-10-04)
+
+| Solution | Cold | Warm | Peak RAM | Change against 0.5.465.11 (cold / warm / RAM) |
+| --- | ---: | ---: | ---: | ---: |
+| `Serilog.sln` | 13.5 s | 100 ms | 1.28 GB | -6.5 % / +2.0 % / -0.5 % |
+| `src/MahApps.Metro.sln` | 20.3 s | 136 ms | 3.52 GB | -12.3 % / -6.9 % / -3.5 % |
+| `RavenDB.sln` | 69.7 s | 1.70 s | 4.31 GB | -18.5 % / -15.0 % / -1.0 % |
+
+AICB `0.5.500.1` against the published release `0.5.465.11` (the build of the
+table above, `0.5.464.52`, is not available as a release), on the same machine
+and at the same repository revisions: medians of 6 interleaved runs per version,
+each in a fresh process with an empty design-time-build cache. Production types
+and methods are identical to the table above for both versions. The peak RAM
+changes lie inside the run-to-run spread, so memory did not change measurably.
+The change is version against version - .NET 10, Roslyn 5.9 and the load-path
+work since `0.5.465.11` together - not the effect of any one of them.
+
+The two tables are not directly comparable. With an empty build cache
+`0.5.465.11` takes 14.4 s cold on Serilog; with the cache filled it takes
+10.0 to 10.3 s (and `0.5.500.1` 9.0 to 9.1 s), so the 9.5 s above was by every
+indication served from that cache. `0.5.465.11` does not cache MahApps or
+RavenDB at all, so no such hit was possible for those two.
+
 ## What long-term reliability and compatibility are promised?
 
 The public release channel currently declares no LTS support window, response-time
